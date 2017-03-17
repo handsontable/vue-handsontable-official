@@ -70,9 +70,9 @@ Note, that you can pass options to Handsontable either as:
 The `root` property declares the `id` of the root element for the table. It is optional - if it isn't provided, the table will get a randomly generated `id`.
 
 ## Examples
-Please see the [/demo](https://github.com/handsontable/vue-handsontable/tree/master/demo) directory for a sample app using `vue-handsontable-official`. 
+Please see the [/demo](https://github.com/handsontable/vue-handsontable-official/tree/master/demo) directory for a sample app using `vue-handsontable-official`. 
 
-You can check out a live version of this example at [handsontable.github.io/vue-handsontable/demo](https://handsontable.github.io/vue-handsontable/demo).
+You can check out a live version of this example at [handsontable.github.io/vue-handsontable-official/demo](https://handsontable.github.io/vue-handsontable-official/demo).
 
 ## License
 `vue-handsontable-official` is released under the [MIT license](https://github.com/handsontable/vue-handsontable-official/blob/master/LICENSE).
