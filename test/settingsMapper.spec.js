@@ -54,6 +54,52 @@ describe('Settings Mapper', () => {
       expect(typeof result.randomPropName).toEqual('undefined');
       expect(typeof result.onAfterChange).toEqual('undefined');
     });
+
+    it('should prepare the settings object containing the `on`-properties and return an object with the `on`-properties trimmed (when two objects are provided)', () => {
+      const settingsMapper = new SettingsMapper();
+      const prepare = settingsMapper.prepare.bind(settingsMapper);
+
+      const onPrefixedPropObj = {
+        'onAfterChange': {},
+        'onAfterCellMetaReset': {},
+        'onAfterChangesObserved': {},
+        'onAfterContextMenuDefaultOptions': {},
+        'onBeforeContextMenuSetItems': {},
+        'onAfterDropdownMenuDefaultOptions': {},
+        'onBeforeDropdownMenuSetItems': {},
+        'onAfterContextMenuHide': {}
+      };
+
+      const secondOnPrefixedPropObj = {
+        'onAfterContextMenuHide': {},
+        'onAfterContextMenuShow': {},
+        'onAfterCopyLimit': {},
+        'onBeforeCreateCol': {},
+        'onAfterCreateCol': {},
+        'onBeforeCreateRow': {},
+        'onAfterCreateRow': {}
+      };
+
+      const result = prepare(onPrefixedPropObj, secondOnPrefixedPropObj);
+
+      expect(typeof result.afterChange).toEqual('object');
+      expect(typeof result.afterCellMetaReset).toEqual('object');
+      expect(typeof result.afterChangesObserved).toEqual('object');
+      expect(typeof result.afterContextMenuDefaultOptions).toEqual('object');
+      expect(typeof result.beforeContextMenuSetItems).toEqual('object');
+      expect(typeof result.afterDropdownMenuDefaultOptions).toEqual('object');
+      expect(typeof result.beforeDropdownMenuSetItems).toEqual('object');
+      expect(typeof result.afterContextMenuHide).toEqual('object');
+      expect(typeof result.afterContextMenuShow).toEqual('object');
+      expect(typeof result.afterCopyLimit).toEqual('object');
+      expect(typeof result.beforeCreateCol).toEqual('object');
+      expect(typeof result.afterCreateCol).toEqual('object');
+      expect(typeof result.beforeCreateRow).toEqual('object');
+      expect(typeof result.afterCreateRow).toEqual('object');
+
+      expect(typeof result.randomPropName).toEqual('undefined');
+      expect(typeof result.onAfterChange).toEqual('undefined');
+    });
   });
 
   describe('addHookPrefix', () => {
