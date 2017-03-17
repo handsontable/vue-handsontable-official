@@ -27,6 +27,7 @@
     "_add-md-tags": "echo $'title: Handsontable component for Vue.js\\n---\\n' | cat - index.md > /tmp/out && mv /tmp/out index.md",
     "_clone_demo": "cpr ./demo ./docs/demo -f /node_modules/",
     "_generate-docs": "rimraf ./docs && ./node_modules/markdown-styles/bin/generate-md --layout github --input index.md --output ./docs && npm run _clone_demo",
-    "_clean-readme-clone": "rm index.md"
+    "_clean-readme-clone": "rm index.md",
+    "release": "generate-release"
   }
 }
