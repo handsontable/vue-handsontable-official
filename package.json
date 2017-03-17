@@ -1,7 +1,7 @@
 {
   "name": "vue-handsontable-official",
   "description": "A Vue.js Handsontable wrapper component.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "Handsoncode",
   "main": "src/HotTable.vue",
   "dependencies": {
@@ -12,6 +12,8 @@
     "handsontable": "^0.31.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015": "^6.24.0",
     "cpr": "^2.0.2",
     "cssstyle": "git://github.com/jansiegel/CSSStyleDeclaration.git",
     "generate-release": "^0.11.0",
