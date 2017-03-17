@@ -6,7 +6,7 @@
   "main": "index.js",
   "dependencies": {
     "handsontable": "^0.31.1",
-    "hot-formula-parser": "2.0.0",
+    "vue-handsontable-official": "^0.2.0",
     "vue": "^2.2.1"
   },
   "devDependencies": {
