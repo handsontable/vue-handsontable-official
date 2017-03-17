@@ -10,7 +10,7 @@
   </head>
   <body>
     <article class="markdown-body"><h1 id="vue-handsontable-official-[![build-status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](https://travis-ci.org/handsontable/vue-handsontable-official)"><a class="header-link" href="#vue-handsontable-official-[![build-status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](https://travis-ci.org/handsontable/vue-handsontable-official)"></a>vue-handsontable-official  <a href="https://travis-ci.org/handsontable/vue-handsontable-official"><img src="https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master" alt="Build Status"></a></h1>
-<p>A React wrapper for the the <a href="https://github.com/handsontable/handsontable">Handsontable</a> spreadsheet component.</p>
+<p>A Vue.js wrapper for the the <a href="https://github.com/handsontable/handsontable">Handsontable</a> spreadsheet component.</p>
 <h2 id="table-of-contents"><a class="header-link" href="#table-of-contents"></a>Table of contents</h2>
 <ol class="list">
 <li><a href="#installation">Installation</a></li>
@@ -63,13 +63,13 @@
   }
 </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></code></pre><p>Note, that you can pass options to Handsontable either as:</p>
 <ul class="list">
-<li>individual component properties<pre class="hljs"><code>&lt;HotTable root=<span class="hljs-string">"hot-example"</span> :data=<span class="hljs-string">"hotData"</span> colHeaders={<span class="hljs-literal">true</span>} rowHeaders={<span class="hljs-literal">true</span>} width=<span class="hljs-string">"600"</span> height=<span class="hljs-string">"300"</span> stretchH=<span class="hljs-string">"all"</span> /&gt;</code></pre></li>
-<li>an object passed to a single <code>settings</code> property<pre class="hljs"><code>&lt;HotTable root=<span class="hljs-string">"hot"</span> :settings=<span class="hljs-string">"settingsObject"</span> /&gt;</code></pre></li>
+<li>individual component properties<pre class="hljs"><code>&lt;HotTable root=<span class="hljs-string">"hot-example"</span> :data=<span class="hljs-string">"hotData"</span> :rowHeaders=<span class="hljs-string">"true"</span>/&gt;</code></pre></li>
+<li>an object passed to a single <code>settings</code> property<pre class="hljs"><code>&lt;HotTable root=<span class="hljs-string">"hot-example"</span> :settings=<span class="hljs-string">"settingsObject"</span> /&gt;</code></pre></li>
 </ul>
 <p>The <code>root</code> property declares the <code>id</code> of the root element for the table. It is optional - if it isn&#39;t provided, the table will get a randomly generated <code>id</code>.</p>
 <h2 id="examples"><a class="header-link" href="#examples"></a>Examples</h2>
 <p>Please see the <a href="https://github.com/handsontable/vue-handsontable/tree/master/demo">/demo</a> directory for a sample app using <code>vue-handsontable-official</code>. </p>
-<p>The live version of this example is located at <a href="https://handsontable.github.io/vue-handsontable/demo">handsontable.github.io/vue-handsontable/demo</a>.</p>
+<p>You can check out a live version of this example at <a href="https://handsontable.github.io/vue-handsontable/demo">handsontable.github.io/vue-handsontable/demo</a>.</p>
 <h2 id="license"><a class="header-link" href="#license"></a>License</h2>
 <p><code>vue-handsontable-official</code> is released under the <a href="https://github.com/handsontable/vue-handsontable-official/blob/master/LICENSE">MIT license</a>.
 Copyrights belong to Handsoncode sp. z o.o.</p>
@@ -80,6 +80,7 @@ Copyrights belong to Handsoncode sp. z o.o.</p>
 <ul class="list">
 <li><a href="https://github.com/handsontable/hot-table">hot-table</a> (Polymer - WebComponents)</li>
 <li><a href="https://github.com/handsontable/ngHandsontable">ngHandsontable</a> (Angular 1)</li>
+<li><a href="https://github.com/handsontable/react-handsontable">react-handsontable</a> (React)</li>
 </ul>
     </article>
   </body>

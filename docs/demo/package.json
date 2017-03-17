@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "handsontable": "^0.31.1",
     "hot-formula-parser": "2.0.0",
-    "handsontable-pro": "git+ssh://git@my.handsontable.com/handsontable/handsontable-pro.git",
     "vue": "^2.2.1"
   },
   "devDependencies": {

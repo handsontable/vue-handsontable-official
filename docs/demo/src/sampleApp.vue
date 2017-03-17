@@ -10,7 +10,7 @@
       <label v-on:click="toggleOption" for="column-resize"><input id="column-resize" type="checkbox"/>Enable column resizing</label><br/>
     </div>
     <div id="hot-preview">
-      <HotTable :root="root" :rowHeaders="true" :settings="hotSettings"></HotTable>
+      <HotTable :root="root" :settings="hotSettings"></HotTable>
     </div>
   </div>
 </template>

@@ -5,8 +5,7 @@ module.exports = {
   entry: './src/index.js',
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.common.js',
-      'handsontable': path.resolve(__dirname, 'node_modules/handsontable-pro')
+      'vue$': 'vue/dist/vue.common.js'
     }
   },
   output: {
@@ -31,14 +30,6 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/
       },
-      // {
-      //   test: /\.(png|jpg|gif|svg)$/,
-      //   loader: 'file-loader',
-      //   options: {
-      //     name: '[name].[ext]?[hash]'
-      //   }
-      // },
-
       {
         test: require.resolve('numbro'),
         loader: 'expose-loader?numbro'
@@ -54,11 +45,7 @@ module.exports = {
       {
         test: require.resolve('zeroclipboard'),
         loader: 'expose-loader?ZeroClipboard'
-      },
-      {
-        test: require.resolve('hot-formula-parser/dist/formula-parser.js'),
-        loader: 'expose-loader?formulaParser'
-      },
+      }
     ]
   }
 };
