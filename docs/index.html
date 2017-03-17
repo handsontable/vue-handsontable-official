@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Handsontable component for Vue.js</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="vue-handsontable-official-[![build-status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](https://travis-ci.org/handsontable/vue-handsontable-official)"><a class="header-link" href="#vue-handsontable-official-[![build-status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](https://travis-ci.org/handsontable/vue-handsontable-official)"></a>vue-handsontable-official  <a href="https://travis-ci.org/handsontable/vue-handsontable-official"><img src="https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master" alt="Build Status"></a></h1>
+<p>A Vue.js wrapper for the the <a href="https://github.com/handsontable/handsontable">Handsontable</a> spreadsheet component.</p>
+<h2 id="table-of-contents"><a class="header-link" href="#table-of-contents"></a>Table of contents</h2>
+<ol class="list">
+<li><a href="#installation">Installation</a></li>
+<li><a href="#basic-usage">Basic usage</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#contact">Contact</a></li>
+<li><a href="#other-wrappers">Other wrappers</a></li>
+</ol>
+<h2 id="installation"><a class="header-link" href="#installation"></a>Installation</h2>
+<p>For detailed installation instructions, please take a look at our wiki under <a href="https://github.com/handsontable/vue-handsontable-official/wiki/Installation-guide">&quot;Installation guide&quot;</a>.</p>
+<h2 id="basic-usage"><a class="header-link" href="#basic-usage"></a>Basic usage</h2>
+<p><code>vue-handsontable-official</code> creates a <code>&lt;HotTable&gt;</code> component. You can use it just like any other Vue component. For example:</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"hot-preview"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">HotTable</span> <span class="hljs-attr">:root</span>=<span class="hljs-string">"root"</span> <span class="hljs-attr">:settings</span>=<span class="hljs-string">"hotSettings"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">HotTable</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+  <span class="hljs-keyword">import</span> moment <span class="hljs-keyword">from</span> <span class="hljs-string">'moment'</span>;
+  <span class="hljs-keyword">import</span> numbro <span class="hljs-keyword">from</span> <span class="hljs-string">'numbro'</span>;
+  <span class="hljs-keyword">import</span> pikaday <span class="hljs-keyword">from</span> <span class="hljs-string">'pikaday'</span>;
+  <span class="hljs-keyword">import</span> Zeroclipboard <span class="hljs-keyword">from</span> <span class="hljs-string">'zeroclipboard'</span>;
+  <span class="hljs-keyword">import</span> Handsontable <span class="hljs-keyword">from</span> <span class="hljs-string">'handsontable'</span>;
+  <span class="hljs-keyword">import</span> HotTable <span class="hljs-keyword">from</span> <span class="hljs-string">'vue-handsontable-official'</span>;
+  <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span>;
+
+  <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+    <span class="hljs-attr">data</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">root</span>: <span class="hljs-string">'test-hot'</span>,
+        <span class="hljs-attr">hotSettings</span>: {
+          <span class="hljs-attr">data</span>: Handsontable.helper.createSpreadsheetData(<span class="hljs-number">40</span>, <span class="hljs-number">40</span>),
+          <span class="hljs-attr">colHeaders</span>: <span class="hljs-literal">true</span>
+        }
+      };
+    },
+    <span class="hljs-attr">components</span>: {
+      HotTable
+    }
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+  <span class="hljs-selector-id">#test-hot</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">600px</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">400px</span>;
+    <span class="hljs-attribute">overflow</span>: hidden;
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></code></pre><p>Note, that you can pass options to Handsontable either as:</p>
+<ul class="list">
+<li>individual component properties<pre class="hljs"><code>&lt;HotTable root=<span class="hljs-string">"hot-example"</span> :data=<span class="hljs-string">"hotData"</span> :rowHeaders=<span class="hljs-string">"true"</span>/&gt;</code></pre></li>
+<li>an object passed to a single <code>settings</code> property<pre class="hljs"><code>&lt;HotTable root=<span class="hljs-string">"hot-example"</span> :settings=<span class="hljs-string">"settingsObject"</span> /&gt;</code></pre></li>
+</ul>
+<p>The <code>root</code> property declares the <code>id</code> of the root element for the table. It is optional - if it isn&#39;t provided, the table will get a randomly generated <code>id</code>.</p>
+<h2 id="examples"><a class="header-link" href="#examples"></a>Examples</h2>
+<p>Please see the <a href="https://github.com/handsontable/vue-handsontable/tree/master/demo">/demo</a> directory for a sample app using <code>vue-handsontable-official</code>. </p>
+<p>You can check out a live version of this example at <a href="https://handsontable.github.io/vue-handsontable/demo">handsontable.github.io/vue-handsontable/demo</a>.</p>
+<h2 id="license"><a class="header-link" href="#license"></a>License</h2>
+<p><code>vue-handsontable-official</code> is released under the <a href="https://github.com/handsontable/vue-handsontable-official/blob/master/LICENSE">MIT license</a>.
+Copyrights belong to Handsoncode sp. z o.o.</p>
+<h2 id="contact"><a class="header-link" href="#contact"></a>Contact</h2>
+<p>Feel free to give us feedback on this wrapper using this <a href="https://handsontable.com/contact.html">contact form</a> or write directly at hello@handsontable.com.</p>
+<h2 id="other-wrappers"><a class="header-link" href="#other-wrappers"></a>Other Wrappers</h2>
+<p>Handsontable comes with more wrappers and directives for popular frameworks:</p>
+<ul class="list">
+<li><a href="https://github.com/handsontable/hot-table">hot-table</a> (Polymer - WebComponents)</li>
+<li><a href="https://github.com/handsontable/ngHandsontable">ngHandsontable</a> (Angular 1)</li>
+<li><a href="https://github.com/handsontable/react-handsontable">react-handsontable</a> (React)</li>
+</ul>
+    </article>
+  </body>
+</html>

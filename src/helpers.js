@@ -4,23 +4,31 @@ import SettingsMapper from './settingsMapper';
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use withing Handsontable config.
  *
- * @param {Object} observerSettingsObject Watcher object containing the changed data.
- * @param {Boolean} needArray Flag defining wheter to return the result as an object or an array.
+ * @param {*} observerSettings Watcher object containing the changed data.
  * @returns {Object|Array}
  */
-function rewriteSettings(observerSettingsObject, needArray) {
-  let settings;
+export function rewriteSettings(observerSettings) {
+  let settings = null;
+  let type = {};
 
-  if (needArray) {
+  if (Object.prototype.toString.call(observerSettings).indexOf('Array') > -1) {
     settings = [];
-  } else {
+    type.array = true;
+
+  } else if (typeof observerSettings === 'object') {
     settings = {};
+    type.object = true;
   }
 
-  for (const p in observerSettingsObject) {
-    if (observerSettingsObject.hasOwnProperty(p)) {
-      settings[p] = observerSettingsObject[p];
+  if (type.array || type.object) {
+    for (const p in observerSettings) {
+      if (observerSettings.hasOwnProperty(p)) {
+        settings[p] = observerSettings[p];
+      }
     }
+
+  } else {
+    settings = observerSettings;
   }
 
   return settings;
@@ -33,22 +41,15 @@ function rewriteSettings(observerSettingsObject, needArray) {
  */
 export function hotInit(vueInstance) {
   const settingsMapper = new SettingsMapper();
-  let settings = {};
+  const unmappedSettings = [
+    vueInstance.settings ? vueInstance.settings : vueInstance._props,
+  ];
 
   if (vueInstance.settings) {
-    settings = vueInstance.settings;
-
-  } else {
-    for (let prop in vueInstance._props) {
-      if (vueInstance._props.hasOwnProperty(prop)) {
-        if (vueInstance[prop]) {
-          settings[prop] = vueInstance[prop];
-        }
-      }
-    }
+    unmappedSettings.push(vueInstance._props)
   }
 
-  vueInstance.table = new Handsontable(vueInstance.$el, settingsMapper.prepare(settings));
+  vueInstance.table = new Handsontable(vueInstance.$el, settingsMapper.prepare(...unmappedSettings));
 }
 
 /**
@@ -61,7 +62,7 @@ export function hotDestroy(vueInstance) {
 }
 
 /**
- * Generate an object containing all the available Handsontable properties and plugin hooks.
+ * Generate an object containing all the available Handsontable properties and plugin hooks (with the `on`-prefixes added).
 
  * @returns {Object}
  */
@@ -105,10 +106,16 @@ export function propWatchFactory(updateFunction, bulkUpdateFunction) {
   for (const prop in props) {
     if (props.hasOwnProperty(prop)) {
       if (prop === 'settings') {
-        props[prop] = function(...args) { return bulkUpdateFunction.call(this, prop, ...args); };
+        props[prop] = {
+          handler: function(...args) { return bulkUpdateFunction.call(this, prop, ...args); },
+          deep: true
+        };
 
       } else {
-        props[prop] = function(...args) { return updateFunction.call(this, prop, ...args); };
+        props[prop] = {
+          handler: function(...args) { return updateFunction.call(this, prop, ...args); },
+          deep: true
+        };
       }
     }
   }
@@ -127,8 +134,8 @@ export function propWatchFactory(updateFunction, bulkUpdateFunction) {
  */
 export function updateHotSettings(updatedProperty, updatedValue, oldValue) {
   const newSettings = {};
-  newSettings[updatedProperty] = rewriteSettings(updatedValue, true);
 
+  newSettings[updatedProperty] = rewriteSettings(updatedValue);
   this.table.updateSettings(newSettings);
 }
 
