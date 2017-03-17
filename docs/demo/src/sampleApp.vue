@@ -20,9 +20,8 @@
   import numbro from 'numbro';
   import pikaday from 'pikaday';
   import Zeroclipboard from 'zeroclipboard';
-  import {Parser} from 'hot-formula-parser';
   import Handsontable from 'handsontable';
-  import HotTable from '../../src/HotTable.vue';
+  import HotTable from 'vue-handsontable-official';
   import Vue from 'vue';
 
   export default {
