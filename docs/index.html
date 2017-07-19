@@ -31,11 +31,6 @@
 <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
 
 <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
-  <span class="hljs-keyword">import</span> moment <span class="hljs-keyword">from</span> <span class="hljs-string">'moment'</span>;
-  <span class="hljs-keyword">import</span> numbro <span class="hljs-keyword">from</span> <span class="hljs-string">'numbro'</span>;
-  <span class="hljs-keyword">import</span> pikaday <span class="hljs-keyword">from</span> <span class="hljs-string">'pikaday'</span>;
-  <span class="hljs-keyword">import</span> Zeroclipboard <span class="hljs-keyword">from</span> <span class="hljs-string">'zeroclipboard'</span>;
-  <span class="hljs-keyword">import</span> Handsontable <span class="hljs-keyword">from</span> <span class="hljs-string">'handsontable'</span>;
   <span class="hljs-keyword">import</span> HotTable <span class="hljs-keyword">from</span> <span class="hljs-string">'vue-handsontable-official'</span>;
   <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span>;
 
@@ -44,7 +39,7 @@
       <span class="hljs-keyword">return</span> {
         <span class="hljs-attr">root</span>: <span class="hljs-string">'test-hot'</span>,
         <span class="hljs-attr">hotSettings</span>: {
-          <span class="hljs-attr">data</span>: Handsontable.helper.createSpreadsheetData(<span class="hljs-number">40</span>, <span class="hljs-number">40</span>),
+          <span class="hljs-attr">data</span>: [[<span class="hljs-string">'sample'</span>, <span class="hljs-string">'data'</span>]],
           <span class="hljs-attr">colHeaders</span>: <span class="hljs-literal">true</span>
         }
       };
