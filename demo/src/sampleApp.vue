@@ -6,7 +6,8 @@
       <label v-on:click="toggleOption" for="fixed-columns"><input id="fixed-columns" type="checkbox"/>Add fixed columns</label><br/>
       <label v-on:click="toggleOption" for="row-headers"><input id="row-headers" type="checkbox"/>Enable row
         headers</label><br/>
-      <label v-on:click="toggleOption" for="column-sorting"><input id="column-sorting" type="checkbox"/>Enable sorting</label><br/>
+      <label v-on:click="toggleOption" for="column-sorting"><input id="column-sorting"
+                                                                   type="checkbox"/>Enable sorting</label><br/>
       <label v-on:click="toggleOption" for="column-resize"><input id="column-resize" type="checkbox"/>Enable column resizing</label><br/>
     </div>
     <div id="hot-preview">
@@ -16,11 +17,6 @@
 </template>
 
 <script>
-  import moment from 'moment';
-  import numbro from 'numbro';
-  import pikaday from 'pikaday';
-  import Zeroclipboard from 'zeroclipboard';
-  import Handsontable from 'handsontable';
   import HotTable from 'vue-handsontable-official';
   import Vue from 'vue';
 
@@ -29,7 +25,17 @@
       return {
         root: 'test-hot',
         hotSettings: {
-          data: Handsontable.helper.createSpreadsheetData(40, 40),
+          data: function(rows, columns) {
+            const result = [];
+            for (let i = 0; i < rows; i++) {
+              let row = [];
+              for (let j = 0; j < columns; j++) {
+                row.push('[' + i + ', ' + j + ']');
+              }
+              result.push(row);
+            }
+            return result;
+          }(40, 40),
           colHeaders: true
         }
       };

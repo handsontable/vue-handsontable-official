@@ -24,11 +24,6 @@ For detailed installation instructions, please take a look at our wiki under ["I
 </template>
 
 <script>
-  import moment from 'moment';
-  import numbro from 'numbro';
-  import pikaday from 'pikaday';
-  import Zeroclipboard from 'zeroclipboard';
-  import Handsontable from 'handsontable';
   import HotTable from 'vue-handsontable-official';
   import Vue from 'vue';
 
@@ -37,7 +32,7 @@ For detailed installation instructions, please take a look at our wiki under ["I
       return {
         root: 'test-hot',
         hotSettings: {
-          data: Handsontable.helper.createSpreadsheetData(40, 40),
+          data: [['sample', 'data']],
           colHeaders: true
         }
       };

@@ -1,15 +1,11 @@
 {
   "name": "vue-handsontable-official",
   "description": "A Vue.js Handsontable wrapper component.",
-  "version": "0.2.6",
+  "version": "1.0.0",
   "author": "Handsoncode",
   "main": "src/HotTable.vue",
   "dependencies": {
-    "zeroclipboard": "^2.3.0",
-    "moment": "^2.17.1",
-    "numbro": "^1.9.3",
-    "pikaday": "^1.5.1",
-    "handsontable": "^0.31.1"
+    "handsontable": "^0.33.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
@@ -31,5 +27,13 @@
     "_generate-docs": "rimraf ./docs && ./node_modules/markdown-styles/bin/generate-md --layout github --input index.md --output ./docs && npm run _clone_demo",
     "_clean-readme-clone": "rm index.md",
     "release": "generate-release"
+  },
+  "jest": {
+    "globals": {
+      "__HOT_BUILD_DATE__": "",
+      "__HOT_PACKAGE_NAME__": "",
+      "__HOT_VERSION__": "",
+      "__HOT_BASE_VERSION__": ""
+    }
   }
 }

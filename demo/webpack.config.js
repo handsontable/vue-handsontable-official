@@ -29,22 +29,6 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
-      },
-      {
-        test: require.resolve('numbro'),
-        loader: 'expose-loader?numbro'
-      },
-      {
-        test: require.resolve('moment'),
-        loader: 'expose-loader?moment'
-      },
-      {
-        test: require.resolve('pikaday'),
-        loader: 'expose-loader?Pikaday'
-      },
-      {
-        test: require.resolve('zeroclipboard'),
-        loader: 'expose-loader?ZeroClipboard'
       }
     ]
   }
