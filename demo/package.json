@@ -3,11 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "dependencies": {
-    "handsontable": "^0.33.0",
-    "vue-handsontable-official": "^0.2.5",
-    "vue": "^2.2.1"
+    "cross-env": "^5.0.5",
+    "handsontable": "^0.34.1",
+    "vue": "^2.2.1",
+    "vue-handsontable-official": "^0.2.5"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -24,6 +25,7 @@
     "webpack": "^3.3.0"
   },
   "scripts": {
+    "build": "cross-env BABEL_ENV=es webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
