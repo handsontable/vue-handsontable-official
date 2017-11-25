@@ -5,11 +5,11 @@
   "author": "Handsoncode",
   "main": "src/HotTable.vue",
   "dependencies": {
-    "handsontable": "^0.33.0"
+    "handsontable": "^0.33.0",
+    "babel-preset-es2015": "^6.24.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
-    "babel-preset-es2015": "^6.24.0",
     "cpr": "^2.0.2",
     "cssstyle": "git://github.com/jansiegel/CSSStyleDeclaration.git",
     "generate-release": "^0.11.0",
