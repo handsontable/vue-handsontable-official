@@ -1,7 +1,7 @@
 {
   "name": "vue-handsontable-official",
   "description": "A Vue.js Handsontable wrapper component.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Handsoncode",
   "main": "src/HotTable.vue",
   "devDependencies": {
