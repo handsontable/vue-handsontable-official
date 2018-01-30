@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "npm run _pre-testing && jest",
-    "_pre-testing": "node ./node_modules/cssstyle/scripts/generate_properties.js",
+    "_pre-testing": "npm i handsontable@0.35.1 --no-save && node ./node_modules/cssstyle/scripts/generate_properties.js",
     "make-docs": "npm run _clone-readme && npm run _add-md-tags && npm run _generate-docs && npm run _clean-readme-clone",
     "_clone-readme": "cp README.md index.md",
     "_add-md-tags": "echo $'title: Handsontable component for Vue.js\\n---\\n' | cat - index.md > /tmp/out && mv /tmp/out index.md",
