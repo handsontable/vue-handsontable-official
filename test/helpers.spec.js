@@ -52,7 +52,7 @@ describe('hotInit', () => {
 
     expect(typeof fakeVueComponent.table).toEqual('undefined');
 
-    hotInit(fakeVueComponent);
+    hotInit.call(fakeVueComponent);
 
     expect(typeof fakeVueComponent.table).toEqual('object');
     expect(typeof fakeVueComponent.table.guid).toEqual('string');
@@ -73,8 +73,8 @@ describe('hotDestroy', () => {
 
     expect(typeof fakeVueComponent.table).toEqual('undefined');
 
-    hotInit(fakeVueComponent);
-    hotDestroy(fakeVueComponent);
+    hotInit.call(fakeVueComponent);
+    hotDestroy.call(fakeVueComponent);
 
     expect(typeof fakeVueComponent.table).toEqual('object');
     expect(fakeVueComponent.table.rootElement).toEqual(null);
@@ -145,7 +145,7 @@ describe('updateHotSettings', () => {
 
     expect(typeof fakeVueComponent.table).toEqual('undefined');
 
-    hotInit(fakeVueComponent);
+    hotInit.call(fakeVueComponent);
 
     updateHotSettings.call(fakeVueComponent, 'startCols', 19, {});
 
@@ -167,7 +167,7 @@ describe('updateBulkHotSettings', () => {
 
     expect(typeof fakeVueComponent.table).toEqual('undefined');
 
-    hotInit(fakeVueComponent);
+    hotInit.call(fakeVueComponent);
 
     updateBulkHotSettings.call(fakeVueComponent, 'settings', {
       startCols: 20,

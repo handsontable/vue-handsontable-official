@@ -39,17 +39,17 @@ export function rewriteSettings(observerSettings) {
  *
  * @param {Object} vueInstance The Vue component instance object.
  */
-export function hotInit(vueInstance) {
+export function hotInit() {
   const settingsMapper = new SettingsMapper();
   const unmappedSettings = [
-    vueInstance.settings ? vueInstance.settings : vueInstance._props,
+    this.settings ? this.settings : this._props,
   ];
 
-  if (vueInstance.settings) {
-    unmappedSettings.push(vueInstance._props)
+  if (this.settings) {
+    unmappedSettings.push(this._props)
   }
 
-  vueInstance.table = new Handsontable(vueInstance.$el, settingsMapper.prepare(...unmappedSettings));
+  this.table = new Handsontable(this.$el, settingsMapper.prepare(...unmappedSettings));
 }
 
 /**
@@ -57,8 +57,8 @@ export function hotInit(vueInstance) {
  *
  * @param {Object} vueInstance The Vue component instance object.
  */
-export function hotDestroy(vueInstance) {
-  vueInstance.table.destroy();
+export function hotDestroy() {
+  this.table.destroy();
 }
 
 /**
@@ -90,6 +90,10 @@ export function propFactory() {
     'type': Object
   };
 
+  if (this) {
+    currentSettings.hotInstance = this.table;
+  }
+
   return currentSettings;
 }
 
@@ -98,6 +102,7 @@ export function propFactory() {
  *
  * @param {Function} updateFunction Function used to update a single changed property.
  * @param {Function} bulkUpdateFunction Function used to update the whole `settings` object.
+ * @param {Object} [vueInstance] The vue component object.
  * @returns {Object}
  */
 export function propWatchFactory(updateFunction, bulkUpdateFunction) {

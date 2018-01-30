@@ -16,10 +16,10 @@
 
   export default {
     name: 'HotTable',
-    props: propFactory(),
-    watch: propWatchFactory(updateHotSettings, updateBulkHotSettings),
-    mounted: function() { return hotInit(this); },
-    beforeDestroy: function() { return hotDestroy(this); },
+    props: propFactory.call(this),
+    watch: propWatchFactory.call(this, updateHotSettings, updateBulkHotSettings),
+    mounted: function() { return hotInit.call(this); },
+    beforeDestroy: function() { return hotDestroy.call(this); },
   };
 </script>
 
