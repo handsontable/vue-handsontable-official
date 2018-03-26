@@ -7,22 +7,26 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "css-loader": "^0.28.9",
-    "vue-loader": "^14.1.1",
-    "vue-style-loader": "^4.0.2",
-    "vue-template-compiler": "^2.5.13",
+    "babel-preset-env": "^1.6.1",
     "cpr": "^2.0.2",
+    "css-loader": "^0.28.9",
     "generate-release": "^0.11.0",
     "jest": "^19.0.2",
     "markdown-styles": "^3.1.9",
     "rimraf": "^2.5.4",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "vue-loader": "^14.1.1",
+    "vue-style-loader": "^4.0.2",
+    "vue-template-compiler": "^2.5.13",
     "webpack": "^3.11.0"
   },
   "peerDependencies": {
     "handsontable": "^0.35.1"
   },
   "scripts": {
+    "build": "npm run build-ce && npm run build-pro",
+    "build-ce": "HOT_VERSION=ce webpack",
+    "build-pro": "HOT_VERSION=pro webpack",
     "test": "npm run _pre-testing && jest",
     "_pre-testing": "npm i handsontable@0.35.1 --no-save && node ./node_modules/cssstyle/scripts/generate_properties.js",
     "make-docs": "npm run _clone-readme && npm run _add-md-tags && npm run _generate-docs && npm run _clean-readme-clone",

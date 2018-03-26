@@ -3,8 +3,7 @@
 </template>
 
 <script>
-  import Handsontable from 'handsontable';
-  import SettingsMapper from './settingsMapper';
+  import Handsontable from 'hot-alias';
   import {
     hotInit,
     hotDestroy,
@@ -12,13 +11,13 @@
     propWatchFactory,
     updateHotSettings,
     updateBulkHotSettings
-  } from './helpers';
+  } from '../common/helpers';
 
   export default {
     name: 'HotTable',
-    props: propFactory.call(this),
+    props: propFactory.call(this, Handsontable),
     watch: propWatchFactory.call(this, updateHotSettings, updateBulkHotSettings),
-    mounted: function() { return hotInit.call(this); },
+    mounted: function() { return hotInit.call(this, Handsontable); },
     beforeDestroy: function() { return hotDestroy.call(this); },
   };
 </script>
