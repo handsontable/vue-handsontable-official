@@ -16,7 +16,7 @@ For detailed installation instructions, please take a look at our wiki under ["I
 ## Basic usage
 `vue-handsontable-official` creates a `<HotTable>` component. You can use it just like any other Vue component. For example:
 
-```
+```vue
 <template>
   <div id="hot-preview">
     <HotTable :root="root" :settings="hotSettings"></HotTable>
@@ -54,11 +54,11 @@ For detailed installation instructions, please take a look at our wiki under ["I
 
 Note, that you can pass options to Handsontable either as:
 * individual component properties
-```jsx
+```vue
 <HotTable root="hot-example" :data="hotData" :rowHeaders="true"/>
 ```
 * an object passed to a single `settings` property
-```jsx
+```vue
 <HotTable root="hot-example" :settings="settingsObject" />
 ```
 
