@@ -23,15 +23,15 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Version: 2.0.0-beta1 (built at 2018-03-29 13:55:26)
+ * Version: 2.0.0-beta1 (built at 2018-03-29 14:09:25)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("handsontable"));
+		module.exports = factory(require("handsontable-pro"));
 	else if(typeof define === 'function' && define.amd)
-		define(["handsontable"], factory);
+		define(["handsontable-pro"], factory);
 	else if(typeof exports === 'object')
-		exports["HotTable"] = factory(require("handsontable"));
+		exports["HotTable"] = factory(require("handsontable-pro"));
 	else
 		root["HotTable"] = factory(root["Handsontable"]);
 })(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
@@ -1032,4 +1032,4 @@ function normalizeComponent (
 /***/ })
 /******/ ])["default"];
 });
-//# sourceMappingURL=vue-handsontable-ce.js.map
+//# sourceMappingURL=vue-handsontable-pro.js.map

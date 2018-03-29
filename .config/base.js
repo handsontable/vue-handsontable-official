@@ -13,7 +13,7 @@ module.exports.create = function create(hotType) {
   return {
     devtool: 'source-map',
     output: {
-      path: path.resolve(__dirname, './../dist-' + hotType + '/'),
+      path: path.resolve(__dirname, './../dist/' + hotType + '/'),
       filename: '[name].js',
       library: 'HotTable',
       libraryTarget: 'umd',
