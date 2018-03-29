@@ -1,5 +1,5 @@
 # @handsontable/vue + @handsontable-pro/vue [![Build Status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](https://travis-ci.org/handsontable/vue-handsontable-official)
-A Vue.js wrappers for [Handsontable](https://github.com/handsontable/handsontable) and [Handsontable Pro](https://github.com/handsontable/handsontable-pro) spreadsheet components.
+Vue.js wrappers for the [Handsontable](https://github.com/handsontable/handsontable) and [Handsontable Pro](https://github.com/handsontable/handsontable-pro) spreadsheet components.
 
 ## Table of contents
 1. [Installation and basic usage](#installation)
@@ -18,7 +18,7 @@ or
 ```
 npm install @handsontable-pro/vue
 ```
-**Important: ** The wrapper does not contain `Handsontable`/`Handsontable Pro`, so you'll need to install it separately, using:
+**Important:** The wrapper does not contain `Handsontable`/`Handsontable Pro`, so you'll need to install it separately, using:
 ```
 npm install handsontable
 ```
