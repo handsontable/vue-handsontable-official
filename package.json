@@ -1,6 +1,7 @@
 {
   "name": "vue-handsontable-official",
   "description": "A Vue.js Handsontable wrapper component.",
+  "private": true,
   "version": "2.0.0-beta1",
   "author": "Handsoncode",
   "main": "dist/vue-handsontable-official.js",
@@ -8,9 +9,12 @@
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
+    "cp": "^0.2.0",
     "cpr": "^2.0.2",
     "css-loader": "^0.28.9",
+    "del-cli": "^1.1.0",
     "generate-release": "^0.11.0",
+    "handsontable": "^0.38.1",
     "jest": "^19.0.2",
     "markdown-styles": "^3.1.9",
     "rimraf": "^2.5.4",
@@ -20,21 +24,17 @@
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.11.0"
   },
-  "peerDependencies": {
-    "handsontable": "^0.35.1"
-  },
   "scripts": {
     "build": "npm run build-ce && npm run build-pro",
-    "build-ce": "HOT_VERSION=ce webpack",
-    "build-pro": "HOT_VERSION=pro webpack",
+    "build-ce": "HOT_TYPE=ce webpack",
+    "build-pro": "HOT_TYPE=pro webpack",
+    "build-tests": "HOT_TYPE=tests webpack",
+    "copy-scopes": "cp ./src/ce/package.json ./dist-ce/ && cp ./src/ce/README.md ./dist-ce/ && cp ./src/pro/package.json ./dist-pro/ && cp ./src/pro/README.md ./dist-pro/",
+    "delete-scopes": "del ./dist-ce/package.json && del ./dist-ce/README.md && del ./dist-pro/package.json && del ./dist-pro/README.md",
+    "publish-scopes": "npm publish ./dist-ce/ && npm publish ./dist-pro/",
+    "publish-all": "npm run copy-scopes && npm run publish-scopes && npm run delete-scopes",
+    "_pre-testing": "npm run build-tests && node ./node_modules/cssstyle/scripts/generate_properties.js",
     "test": "npm run _pre-testing && jest",
-    "_pre-testing": "npm i handsontable@0.35.1 --no-save && node ./node_modules/cssstyle/scripts/generate_properties.js",
-    "make-docs": "npm run _clone-readme && npm run _add-md-tags && npm run _generate-docs && npm run _clean-readme-clone",
-    "_clone-readme": "cp README.md index.md",
-    "_add-md-tags": "echo $'title: Handsontable component for Vue.js\\n---\\n' | cat - index.md > /tmp/out && mv /tmp/out index.md",
-    "_clone_demo": "cpr ./demo ./docs/demo -f /node_modules/",
-    "_generate-docs": "rimraf ./docs && ./node_modules/markdown-styles/bin/generate-md --layout github --input index.md --output ./docs && npm run _clone_demo",
-    "_clean-readme-clone": "rm index.md",
     "release": "generate-release"
   },
   "jest": {

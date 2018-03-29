@@ -3,14 +3,15 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports.create = function create() {
+module.exports.create = function create(hotType) {
   const config = {
     devtool: 'source-map',
     output: {
-      path: path.resolve(__dirname, './../dist/'),
+      path: path.resolve(__dirname, './../dist-' + hotType + '/'),
       filename: '[name].js',
       library: 'HotTable',
       libraryTarget: 'umd',
+      libraryExport: 'default'
     },
     module: {
       loaders: [
@@ -19,7 +20,7 @@ module.exports.create = function create() {
           exclude: /(node_modules|bower_components)/,
           loader: 'babel-loader',
           query: {
-            presets: ['env']
+            presets: ['env'],
           }
         },
         {
@@ -27,7 +28,8 @@ module.exports.create = function create() {
           exclude: /(node_modules|bower_components)/,
           loader: 'vue-loader',
           query: {
-            presets: ['vue-style-loader']
+            presets: ['vue-style-loader'],
+
           }
         }
       ]

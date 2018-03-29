@@ -2,8 +2,8 @@
 
 const baseConfig = require('./base');
 
-module.exports.create = function create() {
-  const config = baseConfig.create();
+module.exports.create = function create(hotType) {
+  const config = baseConfig.create(hotType);
 
   config.entry = {
     'vue-handsontable-ce': './src/common/HotTable.vue',

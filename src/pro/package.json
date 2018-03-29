@@ -1,8 +1,8 @@
 {
   "name": "@handsontable-pro/vue",
-  "version": "1.0.0",
+  "version": "1.0.0-beta1",
   "description": "A Vue.js Handsontable Pro wrapper component.",
-  "main": "../../dist/vue-handsontable-pro.js",
+  "main": "./vue-handsontable-pro.js",
   "peerDependencies": {
     "handsontable-pro": "^1.18.1"
   },
