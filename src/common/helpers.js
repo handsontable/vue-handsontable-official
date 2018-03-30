@@ -1,4 +1,4 @@
-import Handsontable from 'handsontable';
+import Handsontable from 'hot-alias';
 import SettingsMapper from './settingsMapper';
 
 /**
@@ -36,8 +36,6 @@ export function rewriteSettings(observerSettings) {
 
 /**
  * Initialize Handsontable.
- *
- * @param {Object} vueInstance The Vue component instance object.
  */
 export function hotInit() {
   const settingsMapper = new SettingsMapper();
@@ -54,8 +52,6 @@ export function hotInit() {
 
 /**
  * Destroy the Handsontable instance.
- *
- * @param {Object} vueInstance The Vue component instance object.
  */
 export function hotDestroy() {
   this.table.destroy();
@@ -63,7 +59,7 @@ export function hotDestroy() {
 
 /**
  * Generate an object containing all the available Handsontable properties and plugin hooks (with the `on`-prefixes added).
-
+ *
  * @returns {Object}
  */
 export function propFactory() {
@@ -102,7 +98,6 @@ export function propFactory() {
  *
  * @param {Function} updateFunction Function used to update a single changed property.
  * @param {Function} bulkUpdateFunction Function used to update the whole `settings` object.
- * @param {Object} [vueInstance] The vue component object.
  * @returns {Object}
  */
 export function propWatchFactory(updateFunction, bulkUpdateFunction) {

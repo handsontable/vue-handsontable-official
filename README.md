@@ -1,76 +1,39 @@
-# vue-handsontable-official  [![Build Status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](https://travis-ci.org/handsontable/vue-handsontable-official)
-A Vue.js wrapper for the the [Handsontable](https://github.com/handsontable/handsontable) spreadsheet component.
+# @handsontable/vue + @handsontable-pro/vue [![Build Status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](https://travis-ci.org/handsontable/vue-handsontable-official)
+Vue.js wrappers for the [Handsontable](https://github.com/handsontable/handsontable) and [Handsontable Pro](https://github.com/handsontable/handsontable-pro) spreadsheet components.
 
 ## Table of contents
-1. [Installation](#installation)
-2. [Basic usage](#basic-usage)
-3. [Examples](#examples)
-4. [License](#license)
-5. [Contact](#contact)
-6. [Other wrappers](#other-wrappers)
+1. [Installation and basic usage](#installation)
+2. [Examples](#examples)
+3. [License](#license)
+4. [Contact](#contact)
+5. [Other wrappers](#other-wrappers)
 
 ## Installation
 
+Depending on whether you're using [Handsontable](https://github.com/handsontable/handsontable) or [Handsontable Pro](https://github.com/handsontable/handsontable-pro), you'll need to install:
+```
+npm install @handsontable/vue
+```
+or
+```
+npm install @handsontable-pro/vue
+```
+**Important:** The wrapper does not contain `Handsontable`/`Handsontable Pro`, so you'll need to install it separately, using:
+```
+npm install handsontable
+```
+or
+```
+npm install handsontable-pro
+```
+
 For detailed installation instructions, please take a look at our wiki under ["Installation guide"](https://github.com/handsontable/vue-handsontable-official/wiki/Installation-guide).
 
-## Basic usage
-`vue-handsontable-official` creates a `<HotTable>` component. You can use it just like any other Vue component. For example:
-
-```
-<template>
-  <div id="hot-preview">
-    <HotTable :root="root" :settings="hotSettings"></HotTable>
-  </div>
-</template>
-
-<script>
-  import HotTable from 'vue-handsontable-official';
-  import Vue from 'vue';
-
-  export default {
-    data: function() {
-      return {
-        root: 'test-hot',
-        hotSettings: {
-          data: [['sample', 'data']],
-          colHeaders: true
-        }
-      };
-    },
-    components: {
-      HotTable
-    }
-  }
-</script>
-
-<style>
-  #test-hot {
-    width: 600px;
-    height: 400px;
-    overflow: hidden;
-  }
-</style>
-```
-
-Note, that you can pass options to Handsontable either as:
-* individual component properties
-```jsx
-<HotTable root="hot-example" :data="hotData" :rowHeaders="true"/>
-```
-* an object passed to a single `settings` property
-```jsx
-<HotTable root="hot-example" :settings="settingsObject" />
-```
-
-The `root` property declares the `id` of the root element for the table. It is optional - if it isn't provided, the table will get a randomly generated `id`.
-
 ## Examples
-Please see the [/demo](https://github.com/handsontable/vue-handsontable-official/tree/master/demo) directory for a sample app using `vue-handsontable-official`. 
-
-You can check out a live version of this example at [handsontable.github.io/vue-handsontable-official/demo](https://handsontable.github.io/vue-handsontable-official/demo).
+- https://codepen.io/js-ziggle/pen/pLaaVj - A simple `@handsontable/vue` implementation.
 
 ## License
-`vue-handsontable-official` is released under the [MIT license](https://github.com/handsontable/vue-handsontable-official/blob/master/LICENSE).
+`@handsontable/vue` and `@handsontable-pro/vue` are released under the [MIT license](https://github.com/handsontable/vue-handsontable-official/blob/master/LICENSE).
 Copyrights belong to Handsoncode sp. z o.o.
 
 ## Contact
@@ -81,4 +44,5 @@ Handsontable comes with more wrappers and directives for popular frameworks:
 
 - [hot-table](https://github.com/handsontable/hot-table) (Polymer - WebComponents)
 - [ngHandsontable](https://github.com/handsontable/ngHandsontable) (Angular 1)
+- [angular-handsontable](https://github.com/handsontable/angular-handsontable) (Angular)
 - [react-handsontable](https://github.com/handsontable/react-handsontable) (React)

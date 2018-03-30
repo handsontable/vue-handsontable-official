@@ -1,4 +1,4 @@
-import Handsontable from 'handsontable';
+import Handsontable from 'hot-alias';
 
 export default class SettingsMapper {
   constructor() {
