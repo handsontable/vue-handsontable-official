@@ -4,7 +4,6 @@
   "private": true,
   "version": "2.0.0-beta1",
   "author": "Handsoncode",
-  "main": "dist/vue-handsontable-official.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
