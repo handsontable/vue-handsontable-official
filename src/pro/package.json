@@ -2,7 +2,28 @@
   "name": "@handsontable-pro/vue",
   "version": "2.0.0-beta1",
   "description": "A Vue.js Handsontable Pro wrapper component.",
+  "license": "MIT",
   "main": "./vue-handsontable-pro.js",
+  "keywords": [
+    "data",
+    "grid",
+    "table",
+    "editor",
+    "grid-editor",
+    "data-grid",
+    "data-table",
+    "spreadsheet",
+    "excel",
+    "tabular-data",
+    "edit-cell",
+    "editable-table",
+    "data-spreadsheet",
+    "vue",
+    "vue.js",
+    "wrapper",
+    "handsontable",
+    "handsontable-pro"
+  ],
   "peerDependencies": {
     "handsontable-pro": "^1.18.1"
   },
