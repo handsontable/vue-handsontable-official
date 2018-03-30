@@ -23,7 +23,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Version: 2.0.0-beta1 (built at 2018-03-29 14:09:25)
+ * Version: 2.0.0-beta1 (built at Fri Mar 30 2018 09:21:47 GMT+0200 (CEST))
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')

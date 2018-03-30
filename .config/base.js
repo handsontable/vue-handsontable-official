@@ -7,7 +7,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 
 let licenseBody = fs.readFileSync(path.resolve(__dirname, '../LICENSE'), 'utf8');
-licenseBody += '\nVersion: ' + packageBody.version + ' (built at ' + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ')';
+licenseBody += '\nVersion: ' + packageBody.version + ' (built at ' + new Date().toString() + ')';
 
 module.exports.create = function create(hotType) {
   return {
