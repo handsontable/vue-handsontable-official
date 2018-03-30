@@ -5,12 +5,8 @@
   "skip_git_push": true,
   "release_message": true,
   "remote": "origin",
-  "pre_commit_commands": [
-    "npm run make-docs"
-  ],
+  "pre_commit_commands": [],
   "post_commit_commands": [],
   "post_complete_commands": [],
-  "files_to_commit": [
-    "./docs/*"
-  ]
+  "files_to_commit": []
 }
