@@ -1,10 +1,31 @@
 {
   "name": "@handsontable/vue",
-  "version": "2.0.0-beta1",
-  "description": "A Vue.js Handsontable wrapper component.",
+  "version": "2.0.0",
+  "description": "Best Data Grid for Vue with Spreadsheet Look and Feel.",
+  "author": "Handsoncode <hello@handsoncode.net> (https://handsoncode.net)",
+  "homepage": "https://handsontable.com",
+  "license": "MIT",
   "main": "./vue-handsontable-ce.js",
+  "keywords": [
+    "handsontable",
+    "component",
+    "data",
+    "table",
+    "grid",
+    "data table",
+    "data grid",
+    "spreadsheet",
+    "sheet",
+    "excel",
+    "vue",
+    "vue.js",
+    "vuejs",
+    "vue2",
+    "vue component",
+    "vue grid",
+    "wrapper"
+  ],
   "peerDependencies": {
-    "handsontable": "^0.38.1"
-  },
-  "author": "Handsoncode"
+    "handsontable": "^4.0.0"
+  }
 }
