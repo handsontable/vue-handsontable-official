@@ -29,9 +29,8 @@
     "babel-preset-env": "^1.6.1",
     "cp": "^0.2.0",
     "css-loader": "^0.28.11",
-    "cssstyle": "git://github.com/jansiegel/CSSStyleDeclaration.git",
+    "cssstyle": "jansiegel/CSSStyleDeclaration",
     "del-cli": "^1.1.0",
-    "generate-release": "^0.11.0",
     "handsontable": "^4.0.0",
     "jest": "^19.0.2",
     "uglifyjs-webpack-plugin": "^1.2.4",
@@ -50,8 +49,7 @@
     "publish-scopes": "npm publish ./dist/ce/ && npm publish ./dist/pro/",
     "publish-all": "npm run copy-scopes && npm run publish-scopes && npm run delete-scopes",
     "_pre-testing": "npm run build-tests && node ./node_modules/cssstyle/scripts/generate_properties.js",
-    "test": "npm run _pre-testing && jest",
-    "release": "generate-release"
+    "test": "npm run _pre-testing && jest"
   },
   "jest": {
     "globals": {
