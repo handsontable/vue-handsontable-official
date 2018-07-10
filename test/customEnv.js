@@ -13,9 +13,12 @@ class CustomEnvironment extends JSDOMEnvironment {
   async setup() {
     await super.setup();
 
-    Number.prototype.toLowerCase = function() {};
-    Number.prototype.split = function() {
-      return [];
+    Number.prototype.toLowerCase = function() {
+      return this + 'px';
+    };
+
+    Number.prototype.split = function(separator) {
+      return this.toLowerCase().split(separator);
     };
   }
 

@@ -50,12 +50,6 @@
     "test": "npm run build-tests && jest"
   },
   "jest": {
-    "globals": {
-      "__HOT_BUILD_DATE__": "",
-      "__HOT_PACKAGE_NAME__": "",
-      "__HOT_VERSION__": "",
-      "__HOT_BASE_VERSION__": ""
-    },
     "testEnvironment": "./test/customEnv"
   }
 }
