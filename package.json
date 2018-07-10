@@ -29,10 +29,9 @@
     "babel-preset-env": "^1.6.1",
     "cp": "^0.2.0",
     "css-loader": "^0.28.11",
-    "cssstyle": "jansiegel/CSSStyleDeclaration",
     "del-cli": "^1.1.0",
     "handsontable": "^4.0.0",
-    "jest": "^19.0.2",
+    "jest": "^23.3.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "vue-loader": "^14.1.1",
     "vue-style-loader": "^4.0.2",
@@ -48,15 +47,9 @@
     "delete-scopes": "del ./dist/ce/package.json && del ./dist/ce/README.md && del ./dist/pro/package.json && del ./dist/pro/README.md",
     "publish-scopes": "npm publish ./dist/ce/ && npm publish ./dist/pro/",
     "publish-all": "npm run copy-scopes && npm run publish-scopes && npm run delete-scopes",
-    "_pre-testing": "npm run build-tests && node ./node_modules/cssstyle/scripts/generate_properties.js",
-    "test": "npm run _pre-testing && jest"
+    "test": "npm run build-tests && jest"
   },
   "jest": {
-    "globals": {
-      "__HOT_BUILD_DATE__": "",
-      "__HOT_PACKAGE_NAME__": "",
-      "__HOT_VERSION__": "",
-      "__HOT_BASE_VERSION__": ""
-    }
+    "testEnvironment": "./test/customEnv"
   }
 }
