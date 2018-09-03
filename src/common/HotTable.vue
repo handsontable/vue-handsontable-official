@@ -2,7 +2,7 @@
   <div :id="this.root"></div>
 </template>
 
-<script>
+<script lang="ts">
   import Handsontable from 'hot-alias';
   import {
     hotInit,
@@ -10,16 +10,31 @@
     propFactory,
     propWatchFactory,
     updateHotSettings,
-    updateBulkHotSettings
-  } from '../common/helpers';
+    updateBulkHotSettings,
+    PropSchema
+  } from './helpers';
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
 
-  export default {
-    name: 'HotTable',
-    props: propFactory.call(this, Handsontable),
-    watch: propWatchFactory.call(this, updateHotSettings, updateBulkHotSettings),
-    mounted: function() { return hotInit.call(this, Handsontable); },
-    beforeDestroy: function() { return hotDestroy.call(this); },
-  };
+  @Component({
+    props: propFactory(),
+    name: 'HotTable'
+  })
+  export default class HotTable extends Vue {
+    watch(): object {
+      return propWatchFactory(updateHotSettings, updateBulkHotSettings);
+    }
+
+    mounted(): void {
+      return hotInit.call(this, Handsontable);
+    };
+
+    beforeDestroy(): void {
+      return hotDestroy.call(this);
+    };
+  }
+
+  export { HotTable };
 </script>
 
 <style>

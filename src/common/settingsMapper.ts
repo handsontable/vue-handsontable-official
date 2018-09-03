@@ -1,6 +1,8 @@
 import Handsontable from 'hot-alias';
 
 export default class SettingsMapper {
+  registeredHooks: string[];
+
   constructor() {
     this.registeredHooks = Handsontable.hooks.getRegistered();
   }
@@ -11,7 +13,7 @@ export default class SettingsMapper {
    * @param {String} property The name of the property, starting with `on`.
    * @returns {String} The proper property name, with the `on` part trimmed.
    */
-  prepareProp(property) {
+  prepareProp(property: string): string {
     return this.trimHookPrefix(property);
   }
 
@@ -22,7 +24,7 @@ export default class SettingsMapper {
    * @param {Object} additionalSettings An additional object containing the properties, including the `on`-prefixed hook names.
    * @returns {Object} An object containing the properties, with the `on`-prefixes trimmed.
    */
-  prepare(settings, additionalSettings) {
+  prepare(settings: object, additionalSettings: object): Handsontable.DefaultSettings {
     const newSettings = {};
 
     for (const key in settings) {
@@ -46,7 +48,7 @@ export default class SettingsMapper {
    * @param {String} prop Handsontable plugin hook name.
    * @returns {String}
    */
-  addHookPrefix(prop) {
+  addHookPrefix(prop: string): string {
     if (this.registeredHooks.indexOf(prop) > -1) {
       return 'on' + prop.charAt(0).toUpperCase() + prop.slice(1, prop.length);
     }
@@ -60,7 +62,7 @@ export default class SettingsMapper {
    * @param {String} prop Settings property.
    * @returns {String} Handsontable-compatible, prefix-less property name.
    */
-  trimHookPrefix(prop) {
+  trimHookPrefix(prop: string): string {
     if (prop.indexOf('on') === 0) {
       let hookName = prop.charAt(2).toLowerCase() + prop.slice(3, prop.length);
       if (this.registeredHooks.indexOf(hookName) > -1) {
