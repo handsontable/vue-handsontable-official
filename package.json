@@ -24,13 +24,18 @@
     "wrapper"
   ],
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
     "cpy-cli": "^2.0.0",
     "cross-env": "^5.2.0",
     "css-loader": "^0.28.11",
     "del-cli": "^1.1.0",
     "handsontable": "^5.0.1",
     "handsontable-pro": "^5.0.1",
-    "jest": "^23.3.0",
+    "jest": "^23.5.0",
     "rollup": "^0.65.0",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.1.6",
@@ -39,6 +44,7 @@
     "rollup-plugin-typescript2": "^0.16.1",
     "rollup-plugin-uglify": "^4.0.0",
     "rollup-plugin-vue": "^4.3.2",
+    "ts-jest": "^23.1.4",
     "typescript": "^3.0.1",
     "vue-class-component": "^6.2.0",
     "vue-template-compiler": "^2.5.17"
@@ -71,7 +77,30 @@
     "test": "jest"
   },
   "jest": {
-    "testEnvironment": "./test/customEnv"
+    "testURL": "http://localhost/",
+    "setupFiles": [
+      "./test/jestsetup.ts"
+    ],
+    "transform": {
+      "^.+\\.ts?$": "ts-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "testRegex": "(/test/(.*).(test|spec)).(js?|ts?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "moduleNameMapper": {
+      "hot-alias": "<rootDir>/node_modules/handsontable"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "test-tsconfig.json",
+        "useBabelrc": true
+      }
+    }
   },
   "dependencies": {
     "vue": "^2.5.17"

@@ -74,9 +74,7 @@ export function propFactory() {
   const propSchema = new hotTemp.DefaultSettings();
 
   for (let prop in propSchema) {
-    if (propSchema.hasOwnProperty(prop)) {
       propSchema[prop] = {};
-    }
   }
 
   for (let i = 0; i < registeredHooks.length; i++) {
@@ -99,41 +97,6 @@ export function propFactory() {
   }
 
   return propSchema;
-
-
-  // const settingsMapper: SettingsMapper = new SettingsMapper();
-  // const registeredHooks: string[] = Handsontable.hooks.getRegistered();
-  //
-  // //TODO: workaround for `DefaultSettings` being an interface and not a class in `handsontable.ts`
-  // const hotTemp: any = Handsontable;
-  // const propSchema: PropSchema = new hotTemp.DefaultSettings();
-  //
-  // for (let prop in propSchema) {
-  //   if (propSchema.hasOwnProperty(prop)) {
-  //     propSchema[prop] = {};
-  //   }
-  // }
-  //
-  // for (let i = 0; i < registeredHooks.length; i++) {
-  //   propSchema[settingsMapper.addHookPrefix(registeredHooks[i])] = {
-  //     type: Function
-  //   };
-  // }
-  //
-  // propSchema.root = {
-  //   type: String,
-  //   default: 'hot-' + new Date().getTime()
-  // };
-  //
-  // propSchema.settings = {
-  //   type: Object as () => Handsontable.DefaultSettings
-  // };
-  //
-  // if (this) {
-  //   propSchema.hotInstance = this.table;
-  // }
-  //
-  // return propSchema;
 }
 
 /**

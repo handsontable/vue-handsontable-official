@@ -1,4 +1,4 @@
-import SettingsMapper from './dist/settingsMapper';
+import SettingsMapper from './../src/common/settingsMapper';
 
 describe('Settings Mapper', () => {
   describe('prepareProp', () => {

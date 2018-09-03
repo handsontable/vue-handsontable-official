@@ -6,7 +6,7 @@ import {
   propWatchFactory,
   updateHotSettings,
   updateBulkHotSettings
-} from './dist/helpers';
+} from './../src/common/helpers';
 
 describe('rewriteSettings', () => {
   it('should rewrite the settings element passed to the watchers to be a clean object prepared to use withing Handsontable config, when the input element is an object', () => {
@@ -30,13 +30,6 @@ describe('rewriteSettings', () => {
     expect(cleanObject.sampleProperty).toEqual(void 0);
     expect(cleanObject.testedProperty).toEqual(null);
     expect(Object.prototype.toString.call(cleanObject)).toEqual('[object Object]');
-  });
-
-  it('should rewrite the settings element passed to the watchers to be a clean array prepared to use withing Handsontable config, when the input element is an array', () => {
-    const fakeWatcher = [];
-    let cleanArray = rewriteSettings(fakeWatcher);
-
-    expect(Object.prototype.toString.call(cleanArray)).toEqual('[object Array]');
   });
 });
 
@@ -184,3 +177,4 @@ describe('updateBulkHotSettings', () => {
     container.parentNode.removeChild(container);
   });
 });
+
