@@ -4,6 +4,7 @@
   "version": "2.0.0",
   "description": "Best Data Grid for Vue with Spreadsheet Look and Feel.",
   "author": "Handsoncode <hello@handsoncode.net> (https://handsoncode.net)",
+  "homepage": "https://handsontable.com",
   "keywords": [
     "handsontable",
     "component",
@@ -69,8 +70,8 @@
     "copy-builds-pro": "cpy './commonjs/pro/' ./build/pro/commonjs && cpy './es/pro/*.js' ./build/pro/es && cpy './dist/pro/' ./build/pro/dist",
     "copy-builds": "npm run copy-builds-ce && npm run copy-builds-pro",
     "copy-scope-info": "cpy './src/ce/*' ./build/ce && cpy './src/pro/*' ./build/pro",
-    "copy-scopes": "npm run delete-scopes && npm run copy-builds && npm run copy-scope-info",
     "copy-dts": "cpy './es/ce/*.d.ts' ./build/ce && cpy './es/pro/*.d.ts' ./build/pro && del-cli './es/ce/*.d.ts' && del-cli './es/pro/*.d.ts'",
+    "copy-scopes": "npm run delete-scopes && npm run copy-builds && npm run copy-scope-info && npm run copy-dts",
     "delete-scopes": "del-cli ./build/",
     "publish-scopes": "npm publish ./build/ce/ && npm publish ./build/pro/",
     "publish-all": "npm run build && npm run copy-scopes && npm run publish-scopes && npm run delete-scopes",

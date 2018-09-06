@@ -1,4 +1,5 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
+import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
 import VuePlugin from 'rollup-plugin-vue';
 import typescript from 'rollup-plugin-typescript2';
@@ -10,6 +11,7 @@ export const baseConfig = {
   plugins: [
     replace({
       'hot-alias': envHotType === 'pro' ? 'handsontable-pro' : 'handsontable',
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     VuePlugin({
       defaultLang: {
@@ -20,12 +22,14 @@ export const baseConfig = {
       }
     }),
     typescript(),
-    nodeResolve(),
+    babel({
+      exclude: 'node_modules/**',
+    }),
+    nodeResolve()
   ],
   external: [
     (envHotType === 'ce' ? 'handsontable' : 'handsontable-pro'),
     'vue',
-    'vue-class-component',
     'handsontable',
     'handsontable-pro'
   ]
