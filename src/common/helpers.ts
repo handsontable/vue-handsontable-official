@@ -3,7 +3,7 @@ import SettingsMapper from './settingsMapper';
 import { PropOptions } from 'vue';
 
 export interface PropSchema extends Handsontable.DefaultSettings {
-  root?: PropOptions,
+  id?: PropOptions,
   settings?: PropOptions,
   hotInstance: Handsontable
 }
@@ -83,9 +83,9 @@ export function propFactory() {
     };
   }
 
-  propSchema.root = {
+  propSchema.id = {
     type: String,
-    default: 'hot-' + new Date().getTime()
+    default: 'hot-' + Math.random().toString(36).substring(5)
   };
 
   propSchema.settings = {

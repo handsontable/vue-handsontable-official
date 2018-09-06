@@ -1,5 +1,5 @@
 <template>
-  <div :id="this.root"></div>
+  <div :id="id"></div>
 </template>
 
 <script lang="ts">
