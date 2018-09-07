@@ -10,20 +10,18 @@
     propFactory,
     propWatchFactory,
     updateHotSettings,
-    updateBulkHotSettings,
     PropSchema
   } from './helpers';
   import Vue from 'vue';
   import Component from 'vue-class-component';
 
   @Component({
+    watch: propWatchFactory(updateHotSettings),
     props: propFactory(),
     name: 'HotTable'
   })
   export default class HotTable extends Vue {
-    watch(): object {
-      return propWatchFactory(updateHotSettings, updateBulkHotSettings);
-    }
+    __internalEdit: boolean = false;
 
     mounted(): void {
       return hotInit.call(this, Handsontable);

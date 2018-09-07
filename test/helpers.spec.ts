@@ -4,8 +4,7 @@ import {
   hotDestroy,
   propFactory,
   propWatchFactory,
-  updateHotSettings,
-  updateBulkHotSettings
+  updateHotSettings
 } from './../src/common/helpers';
 
 describe('rewriteSettings', () => {
@@ -95,8 +94,7 @@ describe('propFactory', () => {
 describe('propWatchFactory', () => {
   it('should generate and object containing all the available Handsontable properties and hooks tied to the Handsontable updating function', () => {
     const bulkUpdateFunction = () => {};
-    const func2 = () => {};
-    const props = propWatchFactory(bulkUpdateFunction, func2);
+    const props = propWatchFactory(bulkUpdateFunction);
 
     expect(typeof props.startRows).toEqual('object');
     expect(typeof props.startRows.handler).toEqual('function');
@@ -119,9 +117,6 @@ describe('propWatchFactory', () => {
     expect(typeof props.onBeforeInit).toEqual('object');
     expect(typeof props.onBeforeInit.handler).toEqual('function');
     expect(props.onBeforeInit.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
-    expect(typeof props.settings).toEqual('object');
-    expect(typeof props.settings.handler).toEqual('function');
-    expect(props.settings.handler.toString().indexOf('bulkUpdateFunction') > -1).toBe(true);
     expect(typeof props.randomProp).toEqual('undefined');
   });
 });
@@ -147,34 +142,3 @@ describe('updateHotSettings', () => {
     container.parentNode.removeChild(container);
   });
 });
-
-describe('updateBulkHotSettings', () => {
-  it('should update the previously initialized Handsontable instance with a bulk `settings` property containing individual options', () => {
-    const container = document.createElement('DIV');
-    container.id = 'hotContainer';
-    document.body.appendChild(container);
-
-    const fakeVueComponent = {
-      $el: document.getElementById('hotContainer')
-    };
-
-    expect(typeof fakeVueComponent.table).toEqual('undefined');
-
-    hotInit.call(fakeVueComponent);
-
-    updateBulkHotSettings.call(fakeVueComponent, 'settings', {
-      startCols: 20,
-      maxRows: 50,
-      data: [['test']],
-      contextMenu: true
-    }, {});
-
-    expect(fakeVueComponent.table.getSettings().startCols).toEqual(20);
-    expect(fakeVueComponent.table.getSettings().maxRows).toEqual(50);
-    expect(JSON.stringify(fakeVueComponent.table.getData())).toEqual('[["test"]]');
-    expect(fakeVueComponent.table.getSettings().contextMenu).toEqual(true);
-
-    container.parentNode.removeChild(container);
-  });
-});
-

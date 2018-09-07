@@ -14,16 +14,20 @@ export interface PropSchema extends Handsontable.DefaultSettings {
  * @param {*} observerSettings Watcher object containing the changed data.
  * @returns {Object|Array}
  */
-export function rewriteSettings(observerSettings): Handsontable.DefaultSettings {
-  let settings: Handsontable.DefaultSettings = null;
-  let isObserverObjectLike: boolean = false;
+export function rewriteSettings(observerSettings): any[]|object {
+  let settings: any[]|object|null = null;
+  let type: {array?: boolean, object?: boolean } = {};
 
-  if (typeof observerSettings === 'object' || Object.prototype.toString.call(observerSettings).indexOf('Array') > -1) {
+  if (Object.prototype.toString.call(observerSettings).indexOf('Array') > -1) {
+    settings = [];
+    type.array = true;
+
+  } else if (typeof observerSettings === 'object') {
     settings = {};
-    isObserverObjectLike = true;
+    type.object = true;
   }
 
-  if (isObserverObjectLike) {
+  if (type.array || type.object) {
     for (const p in observerSettings) {
       if (observerSettings.hasOwnProperty(p)) {
         settings[p] = observerSettings[p];
@@ -51,6 +55,14 @@ export function hotInit(): void {
   }
 
   this.table = new Handsontable(this.$el, settingsMapper.prepare(unmappedSettings[0], unmappedSettings[1]));
+
+  preventInternalEditWatch(this);
+}
+
+function preventInternalEditWatch(component) {
+  component.table.addHook('beforeChange', () => {
+    component.__internalEdit = true;
+  });
 }
 
 /**
@@ -103,23 +115,21 @@ export function propFactory() {
  * Generate and object containing all the available Handsontable properties and hooks tied to the Handsontable updating function.
  *
  * @param {Function} updateFunction Function used to update a single changed property.
- * @param {Function} bulkUpdateFunction Function used to update the whole `settings` object.
  * @returns {Object}
  */
-export function propWatchFactory(updateFunction: Function, bulkUpdateFunction: Function): object {
+export function propWatchFactory(updateFunction: Function) {
   const props: object = propFactory();
-  const watchList: object = {};
+  const watchList = {};
 
   for (const prop in props) {
     if (props.hasOwnProperty(prop)) {
-      if (prop === 'settings') {
+      if (prop !== 'settings') {
         watchList[prop] = {
-          handler: function(...args) { return bulkUpdateFunction.call(this, prop, ...args); },
+          handler: function(...args) { return updateFunction.call(this, prop, ...args); },
           deep: true
         };
 
-      } else {
-        watchList[prop] = {
+        watchList[`settings.${prop}`] = {
           handler: function(...args) { return updateFunction.call(this, prop, ...args); },
           deep: true
         };
@@ -142,17 +152,11 @@ export function propWatchFactory(updateFunction: Function, bulkUpdateFunction: F
 export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object) {
   const newSettings = {};
 
+  if (updatedProperty === 'data' && this.__internalEdit === true) {
+    this.__internalEdit = false;
+    return;
+  }
+
   newSettings[updatedProperty] = rewriteSettings(updatedValue);
   this.table.updateSettings(newSettings);
-}
-
-/**
- * Update the Handsontable instance with a whole changed `settings` property.
- *
- * @param {String} updatedProperty Updated property name.
- * @param {Object} updatedValue Watcher-generated updated value object.
- * @param {Object} oldValue Watcher-generated old value object.
- */
-export function updateBulkHotSettings(updatedProperty: string, updatedValue: object, oldValue: object) {
-  this.table.updateSettings(rewriteSettings(updatedValue));
 }
