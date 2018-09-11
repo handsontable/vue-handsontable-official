@@ -47,7 +47,6 @@
     "rollup-plugin-vue": "^4.3.2",
     "ts-jest": "^23.1.4",
     "typescript": "^3.0.1",
-    "vue-class-component": "^6.2.0",
     "vue-template-compiler": "^2.5.17"
   },
   "scripts": {

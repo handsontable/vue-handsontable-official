@@ -1,12 +1,12 @@
-import Handsontable, {DefaultSettings} from 'hot-alias';
+import Handsontable from 'hot-alias';
 import SettingsMapper from './settingsMapper';
-import { PropOptions } from 'vue';
 
-export interface PropSchema extends Handsontable.DefaultSettings {
-  id?: PropOptions,
-  settings?: PropOptions,
-  hotInstance: Handsontable
+export interface HotTableProps extends Handsontable.DefaultSettings {
+  id?: string,
+  settings?: Handsontable.DefaultSettings
 }
+
+type Props<T> = { [P in keyof T]: any };
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -14,9 +14,9 @@ export interface PropSchema extends Handsontable.DefaultSettings {
  * @param {*} observerSettings Watcher object containing the changed data.
  * @returns {Object|Array}
  */
-export function rewriteSettings(observerSettings): any[]|object {
-  let settings: any[]|object|null = null;
-  let type: {array?: boolean, object?: boolean } = {};
+export function rewriteSettings(observerSettings): any[] | object {
+  let settings: any[] | object | null = null;
+  let type: { array?: boolean, object?: boolean } = {};
 
   if (Object.prototype.toString.call(observerSettings).indexOf('Array') > -1) {
     settings = [];
@@ -46,7 +46,7 @@ export function rewriteSettings(observerSettings): any[]|object {
  */
 export function hotInit(): void {
   const settingsMapper: SettingsMapper = new SettingsMapper();
-  const unmappedSettings: PropSchema[] = [
+  const unmappedSettings: any[] = [
     this.settings ? this.settings : this._props,
   ];
 
@@ -54,13 +54,13 @@ export function hotInit(): void {
     unmappedSettings.push(this._props)
   }
 
-  this.table = new Handsontable(this.$el, settingsMapper.prepare(unmappedSettings[0], unmappedSettings[1]));
+  this.hotInstance = new Handsontable(this.$el, settingsMapper.prepare(unmappedSettings[0], unmappedSettings[1]));
 
   preventInternalEditWatch(this);
 }
 
 function preventInternalEditWatch(component) {
-  component.table.addHook('beforeChange', () => {
+  component.hotInstance.addHook('beforeChange', () => {
     component.__internalEdit = true;
   });
 }
@@ -69,7 +69,7 @@ function preventInternalEditWatch(component) {
  * Destroy the Handsontable instance.
  */
 export function hotDestroy(): void {
-  this.table.destroy();
+  this.hotInstance.destroy();
 }
 
 /**
@@ -77,16 +77,16 @@ export function hotDestroy(): void {
  *
  * @returns {Object}
  */
-export function propFactory() {
+export function propFactory(): Props<HotTableProps> {
   const settingsMapper: SettingsMapper = new SettingsMapper();
   const registeredHooks: string[] = Handsontable.hooks.getRegistered();
 
   //TODO: workaround for `DefaultSettings` being an interface and not a class in `handsontable.ts`
   const hotTemp: any = Handsontable;
-  const propSchema = new hotTemp.DefaultSettings();
+  const propSchema: Props<HotTableProps> = new hotTemp.DefaultSettings();
 
   for (let prop in propSchema) {
-      propSchema[prop] = {};
+    propSchema[prop] = {};
   }
 
   for (let i = 0; i < registeredHooks.length; i++) {
@@ -103,10 +103,6 @@ export function propFactory() {
   propSchema.settings = {
     type: Object as () => Handsontable.DefaultSettings
   };
-
-  if (this) {
-    propSchema.hotInstance = this.table;
-  }
 
   return propSchema;
 }
@@ -125,12 +121,16 @@ export function propWatchFactory(updateFunction: Function) {
     if (props.hasOwnProperty(prop)) {
       if (prop !== 'settings') {
         watchList[prop] = {
-          handler: function(...args) { return updateFunction.call(this, prop, ...args); },
+          handler: function (...args) {
+            return updateFunction.call(this, prop, ...args);
+          },
           deep: true
         };
 
         watchList[`settings.${prop}`] = {
-          handler: function(...args) { return updateFunction.call(this, prop, ...args); },
+          handler: function (...args) {
+            return updateFunction.call(this, prop, ...args);
+          },
           deep: true
         };
       }
@@ -158,5 +158,5 @@ export function updateHotSettings(updatedProperty: string, updatedValue: object,
   }
 
   newSettings[updatedProperty] = rewriteSettings(updatedValue);
-  this.table.updateSettings(newSettings);
+  this.hotInstance.updateSettings(newSettings);
 }

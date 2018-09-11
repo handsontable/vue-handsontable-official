@@ -10,29 +10,25 @@
     propFactory,
     propWatchFactory,
     updateHotSettings,
-    PropSchema
+    HotTableProps
   } from './helpers';
   import Vue from 'vue';
-  import Component from 'vue-class-component';
+  import {ThisTypedComponentOptionsWithRecordProps} from 'vue/types/options';
 
-  @Component({
-    watch: propWatchFactory(updateHotSettings),
+  const HotTable: ThisTypedComponentOptionsWithRecordProps<Vue, {}, {}, {}, HotTableProps> = {
+    name: 'HotTable',
     props: propFactory(),
-    name: 'HotTable'
-  })
-  export default class HotTable extends Vue {
-    __internalEdit: boolean = false;
-
-    mounted(): void {
+    watch: propWatchFactory(updateHotSettings),
+    mounted: function () {
       return hotInit.call(this, Handsontable);
-    };
-
-    beforeDestroy(): void {
+    },
+    beforeDestroy: function () {
       return hotDestroy.call(this);
-    };
-  }
+    }
+  };
 
-  export { HotTable };
+  export default HotTable;
+  export {HotTable};
 </script>
 
 <style>

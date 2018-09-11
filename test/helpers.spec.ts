@@ -42,12 +42,12 @@ describe('hotInit', () => {
       $el: document.getElementById('hotContainer')
     };
 
-    expect(typeof fakeVueComponent.table).toEqual('undefined');
+    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
 
     hotInit.call(fakeVueComponent);
 
-    expect(typeof fakeVueComponent.table).toEqual('object');
-    expect(typeof fakeVueComponent.table.guid).toEqual('string');
+    expect(typeof fakeVueComponent.hotInstance).toEqual('object');
+    expect(typeof fakeVueComponent.hotInstance.guid).toEqual('string');
 
     container.parentNode.removeChild(container);
   });
@@ -63,14 +63,14 @@ describe('hotDestroy', () => {
       $el: document.getElementById('hotContainer')
     };
 
-    expect(typeof fakeVueComponent.table).toEqual('undefined');
+    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
 
     hotInit.call(fakeVueComponent);
     hotDestroy.call(fakeVueComponent);
 
-    expect(typeof fakeVueComponent.table).toEqual('object');
-    expect(fakeVueComponent.table.rootElement).toEqual(null);
-    expect(fakeVueComponent.table.table).toEqual(null);
+    expect(typeof fakeVueComponent.hotInstance).toEqual('object');
+    expect(fakeVueComponent.hotInstance.rootElement).toEqual(null);
+    expect(fakeVueComponent.hotInstance.table).toEqual(null);
 
     container.parentNode.removeChild(container);
   });
@@ -131,13 +131,13 @@ describe('updateHotSettings', () => {
       $el: document.getElementById('hotContainer')
     };
 
-    expect(typeof fakeVueComponent.table).toEqual('undefined');
+    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
 
     hotInit.call(fakeVueComponent);
 
     updateHotSettings.call(fakeVueComponent, 'startCols', 19, {});
 
-    expect(fakeVueComponent.table.getSettings().startCols).toEqual(19);
+    expect(fakeVueComponent.hotInstance.getSettings().startCols).toEqual(19);
 
     container.parentNode.removeChild(container);
   });
