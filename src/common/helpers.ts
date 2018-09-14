@@ -1,12 +1,5 @@
 import Handsontable from 'hot-alias';
-import SettingsMapper from './settingsMapper';
-
-export interface HotTableProps extends Handsontable.DefaultSettings {
-  id?: string,
-  settings?: Handsontable.DefaultSettings
-}
-
-type Props<T> = { [P in keyof T]: any };
+import {HotTableProps, VueProps} from './types';
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -45,7 +38,6 @@ export function rewriteSettings(observerSettings): any[] | object {
  * Initialize Handsontable.
  */
 export function hotInit(): void {
-  const settingsMapper: SettingsMapper = new SettingsMapper();
   const unmappedSettings: any[] = [
     this.settings ? this.settings : this._props,
   ];
@@ -54,11 +46,15 @@ export function hotInit(): void {
     unmappedSettings.push(this._props)
   }
 
-  this.hotInstance = new Handsontable(this.$el, settingsMapper.prepare(unmappedSettings[0], unmappedSettings[1]));
+  this.hotInstance = new Handsontable(this.$el, prepareSettings(unmappedSettings[0], unmappedSettings[1]));
 
   preventInternalEditWatch(this);
 }
 
+/**
+ * Private method to ensure the table is not calling `updateSettings` after editing cells.
+ * @private
+ */
 function preventInternalEditWatch(component) {
   component.hotInstance.addHook('beforeChange', () => {
     component.__internalEdit = true;
@@ -66,31 +62,23 @@ function preventInternalEditWatch(component) {
 }
 
 /**
- * Destroy the Handsontable instance.
- */
-export function hotDestroy(): void {
-  this.hotInstance.destroy();
-}
-
-/**
  * Generate an object containing all the available Handsontable properties and plugin hooks (with the `on`-prefixes added).
  *
  * @returns {Object}
  */
-export function propFactory(): Props<HotTableProps> {
-  const settingsMapper: SettingsMapper = new SettingsMapper();
+export function propFactory(): VueProps<HotTableProps> {
   const registeredHooks: string[] = Handsontable.hooks.getRegistered();
 
   //TODO: workaround for `DefaultSettings` being an interface and not a class in `handsontable.ts`
   const hotTemp: any = Handsontable;
-  const propSchema: Props<HotTableProps> = new hotTemp.DefaultSettings();
+  const propSchema: VueProps<HotTableProps> = new hotTemp.DefaultSettings();
 
   for (let prop in propSchema) {
     propSchema[prop] = {};
   }
 
   for (let i = 0; i < registeredHooks.length; i++) {
-    propSchema[settingsMapper.addHookPrefix(registeredHooks[i])] = {
+    propSchema[registeredHooks[i]] = {
       type: Function
     };
   }
@@ -159,4 +147,29 @@ export function updateHotSettings(updatedProperty: string, updatedValue: object,
 
   newSettings[updatedProperty] = rewriteSettings(updatedValue);
   this.hotInstance.updateSettings(newSettings);
+}
+
+/**
+ * Prepare the settings object containing the `on`-properties to be used in the Handsontable configuration.
+ *
+ * @param {Object} settings An object containing the properties, including the `on`-prefixed hook names.
+ * @param {Object} [additionalSettings] An additional object containing the properties, including the `on`-prefixed hook names.
+ * @returns {Object} An object containing the properties, with the `on`-prefixes trimmed.
+ */
+export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.DefaultSettings {
+  const newSettings = {};
+
+  for (const key in settings) {
+    if (settings.hasOwnProperty(key) && settings[key] !== void 0) {
+      newSettings[key] = settings[key];
+    }
+  }
+
+  for (const key in additionalSettings) {
+    if (additionalSettings.hasOwnProperty(key) && additionalSettings[key] !== void 0) {
+      newSettings[key] = additionalSettings[key];
+    }
+  }
+
+  return newSettings;
 }

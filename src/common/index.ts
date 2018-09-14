@@ -1,3 +1,3 @@
 export * from './HotTable.vue';
-export * from './settingsMapper';
 export * from './helpers';
+export {default} from './HotTable.vue';

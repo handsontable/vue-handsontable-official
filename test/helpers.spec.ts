@@ -1,7 +1,7 @@
 import {
   rewriteSettings,
   hotInit,
-  hotDestroy,
+  prepareSettings,
   propFactory,
   propWatchFactory,
   updateHotSettings
@@ -53,40 +53,17 @@ describe('hotInit', () => {
   });
 });
 
-describe('hotDestroy', () => {
-  it('should destroy the already existing Handsontable instance from the `table` property in the vue component object', () => {
-    const container = document.createElement('DIV');
-    container.id = 'hotContainer';
-    document.body.appendChild(container);
-
-    const fakeVueComponent = {
-      $el: document.getElementById('hotContainer')
-    };
-
-    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
-
-    hotInit.call(fakeVueComponent);
-    hotDestroy.call(fakeVueComponent);
-
-    expect(typeof fakeVueComponent.hotInstance).toEqual('object');
-    expect(fakeVueComponent.hotInstance.rootElement).toEqual(null);
-    expect(fakeVueComponent.hotInstance.table).toEqual(null);
-
-    container.parentNode.removeChild(container);
-  });
-});
-
 describe('propFactory', () => {
-  it('should generate an object containing all the available Handsontable properties and plugin hooks (with the `on`-prefixes added)', () => {
+  it('should generate an object containing all the available Handsontable properties and plugin hooks', () => {
     const props = propFactory();
 
     expect(typeof props.startRows).toEqual('object');
     expect(typeof props.startCols).toEqual('object');
     expect(typeof props.data).toEqual('object');
     expect(typeof props.fixedRowsTop).toEqual('object');
-    expect(typeof props.onAfterCreateRow).toEqual('object');
-    expect(typeof props.onAfterGetCellMeta).toEqual('object');
-    expect(typeof props.onBeforeInit).toEqual('object');
+    expect(typeof props.afterCreateRow).toEqual('object');
+    expect(typeof props.afterGetCellMeta).toEqual('object');
+    expect(typeof props.beforeInit).toEqual('object');
     expect(typeof props.randomProp).toEqual('undefined');
   });
 });
@@ -108,15 +85,15 @@ describe('propWatchFactory', () => {
     expect(typeof props.fixedRowsTop).toEqual('object');
     expect(typeof props.fixedRowsTop.handler).toEqual('function');
     expect(props.fixedRowsTop.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
-    expect(typeof props.onAfterCreateRow).toEqual('object');
-    expect(typeof props.onAfterCreateRow.handler).toEqual('function');
-    expect(props.onAfterCreateRow.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
-    expect(typeof props.onAfterGetCellMeta).toEqual('object');
-    expect(typeof props.onAfterGetCellMeta.handler).toEqual('function');
-    expect(props.onAfterGetCellMeta.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
-    expect(typeof props.onBeforeInit).toEqual('object');
-    expect(typeof props.onBeforeInit.handler).toEqual('function');
-    expect(props.onBeforeInit.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.afterCreateRow).toEqual('object');
+    expect(typeof props.afterCreateRow.handler).toEqual('function');
+    expect(props.afterCreateRow.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.afterGetCellMeta).toEqual('object');
+    expect(typeof props.afterGetCellMeta.handler).toEqual('function');
+    expect(props.afterGetCellMeta.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.beforeInit).toEqual('object');
+    expect(typeof props.beforeInit.handler).toEqual('function');
+    expect(props.beforeInit.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
     expect(typeof props.randomProp).toEqual('undefined');
   });
 });
@@ -140,5 +117,87 @@ describe('updateHotSettings', () => {
     expect(fakeVueComponent.hotInstance.getSettings().startCols).toEqual(19);
 
     container.parentNode.removeChild(container);
+  });
+});
+
+describe('prepareSettings', () => {
+  it('should prepare the settings object to be used with Handsontable', () => {
+    const onPrefixedPropObj = {
+      'afterChange': {},
+      'afterCellMetaReset': {},
+      'afterChangesObserved': {},
+      'afterContextMenuDefaultOptions': {},
+      'beforeContextMenuSetItems': {},
+      'afterDropdownMenuDefaultOptions': {},
+      'beforeDropdownMenuSetItems': {},
+      'afterContextMenuHide': {},
+      'afterContextMenuShow': {},
+      'afterCopyLimit': {},
+      'beforeCreateCol': {},
+      'afterCreateCol': {},
+      'beforeCreateRow': {},
+      'afterCreateRow': {}
+    };
+
+    const result = prepareSettings(onPrefixedPropObj);
+
+    expect(typeof result.afterChange).toEqual('object');
+    expect(typeof result.afterCellMetaReset).toEqual('object');
+    expect(typeof result.afterChangesObserved).toEqual('object');
+    expect(typeof result.afterContextMenuDefaultOptions).toEqual('object');
+    expect(typeof result.beforeContextMenuSetItems).toEqual('object');
+    expect(typeof result.afterDropdownMenuDefaultOptions).toEqual('object');
+    expect(typeof result.beforeDropdownMenuSetItems).toEqual('object');
+    expect(typeof result.afterContextMenuHide).toEqual('object');
+    expect(typeof result.afterContextMenuShow).toEqual('object');
+    expect(typeof result.afterCopyLimit).toEqual('object');
+    expect(typeof result.beforeCreateCol).toEqual('object');
+    expect(typeof result.afterCreateCol).toEqual('object');
+    expect(typeof result.beforeCreateRow).toEqual('object');
+    expect(typeof result.afterCreateRow).toEqual('object');
+
+    expect(typeof result.randomPropName).toEqual('undefined');
+  });
+
+  it('should prepare the settings object to be used with Handsontable (when two objects are provided)', () => {
+    const onPrefixedPropObj = {
+      'afterChange': {},
+      'afterCellMetaReset': {},
+      'afterChangesObserved': {},
+      'afterContextMenuDefaultOptions': {},
+      'beforeContextMenuSetItems': {},
+      'afterDropdownMenuDefaultOptions': {},
+      'beforeDropdownMenuSetItems': {},
+      'afterContextMenuHide': {}
+    };
+
+    const secondOnPrefixedPropObj = {
+      'afterContextMenuHide': {},
+      'afterContextMenuShow': {},
+      'afterCopyLimit': {},
+      'beforeCreateCol': {},
+      'afterCreateCol': {},
+      'beforeCreateRow': {},
+      'afterCreateRow': {}
+    };
+
+    const result = prepareSettings(onPrefixedPropObj, secondOnPrefixedPropObj);
+
+    expect(typeof result.afterChange).toEqual('object');
+    expect(typeof result.afterCellMetaReset).toEqual('object');
+    expect(typeof result.afterChangesObserved).toEqual('object');
+    expect(typeof result.afterContextMenuDefaultOptions).toEqual('object');
+    expect(typeof result.beforeContextMenuSetItems).toEqual('object');
+    expect(typeof result.afterDropdownMenuDefaultOptions).toEqual('object');
+    expect(typeof result.beforeDropdownMenuSetItems).toEqual('object');
+    expect(typeof result.afterContextMenuHide).toEqual('object');
+    expect(typeof result.afterContextMenuShow).toEqual('object');
+    expect(typeof result.afterCopyLimit).toEqual('object');
+    expect(typeof result.beforeCreateCol).toEqual('object');
+    expect(typeof result.afterCreateCol).toEqual('object');
+    expect(typeof result.beforeCreateRow).toEqual('object');
+    expect(typeof result.afterCreateRow).toEqual('object');
+
+    expect(typeof result.randomPropName).toEqual('undefined');
   });
 });

@@ -3,27 +3,34 @@
 </template>
 
 <script lang="ts">
-  import Handsontable from 'hot-alias';
   import {
-    hotInit,
-    hotDestroy,
     propFactory,
     propWatchFactory,
     updateHotSettings,
-    HotTableProps
+    hotInit
   } from './helpers';
   import Vue from 'vue';
   import {ThisTypedComponentOptionsWithRecordProps} from 'vue/types/options';
+  import {HotTableData, HotTableMethods, HotTableProps} from './types';
 
-  const HotTable: ThisTypedComponentOptionsWithRecordProps<Vue, {}, {}, {}, HotTableProps> = {
+  const HotTable: ThisTypedComponentOptionsWithRecordProps<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
     props: propFactory(),
     watch: propWatchFactory(updateHotSettings),
+    data: function () {
+      return {
+        __internalEdit: false,
+        hotInstance: null
+      }
+    },
+    methods: {
+      hotInit: hotInit
+    },
     mounted: function () {
-      return hotInit.call(this, Handsontable);
+      return this.hotInit();
     },
     beforeDestroy: function () {
-      return hotDestroy.call(this);
+      this.hotInstance.destroy();
     }
   };
 
