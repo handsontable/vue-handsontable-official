@@ -5,7 +5,9 @@
   "author": "Handsoncode <hello@handsoncode.net> (https://handsoncode.net)",
   "homepage": "https://handsontable.com",
   "license": "MIT",
-  "main": "./vue-handsontable-pro.js",
+  "browser": "./dist/vue-handsontable.js",
+  "main": "./commonjs/vue-handsontable.js",
+  "module": "./es/vue-handsontable.js",
   "keywords": [
     "handsontable",
     "component",
