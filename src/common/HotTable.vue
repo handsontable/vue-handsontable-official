@@ -37,6 +37,3 @@
   export default HotTable;
   export {HotTable};
 </script>
-
-<style>
-</style>

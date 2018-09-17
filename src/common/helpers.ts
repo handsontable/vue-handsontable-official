@@ -8,14 +8,15 @@ import {HotTableProps, VueProps} from './types';
  * @returns {Object|Array}
  */
 export function rewriteSettings(observerSettings): any[] | object {
+  const settingsType = Object.prototype.toString.call(observerSettings);
   let settings: any[] | object | null = null;
   let type: { array?: boolean, object?: boolean } = {};
 
-  if (Object.prototype.toString.call(observerSettings).indexOf('Array') > -1) {
+  if (settingsType === '[object Array]') {
     settings = [];
     type.array = true;
 
-  } else if (typeof observerSettings === 'object') {
+  } else if (settingsType === '[object Object]') {
     settings = {};
     type.object = true;
   }
@@ -62,7 +63,7 @@ function preventInternalEditWatch(component) {
 }
 
 /**
- * Generate an object containing all the available Handsontable properties and plugin hooks (with the `on`-prefixes added).
+ * Generate an object containing all the available Handsontable properties and plugin hooks.
  *
  * @returns {Object}
  */
