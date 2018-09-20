@@ -60,6 +60,22 @@ function preventInternalEditWatch(component) {
   component.hotInstance.addHook('beforeChange', () => {
     component.__internalEdit = true;
   });
+
+  component.hotInstance.addHook('beforeCreateRow', () => {
+    component.__internalEdit = true;
+  });
+
+  component.hotInstance.addHook('beforeCreateCol', () => {
+    component.__internalEdit = true;
+  });
+
+  component.hotInstance.addHook('beforeRemoveRow', () => {
+    component.__internalEdit = true;
+  });
+
+  component.hotInstance.addHook('beforeRemoveCol', () => {
+    component.__internalEdit = true;
+  });
 }
 
 /**
