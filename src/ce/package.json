@@ -8,6 +8,7 @@
   "browser": "./dist/vue-handsontable.js",
   "main": "./commonjs/vue-handsontable.js",
   "module": "./es/vue-handsontable.js",
+  "types": "./index.d.ts",
   "keywords": [
     "handsontable",
     "component",
@@ -35,6 +36,7 @@
     "url": "https://github.com/handsontable/vue-handsontable-official/issues"
   },
   "peerDependencies": {
-    "handsontable": "^4.0.0"
+    "handsontable": "^5.0.2",
+    "vue": "^2.5.17"
   }
 }
