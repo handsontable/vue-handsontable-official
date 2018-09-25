@@ -2037,20 +2037,20 @@ handlebars@^4.0.3:
   optionalDependencies:
     uglify-js "^3.1.4"
 
-handsontable-pro@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/handsontable-pro/-/handsontable-pro-5.0.1.tgz#4f48323282ad7f5a5b9f2d6b3c427a50cc7de5da"
+handsontable-pro@^5.0.0:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/handsontable-pro/-/handsontable-pro-5.0.2.tgz#d988ab22d1d0d0427da80258d69f6f96683b754e"
   dependencies:
-    handsontable "5.0.1"
+    handsontable "5.0.2"
     hot-formula-parser "^2.3.1"
     moment "2.20.1"
     numbro "^2.0.6"
     pikaday "1.5.1"
     yarn "^1.5.1"
 
-handsontable@5.0.1, handsontable@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-5.0.1.tgz#4aadbaf1a468d8c7b3cdbf8a5f49c4110879c373"
+handsontable@5.0.2, handsontable@^5.0.0:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-5.0.2.tgz#dcfb4341afe64c98bbbf779be40f69721e3e2c2c"
   dependencies:
     moment "2.20.1"
     numbro "^2.0.6"
@@ -5043,7 +5043,7 @@ voc@:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/voc/-/voc-1.1.0.tgz#d1a08aeff66646bf17cdba2e47c935a7a9b0218b"
 
-vue-template-compiler@^2.5.17:
+vue-template-compiler@^2.5.0:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.17.tgz#52a4a078c327deb937482a509ae85c06f346c3cb"
   dependencies:
@@ -5054,7 +5054,7 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue@^2.5.17:
+vue@^2.5.0:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
 
