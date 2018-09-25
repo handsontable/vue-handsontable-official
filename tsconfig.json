@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "paths": {
+      "hot-alias": ["node_modules/handsontable"]
+    }
+  },
+  "include": [
+    "src/common/*"
+  ],
+  "exclude": [
+    "**/node_modules/*"
+  ]
+}

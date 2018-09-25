@@ -1,26 +1,39 @@
 <template>
-  <div :id="this.root"></div>
+  <div :id="id"></div>
 </template>
 
-<script>
-  import Handsontable from 'hot-alias';
+<script lang="ts">
   import {
-    hotInit,
-    hotDestroy,
     propFactory,
     propWatchFactory,
     updateHotSettings,
-    updateBulkHotSettings
-  } from '../common/helpers';
+    hotInit
+  } from './helpers';
+  import Vue from 'vue';
+  import {ThisTypedComponentOptionsWithRecordProps} from 'vue/types/options';
+  import {HotTableData, HotTableMethods, HotTableProps} from './types';
 
-  export default {
+  const HotTable: ThisTypedComponentOptionsWithRecordProps<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
-    props: propFactory.call(this, Handsontable),
-    watch: propWatchFactory.call(this, updateHotSettings, updateBulkHotSettings),
-    mounted: function() { return hotInit.call(this, Handsontable); },
-    beforeDestroy: function() { return hotDestroy.call(this); },
+    props: propFactory(),
+    watch: propWatchFactory(updateHotSettings),
+    data: function () {
+      return {
+        __internalEdit: false,
+        hotInstance: null
+      }
+    },
+    methods: {
+      hotInit: hotInit
+    },
+    mounted: function () {
+      return this.hotInit();
+    },
+    beforeDestroy: function () {
+      this.hotInstance.destroy();
+    }
   };
-</script>
 
-<style>
-</style>
+  export default HotTable;
+  export {HotTable};
+</script>

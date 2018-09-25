@@ -1,17 +1,23 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
 import VuePlugin from 'rollup-plugin-vue';
 import typescript from 'rollup-plugin-typescript2';
+import commonjs from 'rollup-plugin-commonjs';
 
+const env = process.env.NODE_ENV;
 const envHotType = process.env.HOT_TYPE;
+const filename = 'vue-handsontable.js';
 
-export const baseConfig = {
-  input: 'src/common/index.ts',
+export const esConfig = {
+  output: {
+    format: env,
+    indent: false,
+    file: `./es/${envHotType}/${filename}`,
+    exports: 'named'
+  },
   plugins: [
     replace({
       'hot-alias': envHotType === 'pro' ? 'handsontable-pro' : 'handsontable',
-      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     VuePlugin({
       defaultLang: {
@@ -21,17 +27,18 @@ export const baseConfig = {
         isProduction: true
       }
     }),
-    typescript(),
-    babel({
-      exclude: 'node_modules/**',
+    commonjs({
+      include: [
+        'node_modules/**'
+      ]
     }),
-    nodeResolve()
+    typescript({
+      tsconfigOverride: {
+        compilerOptions: {
+          declaration: true
+        }
+      }
+    }),
+    nodeResolve(),
   ],
-  external: [
-    (envHotType === 'ce' ? 'handsontable' : 'handsontable-pro'),
-    'vue',
-    'handsontable',
-    'handsontable-pro'
-  ]
 };
-

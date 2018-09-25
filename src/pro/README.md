@@ -44,7 +44,7 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 </template>
 
 <script>
-  import HotTable from '@handsontable-pro/vue';
+  import { HotTable } from '@handsontable-pro/vue';
   import Vue from 'vue';
 
   export default {
