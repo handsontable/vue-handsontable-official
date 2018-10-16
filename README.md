@@ -131,7 +131,7 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 <br/>
 
 ## Documentation
-Visit [docs.handsontable.com](//docs.handsontable.com/vue) to get more Handsontable for Vue examples and guides.
+Visit [handsontable.com/docs](//handsontable.com/docs/vue) to get more Handsontable for Vue examples and guides.
 
 <br/>
 
@@ -177,8 +177,8 @@ Some of the most popular features include:
 <br/>
 
 ## Resources
-- [Guides](//docs.handsontable.com/vue)
-- [API Reference](//docs.handsontable.com/Core.html)
+- [Guides](//handsontable.com/docs/vue)
+- [API Reference](//handsontable.com/docs/Core.html)
 - [Release notes](//github.com/handsontable/vue-handsontable-official/releases)
 - [Roadmap](//trello.com/b/PztR4hpj)
 - [Twitter](//twitter.com/handsontable)
