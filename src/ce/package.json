@@ -36,7 +36,7 @@
     "url": "https://github.com/handsontable/vue-handsontable-official/issues"
   },
   "peerDependencies": {
-    "handsontable": "^5.0.0",
+    "handsontable": ">=6.0.0",
     "vue": "^2.5.0"
   }
 }
