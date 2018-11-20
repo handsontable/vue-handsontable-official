@@ -25,6 +25,7 @@
     "wrapper"
   ],
   "devDependencies": {
+    "@types/jest": "^23.3.9",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -47,8 +48,8 @@
     "rollup-plugin-vue": "^4.3.2",
     "ts-jest": "^23.1.4",
     "typescript": "^3.0.1",
-    "vue-template-compiler": "^2.5.0",
-    "vue": "^2.5.0"
+    "vue": "^2.5.0",
+    "vue-template-compiler": "^2.5.0"
   },
   "scripts": {
     "build": "npm run delete-builds && npm run build-ce && npm run build-pro",
@@ -92,8 +93,8 @@
     },
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "test-tsconfig.json",
-        "useBabelrc": true
+        "tsConfig": "test-tsconfig.json",
+        "babelConfig": true
       }
     }
   }
