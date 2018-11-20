@@ -37,7 +37,7 @@
     "del-cli": "^1.1.0",
     "handsontable": "^6.0.0",
     "handsontable-pro": "^6.0.0",
-    "jest": "^23.5.0",
+    "jest": "^23.6.0",
     "rollup": "^0.65.0",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.1.6",
