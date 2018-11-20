@@ -17,7 +17,7 @@ export interface HotTableProps extends Handsontable.DefaultSettings {
   settings?: Handsontable.DefaultSettings
 }
 
-export interface HotTableComponent<V, D, M, C, P> extends ThisTypedComponentOptionsWithRecordProps<Vue, HotTableData, HotTableMethods, {}, HotTableProps> {
+export interface HotTableComponent<V extends Vue, D, M, C, P> extends ThisTypedComponentOptionsWithRecordProps<V, D, M, C, P> {
   version: string
 }
 

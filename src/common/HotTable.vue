@@ -10,7 +10,6 @@
     hotInit
   } from './helpers';
   import Vue from 'vue';
-  import {ThisTypedComponentOptionsWithRecordProps} from 'vue/types/options';
   import {HotTableData, HotTableMethods, HotTableProps, HotTableComponent} from './types';
   import * as packageJson from './../../package.json';
 
