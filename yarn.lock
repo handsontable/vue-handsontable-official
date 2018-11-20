@@ -52,6 +52,11 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
 
+"@types/jest@^23.3.9":
+  version "23.3.9"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.9.tgz#c16b55186ee73ae65e001fbee69d392c51337ad1"
+  integrity sha512-wNMwXSUcwyYajtbayfPp55tSayuDVU6PfY5gzvRSj80UvxdXEJOVPnUVajaOp7NgXLm+1e2ZDLULmpsU9vDvQw==
+
 "@types/node@*":
   version "10.12.9"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.9.tgz#a07bfa74331471e1dc22a47eb72026843f7b95c8"
@@ -2348,22 +2353,21 @@ handlebars@^4.0.3:
   optionalDependencies:
     uglify-js "^3.1.4"
 
-handsontable-pro@^5.0.0:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/handsontable-pro/-/handsontable-pro-5.0.2.tgz#d988ab22d1d0d0427da80258d69f6f96683b754e"
-  integrity sha512-bTrUmtBs4U2w/5YPYbSvSHCJgoMkD0D0LQyNVBEV1fmAKAkgS6HB9qm2COwcZZ+w4IIEWOwYSSJ8vmrVoug2KQ==
+handsontable-pro@^6.0.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/handsontable-pro/-/handsontable-pro-6.2.0.tgz#b32fe285bb4c4d25b18fb2e97336e94eb98f765f"
+  integrity sha512-q09wAHcE0q1Erz9xYDJY15Y1hyJ5P3XLYNmLLUuaTkodMBjw6EuqaD6Y/ri6V7jOZEmFhXrtzh+e6kUOCx3Pdw==
   dependencies:
-    handsontable "5.0.2"
+    handsontable "6.2.0"
     hot-formula-parser "^2.3.1"
     moment "2.20.1"
     numbro "^2.0.6"
     pikaday "1.5.1"
-    yarn "^1.5.1"
 
-handsontable@5.0.2, handsontable@^5.0.0:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-5.0.2.tgz#dcfb4341afe64c98bbbf779be40f69721e3e2c2c"
-  integrity sha512-gPhSb62UTJH/snr68TGLZRi1zhop89kTSijUdRL6ROtRjk1VNpBOo2EoFtBR9ubW7lSoq6ZztOuur9BjOIugmA==
+handsontable@6.2.0, handsontable@^6.0.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-6.2.0.tgz#54c0ac3ea58c8366b63b03ce57484132a8aa8ea5"
+  integrity sha512-4YmxstOauFqLzap+1sfrvK8JrJk9XjWDe4XgU0Rrd8KgvTUIqoU5h5J/2Ft+aWtMVZk8GZ3eFAM3FxTWHXOKMw==
   dependencies:
     moment "2.20.1"
     numbro "^2.0.6"
@@ -3311,7 +3315,7 @@ jest-worker@^23.2.0:
   dependencies:
     merge-stream "^1.0.1"
 
-jest@^23.6.0:
+jest@^23.5.0:
   version "23.6.0"
   resolved "https://registry.yarnpkg.com/jest/-/jest-23.6.0.tgz#ad5835e923ebf6e19e7a1d7529a432edfee7813d"
   integrity sha512-lWzcd+HSiqeuxyhG+EnZds6iO3Y3ZEnMrfZq/OTGvF/C+Z4fPMCdhWTGSAiO2Oym9rbEXfwddHhh6jqrTF3+Lw==
@@ -6050,8 +6054,3 @@ yargs@^11.0.0:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^9.0.2"
-
-yarn@^1.5.1:
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.12.3.tgz#fb4599bf1f8da01552bcc7e1571dfd4e53788203"
-  integrity sha512-8f5rWNDvkhAmCxmn8C0LsNWMxTYVk4VGKiq0sIB6HGZjaZTHsGIH87SUmVDUEd2Wk54bqKoUlbVWgQFCQhRkVw==
