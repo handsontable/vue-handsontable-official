@@ -22,7 +22,7 @@ describe('rewriteSettings', () => {
     expect(fakeWatcherInstance.sampleProperty).toEqual(null);
     expect(fakeWatcherInstance.testedProperty).toEqual(null);
 
-    let cleanObject = rewriteSettings(fakeWatcherInstance);
+    let cleanObject: any = rewriteSettings(fakeWatcherInstance);
 
     expect(typeof cleanObject.sampleMethod).toEqual('undefined');
     expect(typeof cleanObject.testedMethod).toEqual('function');
@@ -38,7 +38,7 @@ describe('hotInit', () => {
     container.id = 'hotContainer';
     document.body.appendChild(container);
 
-    const fakeVueComponent = {
+    const fakeVueComponent: any = {
       $el: document.getElementById('hotContainer')
     };
 
@@ -55,7 +55,7 @@ describe('hotInit', () => {
 
 describe('propFactory', () => {
   it('should generate an object containing all the available Handsontable properties and plugin hooks', () => {
-    const props = propFactory();
+    const props: any = propFactory();
 
     expect(typeof props.startRows).toEqual('object');
     expect(typeof props.startCols).toEqual('object');
@@ -71,7 +71,7 @@ describe('propFactory', () => {
 describe('propWatchFactory', () => {
   it('should generate and object containing all the available Handsontable properties and hooks tied to the Handsontable updating function', () => {
     const bulkUpdateFunction = () => {};
-    const props = propWatchFactory(bulkUpdateFunction);
+    const props: any = propWatchFactory(bulkUpdateFunction);
 
     expect(typeof props.startRows).toEqual('object');
     expect(typeof props.startRows.handler).toEqual('function');
@@ -104,7 +104,7 @@ describe('updateHotSettings', () => {
     container.id = 'hotContainer';
     document.body.appendChild(container);
 
-    const fakeVueComponent = {
+    const fakeVueComponent: any = {
       $el: document.getElementById('hotContainer')
     };
 
@@ -139,7 +139,7 @@ describe('prepareSettings', () => {
       'afterCreateRow': {}
     };
 
-    const result = prepareSettings(onPrefixedPropObj);
+    const result: any = prepareSettings(onPrefixedPropObj);
 
     expect(typeof result.afterChange).toEqual('object');
     expect(typeof result.afterCellMetaReset).toEqual('object');
@@ -181,7 +181,7 @@ describe('prepareSettings', () => {
       'afterCreateRow': {}
     };
 
-    const result = prepareSettings(onPrefixedPropObj, secondOnPrefixedPropObj);
+    const result: any = prepareSettings(onPrefixedPropObj, secondOnPrefixedPropObj);
 
     expect(typeof result.afterChange).toEqual('object');
     expect(typeof result.afterCellMetaReset).toEqual('object');
