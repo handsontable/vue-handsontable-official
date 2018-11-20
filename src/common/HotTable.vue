@@ -11,9 +11,10 @@
   } from './helpers';
   import Vue from 'vue';
   import {ThisTypedComponentOptionsWithRecordProps} from 'vue/types/options';
-  import {HotTableData, HotTableMethods, HotTableProps} from './types';
+  import {HotTableData, HotTableMethods, HotTableProps, HotTableComponent} from './types';
+  import * as packageJson from './../../package.json';
 
-  const HotTable: ThisTypedComponentOptionsWithRecordProps<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
+  const HotTable: HotTableComponent<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
     props: propFactory(),
     watch: propWatchFactory(updateHotSettings),
@@ -31,7 +32,8 @@
     },
     beforeDestroy: function () {
       this.hotInstance.destroy();
-    }
+    },
+    version: (packageJson as any).version
   };
 
   export default HotTable;
