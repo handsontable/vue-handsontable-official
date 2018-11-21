@@ -15,17 +15,17 @@ export function createConfig() {
   };
   const newConfig = newConfigs[env];
 
-  for ( let key in newConfig ) {
+  for (let key in newConfig) {
     if (newConfig.hasOwnProperty(key)) {
-     if (Array.isArray(config[key]) && Array.isArray(newConfig[key])) {
+      if (Array.isArray(config[key]) && Array.isArray(newConfig[key])) {
         config[key] = newConfig[key];
 
-     } else if (typeof config[key] === 'object' && typeof newConfig[key] === 'object') {
-       Object.assign(config[key], newConfig[key]);
+      } else if (typeof config[key] === 'object' && typeof newConfig[key] === 'object') {
+        Object.assign(config[key], newConfig[key]);
 
-     } else {
-       config[key] = newConfig[key];
-     }
+      } else {
+        config[key] = newConfig[key];
+      }
     }
   }
 
