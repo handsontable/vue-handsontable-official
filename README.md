@@ -43,7 +43,7 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 **Vue Component**
 ```vue
 <template>
-  <HotTable :settings="settings"></HotTable>
+  <hot-table :settings="settings"></hot-table>
 </template>
 
 <script>
@@ -78,7 +78,7 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 **Vue Component**
 ```vue
 <template>
-  <HotTable :settings="settings"></HotTable>
+  <hot-table :settings="settings"></hot-table>
 </template>
 
 <script>
