@@ -37,14 +37,11 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 **Vue Component**
 ```vue
 <template>
-  <div id="hot-preview">
-    <HotTable :settings="settings"></HotTable>
-  </div>
+  <hot-table :settings="settings"></hot-table>
 </template>
 
 <script>
   import { HotTable } from '@handsontable/vue';
-  import Vue from 'vue';
 
   export default {
     data: function() {
@@ -68,13 +65,6 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 </script>
 
 <style src="../node_modules/handsontable/dist/handsontable.full.css"></style>
-<style>
-  #test-hot {
-    width: 600px;
-    height: 400px;
-    overflow: hidden;
-  }
-</style>
 ```
 
 <br/>

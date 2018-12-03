@@ -43,14 +43,11 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 **Vue Component**
 ```vue
 <template>
-  <div id="hot-preview">
-    <HotTable :settings="settings"></HotTable>
-  </div>
+  <hot-table :settings="settings"></hot-table>
 </template>
 
 <script>
   import { HotTable } from '@handsontable/vue';
-  import Vue from 'vue';
 
   export default {
     data: function() {
@@ -74,13 +71,6 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 </script>
 
 <style src="../node_modules/handsontable/dist/handsontable.full.css"></style>
-<style>
-  #test-hot {
-    width: 600px;
-    height: 400px;
-    overflow: hidden;
-  }
-</style>
 ```
 
 ### Handsontable Pro:
@@ -88,14 +78,11 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 **Vue Component**
 ```vue
 <template>
-  <div id="hot-preview">
-    <HotTable :settings="settings"></HotTable>
-  </div>
+  <hot-table :settings="settings"></hot-table>
 </template>
 
 <script>
   import { HotTable } from '@handsontable-pro/vue';
-  import Vue from 'vue';
 
   export default {
     data: function() {
@@ -119,19 +106,12 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
 </script>
 
 <style src="../node_modules/handsontable-pro/dist/handsontable.full.css"></style>
-<style>
-  #test-hot {
-    width: 600px;
-    height: 400px;
-    overflow: hidden;
-  }
-</style>
 ```
 
 <br/>
 
 ## Documentation
-Visit [docs.handsontable.com](//docs.handsontable.com/vue) to get more Handsontable for Vue examples and guides.
+Visit [handsontable.com/docs](//handsontable.com/docs/vue) to get more Handsontable for Vue examples and guides.
 
 <br/>
 
@@ -177,8 +157,8 @@ Some of the most popular features include:
 <br/>
 
 ## Resources
-- [Guides](//docs.handsontable.com/vue)
-- [API Reference](//docs.handsontable.com/Core.html)
+- [Guides](//handsontable.com/docs/vue)
+- [API Reference](//handsontable.com/docs/Core.html)
 - [Release notes](//github.com/handsontable/vue-handsontable-official/releases)
 - [Roadmap](//trello.com/b/PztR4hpj)
 - [Twitter](//twitter.com/handsontable)
