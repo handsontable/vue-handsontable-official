@@ -1,5 +1,5 @@
 import Handsontable from 'hot-alias';
-import {HotTableProps, VueProps} from './types';
+import { HotTableProps, VueProps } from './types';
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -36,27 +36,10 @@ export function rewriteSettings(observerSettings): any[] | object {
 }
 
 /**
- * Initialize Handsontable.
- */
-export function hotInit(): void {
-  const unmappedSettings: any[] = [
-    this.settings ? this.settings : this._props,
-  ];
-
-  if (this.settings) {
-    unmappedSettings.push(this._props)
-  }
-
-  this.hotInstance = new Handsontable(this.$el, prepareSettings(unmappedSettings[0], unmappedSettings[1]));
-
-  preventInternalEditWatch(this);
-}
-
-/**
  * Private method to ensure the table is not calling `updateSettings` after editing cells.
  * @private
  */
-function preventInternalEditWatch(component) {
+export function preventInternalEditWatch(component) {
   component.hotInstance.addHook('beforeChange', () => {
     component.__internalEdit = true;
   });
