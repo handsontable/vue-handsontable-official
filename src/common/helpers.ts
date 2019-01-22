@@ -137,7 +137,7 @@ export function propWatchFactory(updateFunction: Function) {
  * @param {Object} updatedValue Watcher-generated updated value object.
  * @param {Object} oldValue Watcher-generated old value object.
  */
-export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object) {
+export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object): void {
   const newSettings = {};
 
   if (updatedProperty === 'data' && this.__internalEdit === true) {

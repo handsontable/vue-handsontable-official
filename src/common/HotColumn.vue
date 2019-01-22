@@ -6,17 +6,19 @@
 
 <script lang="ts">
   import Vue, { VNode } from 'vue';
+  import CombinedVueInstance from 'vue';
   import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
   import {
     propFactory
   } from './helpers';
   import {
     createVueComponent,
+    CustomEditor,
     getColumnVNode
   } from './helpers/hotColumn';
   import {
     HotTableProps,
-    HotColumnMethods, CustomEditorClass
+    HotColumnMethods
   } from './types';
   import Handsontable from 'hot-alias';
 
@@ -35,9 +37,9 @@
           return;
         }
 
-        const hotColumnSlots = this.$slots.default;
-        const rendererVNode = getColumnVNode(hotColumnSlots, 'hot-renderer');
-        const editorVNode = getColumnVNode(hotColumnSlots, 'hot-editor');
+        const hotColumnSlots: VNode[] = this.$slots.default;
+        const rendererVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-renderer');
+        const editorVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-editor');
 
         this.columnSettings = {...this.$props};
 
@@ -76,13 +78,13 @@
         return function (instance, TD, row, col, prop, value, cellProperties) {
           if (TD) {
             if (!rendererCache.has(TD)) {
-              const mountedComponent = createVueComponent(VNode, $vm, {});
+              const mountedComponent: CombinedVueInstance = createVueComponent(VNode, $vm, {});
 
               rendererCache.set(TD, mountedComponent);
             }
 
-            const cachedComponent = rendererCache.get(TD);
-            const rendererArgs = {
+            const cachedComponent: CombinedVueInstance = rendererCache.get(TD);
+            const rendererArgs: object = {
               instance,
               TD,
               row,
@@ -104,12 +106,13 @@
        * Create a fresh class to be used as an editor, based on the editor component provided.
        *
        * @param {Object} VNode VNode for the editor child component.
-       * @returns {CustomEditorClass} The class used as an editor in Handsontable.
+       * @returns {Class} The class used as an editor in Handsontable.
        */
-      getEditorClass: function (VNode: VNode): CustomEditorClass {
-        const requiredMethods = ['focus', 'open', 'close', 'getValue', 'setValue'];
-        const componentName = VNode.componentOptions.Ctor.options.name;
-        let mountedComponent = null;
+      getEditorClass: function (VNode: VNode): typeof CustomEditor {
+        const requiredMethods: string[] = ['focus', 'open', 'close', 'getValue', 'setValue'];
+        const componentName: string = (VNode.componentOptions.Ctor as any).options.name;
+        let mountedComponent: object = null;
+        let customEditorClass: typeof CustomEditor = null;
 
         if (!editorCache.has(componentName)) {
           mountedComponent = createVueComponent(VNode, this, {});
@@ -120,28 +123,11 @@
           mountedComponent = editorCache.get(componentName);
         }
 
-        class CustomEditor extends Handsontable.editors.BaseEditor {
-          prepare(row, col, prop, td, originalValue, cellProperties) {
-            super.prepare(row, col, prop, td, originalValue, cellProperties);
-
-            mountedComponent.$data.row = row;
-            mountedComponent.$data.column = col;
-            mountedComponent.$data.columnProp = prop;
-            mountedComponent.$data.td = td;
-            mountedComponent.$data.originalValue = originalValue;
-            mountedComponent.$data.cellProperties = cellProperties;
-
-            mountedComponent.finishEditing = (restoreOriginalValue, ctrlDown, callback) => {
-              super.finishEditing(restoreOriginalValue, ctrlDown, callback);
-            };
-          }
-
-          // TODO: remove `focus` after it's added to the BaseEditor.
-          focus() {}
-        }
+        customEditorClass = CustomEditor;
+        customEditorClass.prototype.mountedComponent = mountedComponent;
 
         Object.entries(Handsontable.editors.BaseEditor.prototype).forEach(entry => {
-          const methodName = entry[0];
+          const methodName: string = entry[0];
 
           if ((requiredMethods.includes(methodName) || methodName !== 'prepare') && mountedComponent[methodName]) {
             CustomEditor.prototype[methodName] = function () {
@@ -149,7 +135,7 @@
             }
 
           } else if (methodName === 'prepare') {
-            const defaultPrepare = CustomEditor.prototype[methodName];
+            const defaultPrepare: (...args: any[]) => any = CustomEditor.prototype[methodName];
 
             CustomEditor.prototype[methodName] = function () {
               defaultPrepare.call(this, ...arguments);

@@ -1,17 +1,19 @@
 import Handsontable from 'handsontable';
 import Vue, { VNode } from 'vue';
-import {ThisTypedComponentOptionsWithRecordProps} from 'vue/types/options';
-import {HotTableData, HotTableMethods, HotTableProps} from './types';
+import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
+import { HotTableData, HotTableMethods, HotTableProps } from './types';
+import { CustomEditor } from './helpers/hotColumn';
 
 export interface HotTableData {
   __internalEdit: boolean,
   hotInstance?: Handsontable,
-  columnSettings: any
+  columnSettings: HotTableProps[]
 }
 
 export interface HotTableMethods {
   hotInit: () => void,
-  getColumnSettings: () => any
+  getColumnSettings: () => HotTableProps[] | void,
+  updateHotSettings: (updatedProperty: string, updatedValue: object, oldValue: object) => void
 }
 
 export interface HotTableProps extends Handsontable.DefaultSettings {
@@ -26,12 +28,8 @@ export interface HotTableComponent<V extends Vue, D, M, C, P> extends ThisTypedC
 export interface HotColumnMethods {
   createColumnSettings: () => void,
   hasColumnProp: (type: string) => boolean,
-  getRendererWrapper: (VNode: VNode) =>  (...args) => HTMLElement,
-  getEditorClass: (VNode: VNode) => CustomEditorClass
-}
-
-export interface CustomEditorClass extends Handsontable._editors.Base {
-
+  getRendererWrapper: (VNode: VNode) => (...args) => HTMLElement,
+  getEditorClass: (VNode: VNode) => typeof CustomEditor
 }
 
 export interface SubComponentParent {

@@ -1,6 +1,6 @@
 <template>
   <div :id="id">
-      <slot></slot>
+    <slot></slot>
   </div>
 </template>
 
@@ -13,7 +13,7 @@
     prepareSettings
   } from './helpers';
   import Vue from 'vue';
-  import {HotTableData, HotTableMethods, HotTableProps, HotTableComponent} from './types';
+  import { HotTableData, HotTableMethods, HotTableProps, HotTableComponent } from './types';
   import * as packageJson from './../../package.json';
   import Handsontable from 'hot-alias';
 
@@ -32,16 +32,16 @@
       /**
        * Initialize Handsontable.
        */
-      hotInit: function(): void {
+      hotInit: function (): void {
         const unmappedSettings: any[] = [
-          this.settings ? this.settings : this._props,
+          this.settings ? this.settings : this.$props,
         ];
 
         if (this.settings) {
-          unmappedSettings.push(this._props)
+          unmappedSettings.push(this.$props)
         }
 
-        const newSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);
+        const newSettings: Handsontable.DefaultSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);
 
         newSettings.columns = this.columnSettings ? this.columnSettings : newSettings.columns;
 
@@ -52,8 +52,8 @@
       /**
        * Get settings for the columns provided in the `hot-column` components.
        */
-      getColumnSettings: function(): any[]|void {
-        const columnSettings = [];
+      getColumnSettings: function (): HotTableProps[] | void {
+        const columnSettings: HotTableProps[] = [];
 
         if (this.$children.length > 0) {
           this.$children.forEach((elem, i) => {
@@ -64,7 +64,8 @@
         }
 
         return columnSettings.length ? columnSettings : void 0;
-      }
+      },
+      updateHotSettings: updateHotSettings
     },
     mounted: function () {
       this.columnSettings = this.getColumnSettings();
@@ -78,5 +79,5 @@
   };
 
   export default HotTable;
-  export {HotTable};
+  export { HotTable };
 </script>

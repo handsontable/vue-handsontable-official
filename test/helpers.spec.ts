@@ -1,11 +1,9 @@
 import {
   rewriteSettings,
-  hotInit,
   prepareSettings,
   propFactory,
-  propWatchFactory,
-  updateHotSettings
-} from './../src/common/helpers';
+  propWatchFactory
+} from '../src/common/helpers';
 
 describe('rewriteSettings', () => {
   it('should rewrite the settings element passed to the watchers to be a clean object prepared to use withing Handsontable config, when the input element is an object', () => {
@@ -29,27 +27,6 @@ describe('rewriteSettings', () => {
     expect(cleanObject.sampleProperty).toEqual(void 0);
     expect(cleanObject.testedProperty).toEqual(null);
     expect(Object.prototype.toString.call(cleanObject)).toEqual('[object Object]');
-  });
-});
-
-describe('hotInit', () => {
-  it('should initialize Handsontable and assign it to the `table` property of the provided object', () => {
-    const container = document.createElement('DIV');
-    container.id = 'hotContainer';
-    document.body.appendChild(container);
-
-    const fakeVueComponent: any = {
-      $el: document.getElementById('hotContainer')
-    };
-
-    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
-
-    hotInit.call(fakeVueComponent);
-
-    expect(typeof fakeVueComponent.hotInstance).toEqual('object');
-    expect(typeof fakeVueComponent.hotInstance.guid).toEqual('string');
-
-    container.parentNode.removeChild(container);
   });
 });
 
@@ -95,28 +72,6 @@ describe('propWatchFactory', () => {
     expect(typeof props.beforeInit.handler).toEqual('function');
     expect(props.beforeInit.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
     expect(typeof props.randomProp).toEqual('undefined');
-  });
-});
-
-describe('updateHotSettings', () => {
-  it('should update the previously initialized Handsontable instance with a single changed property', () => {
-    const container = document.createElement('DIV');
-    container.id = 'hotContainer';
-    document.body.appendChild(container);
-
-    const fakeVueComponent: any = {
-      $el: document.getElementById('hotContainer')
-    };
-
-    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
-
-    hotInit.call(fakeVueComponent);
-
-    updateHotSettings.call(fakeVueComponent, 'startCols', 19, {});
-
-    expect(fakeVueComponent.hotInstance.getSettings().startCols).toEqual(19);
-
-    container.parentNode.removeChild(container);
   });
 });
 
