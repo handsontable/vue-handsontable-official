@@ -10,7 +10,7 @@
   import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
   import {
     propFactory
-  } from './helpers';
+  } from './helpers/hotTable';
   import {
     createVueComponent,
     CustomEditor,
@@ -30,14 +30,11 @@
     props: propFactory(),
     methods: {
       /**
-       * Create the column settings based on the data provided to the `hot-column` component.
+       * Create the column settings based on the data provided to the `hot-column` component and it's child components.
        */
       createColumnSettings: function (): void {
-        if (!this.$slots.default) {
-          return;
-        }
+        const hotColumnSlots: VNode[] | any[] = this.$slots.default || [];
 
-        const hotColumnSlots: VNode[] = this.$slots.default;
         const rendererVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-renderer');
         const editorVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-editor');
 
@@ -46,14 +43,14 @@
         if (rendererVNode !== null) {
           this.columnSettings.renderer = this.getRendererWrapper(rendererVNode);
 
-        } else if (this.hasColumnProp('renderer')) {
+        } else if (this.hasProp('renderer')) {
           this.columnSettings.renderer = this.$props.renderer;
         }
 
         if (editorVNode !== null) {
           this.columnSettings.editor = this.getEditorClass(editorVNode);
 
-        } else if (this.hasColumnProp('editor')) {
+        } else if (this.hasProp('editor')) {
           this.columnSettings.editor = this.$props.editor;
         }
       },
@@ -63,22 +60,22 @@
        * @param {String} type Type of the prop to check. (Either `renderer` or `editor`)
        * @returns {Boolean} `true` if the `hot-column` component has the prop defined, `false` otherwise.
        */
-      hasColumnProp: function (type: string): boolean {
+      hasProp: function (type: string): boolean {
         return !!this.$props[type];
       },
       /**
        * Create the wrapper function for the provided renderer child component.
        *
-       * @param {Object} VNode VNode of the renderer child component.
+       * @param {Object} vNode VNode of the renderer child component.
        * @returns {Function} The wrapper function used as the renderer.
        */
-      getRendererWrapper: function (VNode: VNode): (...args) => HTMLElement {
+      getRendererWrapper: function (vNode: VNode): (...args) => HTMLElement {
         const $vm = this;
 
         return function (instance, TD, row, col, prop, value, cellProperties) {
           if (TD) {
             if (!rendererCache.has(TD)) {
-              const mountedComponent: CombinedVueInstance = createVueComponent(VNode, $vm, {});
+              const mountedComponent: CombinedVueInstance = createVueComponent(vNode, $vm, {});
 
               rendererCache.set(TD, mountedComponent);
             }
@@ -105,17 +102,17 @@
       /**
        * Create a fresh class to be used as an editor, based on the editor component provided.
        *
-       * @param {Object} VNode VNode for the editor child component.
+       * @param {Object} vNode VNode for the editor child component.
        * @returns {Class} The class used as an editor in Handsontable.
        */
-      getEditorClass: function (VNode: VNode): typeof CustomEditor {
+      getEditorClass: function (vNode: VNode): typeof CustomEditor {
         const requiredMethods: string[] = ['focus', 'open', 'close', 'getValue', 'setValue'];
-        const componentName: string = (VNode.componentOptions.Ctor as any).options.name;
+        const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
         let mountedComponent: object = null;
         let customEditorClass: typeof CustomEditor = null;
 
         if (!editorCache.has(componentName)) {
-          mountedComponent = createVueComponent(VNode, this, {});
+          mountedComponent = createVueComponent(vNode, this, {});
 
           editorCache.set(componentName, mountedComponent);
 

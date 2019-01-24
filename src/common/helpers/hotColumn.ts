@@ -27,11 +27,11 @@ export function getColumnVNode(hotColumnSlots: VNode[], type: string): VNode {
 /**
  * Create an instance of the Vue Component based on the provided VNode.
  *
- * @param {Object} VNode VNode element to be turned into a component instance.
+ * @param {Object} vNode VNode element to be turned into a component instance.
  * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
  * @param {Object} props Props to be passed to the new instance.
  */
-export function createVueComponent(VNode: VNode, parent: SubComponentParent, props: object): CombinedVueInstance {
+export function createVueComponent(vNode: VNode, parent: SubComponentParent, props: object): CombinedVueInstance {
   const HotTableComponent: SubComponentParent = parent;
   const settings: object = {
     propsData: props,
@@ -40,7 +40,7 @@ export function createVueComponent(VNode: VNode, parent: SubComponentParent, pro
     store: HotTableComponent.$store,
   };
 
-  return (new (VNode.componentOptions as any).Ctor(settings)).$mount();
+  return (new (vNode.componentOptions as any).Ctor(settings)).$mount();
 }
 
 /**

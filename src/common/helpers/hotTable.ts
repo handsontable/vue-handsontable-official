@@ -1,5 +1,5 @@
 import Handsontable from 'hot-alias';
-import { HotTableProps, VueProps } from './types';
+import { HotTableProps, VueProps } from '../types';
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.

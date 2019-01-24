@@ -11,7 +11,7 @@
     updateHotSettings,
     preventInternalEditWatch,
     prepareSettings
-  } from './helpers';
+  } from './helpers/hotTable';
   import Vue from 'vue';
   import { HotTableData, HotTableMethods, HotTableProps, HotTableComponent } from './types';
   import * as packageJson from './../../package.json';

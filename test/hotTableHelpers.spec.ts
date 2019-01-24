@@ -3,7 +3,7 @@ import {
   prepareSettings,
   propFactory,
   propWatchFactory
-} from '../src/common/helpers';
+} from '../src/common/helpers/hotTable';
 
 describe('rewriteSettings', () => {
   it('should rewrite the settings element passed to the watchers to be a clean object prepared to use withing Handsontable config, when the input element is an object', () => {
