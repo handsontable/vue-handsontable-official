@@ -27,9 +27,9 @@ export interface HotTableComponent<V extends Vue, D, M, C, P> extends ThisTypedC
 
 export interface HotColumnMethods {
   createColumnSettings: () => void,
-  hasColumnProp: (type: string) => boolean,
   getRendererWrapper: (vNode: VNode) => (...args) => HTMLElement,
-  getEditorClass: (vNode: VNode) => typeof CustomEditor
+  getEditorClass: (vNode: VNode) => typeof CustomEditor,
+  hasProp: (type: string) => boolean
 }
 
 export interface SubComponentParent {

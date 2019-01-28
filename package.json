@@ -53,7 +53,9 @@
     "typescript": "^3.0.1",
     "vue": "^2.5.0",
     "vue-jest": "^3.0.2",
-    "vue-template-compiler": "^2.5.0"
+    "vue-router": "^3.0.2",
+    "vue-template-compiler": "^2.5.0",
+    "vuex": "^3.1.0"
   },
   "scripts": {
     "build": "npm run delete-builds && npm run build-ce && npm run build-pro",

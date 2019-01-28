@@ -22,9 +22,6 @@
   } from './types';
   import Handsontable from 'hot-alias';
 
-  const rendererCache = new WeakMap();
-  const editorCache = new Map();
-
   const HotColumn: ThisTypedComponentOptionsWithRecordProps<Vue, {}, HotColumnMethods, {}, HotTableProps> = {
     name: 'HotColumn',
     props: propFactory(),
@@ -74,7 +71,9 @@
 
         return function (instance, TD, row, col, prop, value, cellProperties) {
           if (TD) {
-            if (!rendererCache.has(TD)) {
+            const rendererCache = $vm.$parent.$data.rendererCache;
+
+            if (rendererCache && !rendererCache.has(TD)) {
               const mountedComponent: CombinedVueInstance = createVueComponent(vNode, $vm, {});
 
               rendererCache.set(TD, mountedComponent);
@@ -108,10 +107,12 @@
       getEditorClass: function (vNode: VNode): typeof CustomEditor {
         const requiredMethods: string[] = ['focus', 'open', 'close', 'getValue', 'setValue'];
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
+        const editorCache = this.$parent.$data.editorCache;
         let mountedComponent: object = null;
         let customEditorClass: typeof CustomEditor = null;
 
-        if (!editorCache.has(componentName)) {
+
+        if (editorCache && !editorCache.has(componentName)) {
           mountedComponent = createVueComponent(vNode, this, {});
 
           editorCache.set(componentName, mountedComponent);

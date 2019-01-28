@@ -25,7 +25,9 @@
       return {
         __internalEdit: false,
         hotInstance: null,
-        columnSettings: null
+        columnSettings: null,
+        rendererCache: new WeakMap(),
+        editorCache: new Map()
       }
     },
     methods: {

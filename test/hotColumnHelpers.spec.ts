@@ -1,8 +1,11 @@
 import {
   getColumnVNode,
-  createVueComponent
+  createVueComponent,
+  CustomEditor
 } from '../src/common/helpers/hotColumn';
 import Vue from 'vue';
+import Vuex from 'vuex';
+import VueRouter from 'vue-router';
 
 describe('getColumnVNode', () => {
   it('should get the VNode child of the `hot-column` component.', () => {
@@ -33,7 +36,8 @@ describe('getColumnVNode', () => {
 });
 
 describe('createVueComponent', () => {
-  it('should create an instance of the Vue Component based on the provided VNode using its $mount method.', () => {
+  it('should create an instance of the Vue Component based on the provided VNode using its $mount method, as well as copy the essential ' +
+    'parent component properties.', () => {
     const testDiv = document.createElement('DIV');
     testDiv.id = 'vue-test';
     document.body.appendChild(testDiv);
@@ -64,6 +68,9 @@ describe('createVueComponent', () => {
       }
     };
 
+    Vue.use(Vuex);
+    Vue.use(VueRouter);
+
     const vue = new Vue({
       el: '#vue-test',
       components: {
@@ -77,13 +84,31 @@ describe('createVueComponent', () => {
             h('mc')
           ]
         );
-      }
+      },
+      store: new Vuex.Store({
+        state: {
+          testValue: 'test'
+        },
+      }),
+      router: new VueRouter({
+        routes: [{ path: '/foo'}]
+      }),
     });
 
     const sampleVNode = vue.$children[0].$children[0].$vnode;
     const sampleParentComponent = vue.$children[0] as any;
 
     expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$parent).toEqual(vue.$children[0]);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$router).not.toEqual(void 0);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$store).not.toEqual(void 0);
     expect(createVueComponent(sampleVNode, sampleParentComponent, {'testProp': 'test-prop-value'}).$props['testProp']).toEqual('test-prop-value');
+  });
+});
+
+describe('CustomEditor', () => {
+  it('should return a class with all the methods needed to create a custom editor', () => {
+    expect(CustomEditor.prototype.prepare).not.toEqual(void 0);
+    expect(CustomEditor.prototype.fillWithInitialData).not.toEqual(void 0);
+    expect(CustomEditor.prototype.focus).not.toEqual(void 0);
   });
 });
