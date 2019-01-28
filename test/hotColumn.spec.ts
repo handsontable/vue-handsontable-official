@@ -132,12 +132,20 @@ describe('getRendererWrapper', () => {
         }
       }
     };
+    const mockComponent = {
+      $parent: {
+        $data: {
+          editorCache: new Map(),
+          rendererCache: new WeakMap()
+        }
+      }
+    };
 
     const getRendererWrapper = (HotColumnConstructor as any).methods.getRendererWrapper;
     const mockTD = document.createElement('TD');
 
-    expect(typeof getRendererWrapper.call(mockVNode)).toEqual('function');
-    expect(getRendererWrapper.call(mockVNode, mockVNode)({}, mockTD, 0, 0, 0, '', {})).toEqual(mockTD);
+    expect(typeof getRendererWrapper.call(mockComponent)).toEqual('function');
+    expect(getRendererWrapper.call(mockComponent, mockVNode)({}, mockTD, 0, 0, 0, '', {})).toEqual(mockTD);
   });
 });
 
@@ -162,10 +170,18 @@ describe('getEditorClass', () => {
         }
       }
     };
+    const mockComponent = {
+      $parent: {
+        $data: {
+          editorCache: new Map(),
+          rendererCache: new WeakMap()
+        }
+      }
+    };
 
     const getEditorClass = (HotColumnConstructor as any).methods.getEditorClass;
 
-    expect(getEditorClass.call(mockVNode, mockVNode).constructor).not.toEqual(void 0);
-    expect(getEditorClass.call(mockVNode, mockVNode).prototype.prepare).not.toEqual(void 0);
+    expect(getEditorClass.call(mockComponent, mockVNode).constructor).not.toEqual(void 0);
+    expect(getEditorClass.call(mockComponent, mockVNode).prototype.prepare).not.toEqual(void 0);
   });
 });
