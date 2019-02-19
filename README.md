@@ -5,6 +5,7 @@
 **Handsontable for Vue** is the official wrapper for [**Handsontable**](//github.com/handsontable/handsontable), a JavaScript data grid component with a spreadsheet look & feel. It easily integrates with any data source and comes with lots of useful features like data binding, validation, sorting or powerful context menu.
 
 [![Build status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](//travis-ci.org/handsontable/vue-handsontable-official)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhandsontable%2Fvue-handsontable-official.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhandsontable%2Fvue-handsontable-official?ref=badge_shield)
 
 <br/>
 
@@ -22,6 +23,9 @@
  10. [Licensing](#licensing)
 
 <br/>
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhandsontable%2Fvue-handsontable-official.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhandsontable%2Fvue-handsontable-official?ref=badge_large)
 
 ## Installation
 Use npm to download the project.
