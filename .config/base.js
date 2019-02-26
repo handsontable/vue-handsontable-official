@@ -5,8 +5,6 @@ import VuePlugin from 'rollup-plugin-vue';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 
-const envHotType = process.env.HOT_TYPE;
-
 export const plugins = {
   replace: replace({
     'process.env.NODE_ENV': JSON.stringify('production')
@@ -19,9 +17,17 @@ export const plugins = {
       isProduction: true
     }
   }),
-  typescript: typescript(),
+  typescript: typescript({
+    objectHashIgnoreUnknownHack: true,
+    clean: true
+  }),
   babel: babel({
+    babelrc: false,
     exclude: 'node_modules/**',
+    extensions: ['.js', '.ts', '.vue'],
+    presets: [
+      '@babel/env'
+    ],
   }),
   nodeResolve: nodeResolve(),
   json: json({
