@@ -9,7 +9,6 @@ const envHotType = process.env.HOT_TYPE;
 
 export const plugins = {
   replace: replace({
-    'hot-alias': envHotType === 'pro' ? 'handsontable-pro' : 'handsontable',
     'process.env.NODE_ENV': JSON.stringify('production')
   }),
   VuePlugin: VuePlugin({
@@ -32,7 +31,7 @@ export const plugins = {
 };
 
 export const baseConfig = {
-  input: 'src/common/index.ts',
+  input: 'src/index.ts',
   plugins: [
     plugins.json,
     plugins.replace,
@@ -42,7 +41,7 @@ export const baseConfig = {
     plugins.nodeResolve
   ],
   external: [
-    (envHotType === 'ce' ? 'handsontable' : 'handsontable-pro'),
+    'handsontable',
     'vue',
     'handsontable',
     'handsontable-pro'

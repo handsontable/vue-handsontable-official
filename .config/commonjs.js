@@ -9,7 +9,7 @@ export const cjsConfig = {
   output: {
     format: env,
     indent: false,
-    file: `./commonjs/${envHotType}/${filename}`,
+    file: `./commonjs/${filename}`,
     exports: 'named'
   },
   plugins: baseConfig.plugins.concat([commonjs()])

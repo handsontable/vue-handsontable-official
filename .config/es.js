@@ -13,7 +13,7 @@ export const esConfig = {
   output: {
     format: env,
     indent: false,
-    file: `./es/${envHotType}/${filename}`,
+    file: `./es/${filename}`,
     exports: 'named'
   },
   plugins: [
@@ -30,7 +30,8 @@ export const esConfig = {
         compilerOptions: {
           declaration: true
         }
-      }
+      },
+      useTsconfigDeclarationDir: true
     }),
     plugins.nodeResolve,
   ]

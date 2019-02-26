@@ -3,8 +3,6 @@ import { addLicenseBanner } from './helpers/licenseBanner';
 import { uglify } from 'rollup-plugin-uglify';
 import commonjs from 'rollup-plugin-commonjs';
 
-const env = process.env.NODE_ENV;
-const envHotType = process.env.HOT_TYPE;
 const minFilename = 'vue-handsontable.min.js';
 
 const minConfig = {
@@ -13,7 +11,7 @@ const minConfig = {
     name: 'Handsontable.vue',
     indent: false,
     sourcemap: true,
-    file: `./dist/${envHotType}/${minFilename}`,
+    file: `./dist/${minFilename}`,
     exports: 'named'
   },
   plugins: baseConfig.plugins.concat([

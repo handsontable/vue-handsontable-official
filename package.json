@@ -1,10 +1,14 @@
 {
-  "name": "vue-handsontable-official",
-  "private": true,
+  "name": "@handsontable/vue",
   "version": "3.1.0",
   "description": "Best Data Grid for Vue with Spreadsheet Look and Feel.",
   "author": "Handsoncode <hello@handsoncode.net> (https://handsoncode.net)",
   "homepage": "https://handsontable.com",
+  "license": "MIT",
+  "browser": "./dist/vue-handsontable.js",
+  "main": "./commonjs/vue-handsontable.js",
+  "module": "./es/vue-handsontable.js",
+  "types": "./index.d.ts",
   "keywords": [
     "handsontable",
     "component",
@@ -22,9 +26,28 @@
     "vue2",
     "vue component",
     "vue grid",
-    "wrapper"
+    "wrapper",
+    "enterprise",
+    "sort",
+    "formulas",
+    "filter",
+    "search",
+    "conditional formatting",
+    "csv"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/handsontable/vue-handsontable-official.git"
+  },
+  "bugs": {
+    "url": "https://github.com/handsontable/vue-handsontable-official/issues"
+  },
+  "peerDependencies": {
+    "handsontable": ">=6.0.0",
+    "vue": "^2.5.0"
+  },
   "devDependencies": {
+    "@babel/polyfill": "^7.2.5",
     "@types/jest": "^23.3.9",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
@@ -36,7 +59,6 @@
     "css-loader": "^0.28.11",
     "del-cli": "^1.1.0",
     "handsontable": "^6.0.0",
-    "handsontable-pro": "^6.0.0",
     "jest": "^23.6.0",
     "rollup": "^0.65.0",
     "rollup-plugin-babel": "^3.0.7",
@@ -53,27 +75,14 @@
     "vue-template-compiler": "^2.5.0"
   },
   "scripts": {
-    "build": "npm run delete-builds && npm run build-ce && npm run build-pro",
-    "build-ce": "npm run build-ce:commonjs && npm run build-ce:es && npm run build-ce:umd && npm run build-ce:min",
-    "build-pro": "npm run build-pro:commonjs && npm run build-pro:es && npm run build-pro:umd && npm run build-pro:min",
-    "build-ce:commonjs": "cross-env NODE_ENV=cjs HOT_TYPE=ce rollup -c",
-    "build-ce:umd": "cross-env NODE_ENV=umd HOT_TYPE=ce rollup -c",
-    "build-ce:es": "cross-env NODE_ENV=es HOT_TYPE=ce rollup -c",
-    "build-ce:min": "cross-env NODE_ENV=min HOT_TYPE=ce rollup -c",
-    "build-pro:commonjs": "cross-env NODE_ENV=cjs HOT_TYPE=pro rollup -c",
-    "build-pro:umd": "cross-env NODE_ENV=umd HOT_TYPE=pro rollup -c",
-    "build-pro:es": "cross-env NODE_ENV=es HOT_TYPE=pro rollup -c",
-    "build-pro:min": "cross-env NODE_ENV=min HOT_TYPE=pro rollup -c",
-    "delete-builds": "del-cli ./commonjs/ && del-cli ./dist/ && del-cli ./es/",
-    "copy-builds-ce": "cpy './commonjs/ce/' ./build/ce/commonjs && cpy './es/ce/*.js' ./build/ce/es && cpy './dist/ce/' ./build/ce/dist",
-    "copy-builds-pro": "cpy './commonjs/pro/' ./build/pro/commonjs && cpy './es/pro/*.js' ./build/pro/es && cpy './dist/pro/' ./build/pro/dist",
-    "copy-builds": "npm run copy-builds-ce && npm run copy-builds-pro",
-    "copy-scope-info": "cpy './src/ce/*' ./build/ce && cpy './src/pro/*' ./build/pro",
-    "copy-dts": "cpy './es/ce/*.d.ts' ./build/ce && cpy './es/pro/*.d.ts' ./build/pro && del-cli './es/ce/*.d.ts' && del-cli './es/pro/*.d.ts'",
-    "copy-scopes": "npm run delete-scopes && npm run copy-builds && npm run copy-scope-info && npm run copy-dts",
-    "delete-scopes": "del-cli ./build/",
-    "publish-scopes": "npm publish ./build/ce/ && npm publish ./build/pro/",
-    "publish-all": "npm run build && npm run copy-scopes && npm run publish-scopes && npm run delete-scopes",
+    "build": "npm run delete-build && npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:min",
+    "build:commonjs": "cross-env NODE_ENV=cjs rollup -c",
+    "build:umd": "cross-env NODE_ENV=umd rollup -c",
+    "build:es": "cross-env NODE_ENV=es rollup -c",
+    "build:min": "cross-env NODE_ENV=min rollup -c",
+    "delete-build": "del-cli ./es/ && del-cli ./commonjs/ && del-cli ./dist/ && del-cli ./*.d.ts",
+    "publish-build": "npm publish",
+    "publish-all": "npm run build && npm run copy-build-info && npm run publish-build && npm run delete-build",
     "test": "jest"
   },
   "jest": {
@@ -89,9 +98,6 @@
       "json",
       "node"
     ],
-    "moduleNameMapper": {
-      "hot-alias": "handsontable"
-    },
     "globals": {
       "ts-jest": {
         "tsConfig": "test-tsconfig.json",
