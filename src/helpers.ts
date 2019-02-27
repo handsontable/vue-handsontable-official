@@ -1,4 +1,4 @@
-import Handsontable from 'hot-alias';
+import Handsontable from 'handsontable';
 import {HotTableProps, VueProps} from './types';
 
 /**
@@ -173,7 +173,7 @@ export function updateHotSettings(updatedProperty: string, updatedValue: object,
  * @param {Object} [additionalSettings] An additional object containing the properties, including the `on`-prefixed hook names.
  * @returns {Object} An object containing the properties, with the `on`-prefixes trimmed.
  */
-export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.DefaultSettings {
+export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.GridSettings {
   const newSettings = {};
 
   for (const key in settings) {
