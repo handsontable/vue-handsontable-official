@@ -31,6 +31,7 @@ export const esConfig = {
       objectHashIgnoreUnknownHack: true,
       clean: true
     }),
+    plugins.babel,
     plugins.nodeResolve,
   ]
 };
