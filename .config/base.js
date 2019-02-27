@@ -48,9 +48,7 @@ export const baseConfig = {
   ],
   external: [
     'handsontable',
-    'vue',
-    'handsontable',
-    'handsontable-pro'
+    'vue'
   ]
 };
 

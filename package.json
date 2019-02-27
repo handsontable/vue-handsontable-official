@@ -43,7 +43,7 @@
     "url": "https://github.com/handsontable/vue-handsontable-official/issues"
   },
   "peerDependencies": {
-    "handsontable": ">=6.0.0",
+    "handsontable": ">=7.0.0",
     "vue": "^2.5.0"
   },
   "devDependencies": {
@@ -83,7 +83,7 @@
     "build:min": "cross-env NODE_ENV=min rollup -c",
     "delete-build": "del-cli ./es/ && del-cli ./commonjs/ && del-cli ./dist/ && del-cli ./*.d.ts",
     "publish-build": "npm publish",
-    "publish-all": "npm run build && npm run copy-build-info && npm run publish-build && npm run delete-build",
+    "publish-all": "npm run build && npm run publish-build && npm run delete-build",
     "test": "jest"
   },
   "jest": {
