@@ -7,8 +7,8 @@
   "license": "MIT",
   "main": "./commonjs/vue-handsontable.js",
   "module": "./es/vue-handsontable.js",
-  "jsdelivr": "./dist/vue-handsontable.js",
-  "unpkg": "./dist/vue-handsontable.js",
+  "jsdelivr": "./dist/vue-handsontable.min.js",
+  "unpkg": "./dist/vue-handsontable.min.js",
   "types": "./index.d.ts",
   "keywords": [
     "handsontable",
