@@ -8,12 +8,10 @@
     "sourceMap": true,
     "baseUrl": ".",
     "experimentalDecorators": true,
-    "paths": {
-      "hot-alias": ["node_modules/handsontable"]
-    }
+    "declarationDir": "./"
   },
   "include": [
-    "src/common/*"
+    "src/*"
   ],
   "exclude": [
     "**/node_modules/*"

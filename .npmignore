@@ -1,8 +1,9 @@
-.DS_Store
-.grunt
-.github
-.idea
+*
 
-node_modules/
-test/dist/
-
+!commonjs/*
+!dist/*
+!es/*
+!package.json
+!*.d.ts
+!README.md
+!LICENSE

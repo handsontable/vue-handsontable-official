@@ -1,4 +1,4 @@
-# Contributing to Handsontable
+# Contributing to Handsontable for Vue
 
 Your contributions to this project are very welcome. If you want to fix a bug or propose a new feature, you can open a new Pull Request but first make sure it follows these general rules:
 
