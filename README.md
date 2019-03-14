@@ -1,49 +1,55 @@
-<img src="https://raw.githubusercontent.com/handsontable/static-files/master/Images/Logo/Handsontable/handsontable-vue.png" alt="Handsontable for Vue" />
+<div align="center">
+  
+![Handsontable for Vue](https://raw.githubusercontent.com/handsontable/static-files/master/Images/Logo/Handsontable/handsontable-vue.png)
 
-<br/>
+This is the official wrapper of [**Handsontable**](//github.com/handsontable/handsontable) data grid for Vue.<br>
+It provides data binding, data validation, filtering, sorting and more.<br>
 
-**Handsontable for Vue** is the official wrapper for [**Handsontable**](//github.com/handsontable/handsontable), a JavaScript data grid component with a spreadsheet look & feel. It easily integrates with any data source and comes with lots of useful features like data binding, validation, sorting or powerful context menu.
-
+[![npm](https://img.shields.io/npm/dt/@handsontable/vue.svg)](//npmjs.com/package/@handsontable/vue)
+[![npm](https://img.shields.io/npm/dm/@handsontable/vue.svg)](//npmjs.com/package/@handsontable/vue)
 [![Build status](https://travis-ci.org/handsontable/vue-handsontable-official.png?branch=master)](//travis-ci.org/handsontable/vue-handsontable-official)
+</div>
 
-<br/>
+<br>
 
-## Table of contents
+<div align="center">
+<a href="//handsontable.com/docs/frameworks-wrapper-for-vue-simple-example.html">
+<img src="https://raw.githubusercontent.com/handsontable/static-files/master/Images/Screenshots/handsontable-screenshot-new.png" align="center" alt="A screenshot of a data grid for Vue.js"/>
+</a>
+</div>
 
- 1. [Installation](#installation)
- 2. [Getting Started](#getting-started)
- 3. [Documentation](#documentation)
- 4. [What to use it for?](#what-to-use-it-for)
- 5. [Features](#features)
- 6. [Screenshot](#screenshot)
- 7. [Resources](#resources)
- 8. [Support](#support)
- 9. [Contributing](#contributing)
- 10. [Licensing](#licensing)
-
-<br/>
+<br>
 
 ## Installation
-Use npm to download the project.
-```bash
+
+Use npm to install this wrapper together with Handsontable.
+```
 npm install handsontable @handsontable/vue
 ```
-A package scope for Handsontable Pro users:
-```bash
-npm install handsontable-pro @handsontable-pro/vue
+
+You can load it directly from [jsDelivr](//jsdelivr.com/package/npm/@handsontable/vue) as well.
+```html
+<script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@handsontable/vue/dist/vue-handsontable.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" rel="stylesheet">
 ```
 
-<br/>
+The component will be available as `Handsontable.vue.HotTable`.
 
-## Getting Started
-Assuming that you have installed the wrapper with npm, now you just need to include Handsontable styles into your build system and use `<HotTable>` just like any other Vue component.
+## Usage
 
-### Handsontable Community Edition:
+Use this data grid as you would any other component in your application. [Options](//handsontable.com/docs/Options.html) can be set as `HotTable` props.
+
+**Styles**
+```css
+@import '~handsontable/dist/handsontable.full.css';
+```
 
 **Vue Component**
 ```vue
 <template>
-  <hot-table :settings="settings"></hot-table>
+  <hot-table :data="data" colHeaders="true" rowHeaders="true" width="600" height="300"></hot-table>
 </template>
 
 <script>
@@ -52,16 +58,12 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
   export default {
     data: function() {
       return {
-        settings: {
-          data: [
-            ["", "Ford", "Volvo", "Toyota", "Honda"],
-            ["2016", 10, 11, 12, 13],
-            ["2017", 20, 11, 14, 13],
-            ["2018", 30, 15, 12, 13]
-          ],
-          colHeaders: true,
-          rowHeaders: true,
-        }
+        data: [
+          ['', 'Tesla', 'Mercedes', 'Toyota', 'Volvo'],
+          ['2019', 10, 11, 12, 13],
+          ['2020', 20, 11, 14, 13],
+          ['2021', 30, 15, 12, 13]
+        ],
       };
     },
     components: {
@@ -69,117 +71,105 @@ Assuming that you have installed the wrapper with npm, now you just need to incl
     }
   }
 </script>
-
-<style src="../node_modules/handsontable/dist/handsontable.full.css"></style>
 ```
 
-### Handsontable Pro:
-
-**Vue Component**
-```vue
-<template>
-  <hot-table :settings="settings"></hot-table>
-</template>
-
-<script>
-  import { HotTable } from '@handsontable-pro/vue';
-
-  export default {
-    data: function() {
-      return {
-        settings: {
-          data: [
-            ["", "Ford", "Volvo", "Toyota", "Honda"],
-            ["2016", 10, 11, 12, 13],
-            ["2017", 20, 11, 14, 13],
-            ["2018", 30, 15, 12, 13]
-          ],
-          colHeaders: true,
-          rowHeaders: true,
-        }
-      };
-    },
-    components: {
-      HotTable
-    }
-  }
-</script>
-
-<style src="../node_modules/handsontable-pro/dist/handsontable.full.css"></style>
-```
-
-<br/>
-
-## Documentation
-Visit [handsontable.com/docs](//handsontable.com/docs/vue) to get more Handsontable for Vue examples and guides.
-
-<br/>
-
-## What to use it for?
-The list below gives a rough idea on what you can do with Handsontable, but it shouldn't limit you in any way:
-
-- Database editing
-- Configuration controlling
-- Data merging
-- Team scheduling
-- Sales reporting
-- Financial analysis
-
-<br/>
+##### [See the live demo](//handsontable.com/docs/frameworks-wrapper-for-vue-simple-example.html)
 
 ## Features
 
-Some of the most popular features include:
+A list of some of the most popular features:
 
-- Sorting data
-- Data validation
+- Multiple column sorting
+- Non-contiguous selection
+- Filtering data
+- Export to file
+- Validating data
 - Conditional formatting
-- Freezing rows/columns
 - Merging cells
-- Defining custom cell types
+- Custom cell types
+- Freezing rows/columns
 - Moving rows/columns
 - Resizing rows/columns
+- Hiding rows/columns
 - Context menu
-- Adding comments to cells
-- Dragging fill handle to populate data
-- Internationalization
-- Non-contiguous selection
+- Comments
+- Auto-fill option
 
-<br/>
+## Documentation
 
-## Screenshot
-<div align="center">
-<a href="//handsontable.com/examples">
-<img src="https://raw.githubusercontent.com/handsontable/static-files/master/Images/Screenshots/handsontable-ce-showcase.png" align="center" alt="Handsontable for Vue" />
-</a>
-</div>
-
-<br/>
-
-## Resources
-- [Guides](//handsontable.com/docs/vue)
+- [Developer guides](//handsontable.com/docs/vue)
 - [API Reference](//handsontable.com/docs/Core.html)
-- [Release notes](//github.com/handsontable/vue-handsontable-official/releases)
-- [Roadmap](//trello.com/b/PztR4hpj)
-- [Twitter](//twitter.com/handsontable)
+- [Release notes](//handsontable.com/docs/tutorial-release-notes.html)
+- [Twitter](//twitter.com/handsontable) (News and updates)
 
-<br/>
+## Support and contribution
 
-## Support
-You can report your issues here on [GitHub](//github.com/handsontable/vue-handsontable-official/issues).
+We provide support for all users through [GitHub issues](//github.com/handsontable/vue-handsontable-official/issues). If you have a commercial license then you can add a new ticket through the [contact form](//handsontable.com/contact?category=technical_support).
 
-An open source version of Handsontable doesn't include technical support. You need to purchase the [Handsontable Pro](//handsontable.com/pricing) license or [contact us](//handsontable.com/contact) directly in order to obtain a technical support from the Handsontable team.
+If you would like to contribute to this project, make sure you first read the [guide for contributors](//github.com/handsontable/vue-handsontable-official/blob/master/CONTRIBUTING.md).
 
-<br/>
+## Browser compatibility
 
-## Contributing
-If you would like to help us to develop this wrapper for Vue, please read the [guide for contributors](//github.com/handsontable/vue-handsontable-official/blob/master/CONTRIBUTING.md) first.
+Handsontable is compatible with modern browsers such as Chrome, Firefox, Safari, Opera, and Edge. It also supports Internet Explorer 9 to 11 but with limited performance.
 
-<br/>
+## License
 
-## Licensing
-This wrapper is released under [the MIT license](//github.com/handsontable/vue-handsontable-official/blob/master/LICENSE).
+This wrapper is released under [the MIT license](//github.com/handsontable/vue-handsontable-official/blob/master/LICENSE) but under the hood it uses [Handsontable](//github.com/handsontable/handsontable), which is dual-licensed. You can either use it for free in all your non-commercial projects or purchase a commercial license.
 
-<br/>
+<table>
+  <thead align="center">
+    <tr>
+      <th width="50%">Free license</th>
+      <th width="50%">Paid license</th>
+    </tr>    
+  </thead>
+  <tbody align="center">
+    <tr>
+      <td>For non-commercial purposes such as teaching, academic research, personal experimentation, and evaluating  on development and testing servers.</td>
+      <td>For all commercial purposes</td>
+    </tr>
+    <tr>
+      <td>All features are available</td>
+      <td>All features are available</td>
+    </tr>
+    <tr>
+      <td>Community support</td>
+      <td>Dedicated support</td>
+    </tr>    
+    <tr>
+      <td><a href="//github.com/handsontable/handsontable/blob/master/handsontable-non-commercial-license.pdf">Read the license</a></td>
+      <td><a href="//handsontable.com/pricing">See plans</a></td>
+    </tr>
+  </tbody>
+</table>
 
-Copyrights belong to Handsoncode sp. z o.o.
+## License key
+
+**The license key is obligatory since [Handsontable 7.0.0](//github.com/handsontable/handsontable/releases/tag/7.0.0) (released in March 2019).**
+
+If you use Handsontable for purposes not intended toward monetary compensation such as, but not limited to, teaching, academic research, evaluation, testing and experimentation, pass the phrase `'non-commercial-and-evaluation'`, as presented below. 
+
+You can pass it in the `settings` object: 
+
+```js
+settings: {
+  data: data,
+  rowHeaders: true,
+  colHeaders: true,
+  licenseKey: 'non-commercial-and-evaluation'
+}
+```
+
+Alternatively, you can pass it to a `licenseKey` prop:
+```vue
+<hot-table :settings="settings" licenseKey="non-commercial-and-evaluation" />
+```
+
+If, on the other hand, you use Handsontable in a project that supports your commercial activity, then you must purchase the license key at [handsontable.com](//handsontable.com/pricing).
+
+The license key is validated in an offline mode.  No connection is made to any server. [Learn more](//handsontable.com/docs/tutorial-license-key.html) about how it works.
+
+<br>
+<br>
+
+Created by [Handsoncode](//handsoncode.net) with ❤ and ☕ in [Tricity](//en.wikipedia.org/wiki/Tricity,_Poland).

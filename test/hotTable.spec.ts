@@ -1,4 +1,4 @@
-import HotTableConstructor from '../src/common/HotTable.vue';
+import HotTableConstructor from '../src/HotTable.vue';
 
 describe('hotInit', () => {
   it('should initialize Handsontable and assign it to the `table` property of the provided object', () => {

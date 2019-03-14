@@ -1,8 +1,7 @@
 import {
   getColumnVNode,
-  createVueComponent,
-  CustomEditor
-} from '../src/common/helpers/hotColumn';
+  createVueComponent
+} from '../src/helpers';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
@@ -102,13 +101,5 @@ describe('createVueComponent', () => {
     expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$router).not.toEqual(void 0);
     expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$store).not.toEqual(void 0);
     expect(createVueComponent(sampleVNode, sampleParentComponent, {'testProp': 'test-prop-value'}).$props['testProp']).toEqual('test-prop-value');
-  });
-});
-
-describe('CustomEditor', () => {
-  it('should return a class with all the methods needed to create a custom editor', () => {
-    expect(CustomEditor.prototype.prepare).not.toEqual(void 0);
-    expect(CustomEditor.prototype.fillWithInitialData).not.toEqual(void 0);
-    expect(CustomEditor.prototype.focus).not.toEqual(void 0);
   });
 });

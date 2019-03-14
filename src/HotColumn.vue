@@ -9,18 +9,15 @@
   import CombinedVueInstance from 'vue';
   import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
   import {
-    propFactory
-  } from './helpers/hotTable';
-  import {
+    propFactory,
     createVueComponent,
-    CustomEditor,
     getColumnVNode
-  } from './helpers/hotColumn';
+  } from './helpers';
   import {
     HotTableProps,
     HotColumnMethods
   } from './types';
-  import Handsontable from 'hot-alias';
+  import Handsontable from 'handsontable';
 
   const HotColumn: ThisTypedComponentOptionsWithRecordProps<Vue, {}, HotColumnMethods, {}, HotTableProps> = {
     name: 'HotColumn',
@@ -104,13 +101,42 @@
        * @param {Object} vNode VNode for the editor child component.
        * @returns {Class} The class used as an editor in Handsontable.
        */
-      getEditorClass: function (vNode: VNode): typeof CustomEditor {
+      getEditorClass: function (vNode: VNode): typeof Handsontable.editors.BaseEditor {
         const requiredMethods: string[] = ['focus', 'open', 'close', 'getValue', 'setValue'];
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
         const editorCache = this.$parent.$data.editorCache;
-        let mountedComponent: object = null;
-        let customEditorClass: typeof CustomEditor = null;
+        let mountedComponent: any = null;
 
+        class CustomEditor extends Handsontable.editors.BaseEditor implements Handsontable._editors.Base {
+          prepare(row, col, prop, td, originalValue, cellProperties) {
+            super.prepare(row, col, prop, td, originalValue, cellProperties);
+
+            mountedComponent.$data.row = row;
+            mountedComponent.$data.column = col;
+            mountedComponent.$data.columnProp = prop;
+            mountedComponent.$data.td = td;
+            mountedComponent.$data.originalValue = originalValue;
+            mountedComponent.$data.cellProperties = cellProperties;
+
+            mountedComponent.finishEditing = (restoreOriginalValue, ctrlDown, callback) => {
+              super.finishEditing(restoreOriginalValue, ctrlDown, callback);
+            };
+          }
+
+          focus() {}
+          getValue() {
+            Handsontable.editors.BaseEditor.prototype.getValue();
+          }
+          setValue() {
+            Handsontable.editors.BaseEditor.prototype.setValue();
+          }
+          open() {
+            Handsontable.editors.BaseEditor.prototype.open();
+          }
+          close() {
+            Handsontable.editors.BaseEditor.prototype.close();
+          }
+        }
 
         if (editorCache && !editorCache.has(componentName)) {
           mountedComponent = createVueComponent(vNode, this, {});
@@ -120,9 +146,6 @@
         } else {
           mountedComponent = editorCache.get(componentName);
         }
-
-        customEditorClass = CustomEditor;
-        customEditorClass.prototype.mountedComponent = mountedComponent;
 
         Object.entries(Handsontable.editors.BaseEditor.prototype).forEach(entry => {
           const methodName: string = entry[0];

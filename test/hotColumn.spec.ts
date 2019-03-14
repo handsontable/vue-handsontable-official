@@ -1,4 +1,4 @@
-import HotColumnConstructor from '../src/common/HotColumn.vue';
+import HotColumnConstructor from '../src/HotColumn.vue';
 
 describe('createColumnSettings', () => {
   it('should create the column settings based on the data provided to the `hot-column` component and it\'s child components', () => {

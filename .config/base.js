@@ -5,11 +5,8 @@ import VuePlugin from 'rollup-plugin-vue';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 
-const envHotType = process.env.HOT_TYPE;
-
 export const plugins = {
   replace: replace({
-    'hot-alias': envHotType === 'pro' ? 'handsontable-pro' : 'handsontable',
     'process.env.NODE_ENV': JSON.stringify('production')
   }),
   VuePlugin: VuePlugin({
@@ -20,9 +17,17 @@ export const plugins = {
       isProduction: true
     }
   }),
-  typescript: typescript(),
+  typescript: typescript({
+    objectHashIgnoreUnknownHack: true,
+    clean: true
+  }),
   babel: babel({
+    babelrc: false,
     exclude: 'node_modules/**',
+    extensions: ['.js', '.ts', '.vue'],
+    presets: [
+      '@babel/env'
+    ],
   }),
   nodeResolve: nodeResolve(),
   json: json({
@@ -32,7 +37,7 @@ export const plugins = {
 };
 
 export const baseConfig = {
-  input: 'src/common/index.ts',
+  input: './src/index.ts',
   plugins: [
     plugins.json,
     plugins.replace,
@@ -42,10 +47,8 @@ export const baseConfig = {
     plugins.nodeResolve
   ],
   external: [
-    (envHotType === 'ce' ? 'handsontable' : 'handsontable-pro'),
-    'vue',
     'handsontable',
-    'handsontable-pro'
+    'vue'
   ]
 };
 

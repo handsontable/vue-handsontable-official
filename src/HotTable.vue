@@ -11,11 +11,11 @@
     updateHotSettings,
     preventInternalEditWatch,
     prepareSettings
-  } from './helpers/hotTable';
+  } from './helpers';
   import Vue from 'vue';
   import { HotTableData, HotTableMethods, HotTableProps, HotTableComponent } from './types';
-  import * as packageJson from './../../package.json';
-  import Handsontable from 'hot-alias';
+  import * as packageJson from '../package.json';
+  import Handsontable from 'handsontable';
 
   const HotTable: HotTableComponent<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
@@ -43,7 +43,7 @@
           unmappedSettings.push(this.$props)
         }
 
-        const newSettings: Handsontable.DefaultSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);
+        const newSettings: Handsontable.GridSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);
 
         newSettings.columns = this.columnSettings ? this.columnSettings : newSettings.columns;
 

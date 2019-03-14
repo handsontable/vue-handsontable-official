@@ -1,17 +1,12 @@
 {
-  "presets": [
-    "es2015-rollup"
-  ],
-  "plugins": [
-    "transform-object-rest-spread"
-  ],
   "env": {
     "test": {
       "presets": [
-        "env"
+        "@babel/env",
+        "@babel/preset-typescript"
       ],
       "plugins": [
-        "transform-runtime"
+        "@babel/transform-runtime"
       ]
     }
   }

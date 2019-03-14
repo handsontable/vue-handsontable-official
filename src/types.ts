@@ -2,7 +2,7 @@ import Handsontable from 'handsontable';
 import Vue, { VNode } from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import { HotTableData, HotTableMethods, HotTableProps } from './types';
-import { CustomEditor } from './helpers/hotColumn';
+import { CustomEditor } from './hotColumn';
 
 export interface HotTableData {
   __internalEdit: boolean,
@@ -16,7 +16,7 @@ export interface HotTableMethods {
   updateHotSettings: (updatedProperty: string, updatedValue: object, oldValue: object) => void
 }
 
-export interface HotTableProps extends Handsontable.DefaultSettings {
+export interface HotTableProps extends Handsontable.GridSettings {
   id?: string,
   settings?: Handsontable.DefaultSettings
 }

@@ -1,5 +1,6 @@
-import Handsontable from 'hot-alias';
-import { HotTableProps, VueProps } from '../types';
+import CombinedVueInstance, { VNode } from 'vue';
+import Handsontable from 'handsontable';
+import { HotTableProps, VueProps, SubComponentParent } from './types';
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -33,6 +34,23 @@ export function rewriteSettings(observerSettings): any[] | object {
   }
 
   return settings;
+}
+
+/**
+ * Initialize Handsontable.
+ */
+export function hotInit(): void {
+  const unmappedSettings: any[] = [
+    this.settings ? this.settings : this._props,
+  ];
+
+  if (this.settings) {
+    unmappedSettings.push(this._props)
+  }
+
+  this.hotInstance = new Handsontable(this.$el, prepareSettings(unmappedSettings[0], unmappedSettings[1]));
+
+  preventInternalEditWatch(this);
 }
 
 /**
@@ -137,7 +155,7 @@ export function propWatchFactory(updateFunction: Function) {
  * @param {Object} updatedValue Watcher-generated updated value object.
  * @param {Object} oldValue Watcher-generated old value object.
  */
-export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object): void {
+export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object) {
   const newSettings = {};
 
   if (updatedProperty === 'data' && this.__internalEdit === true) {
@@ -156,7 +174,7 @@ export function updateHotSettings(updatedProperty: string, updatedValue: object,
  * @param {Object} [additionalSettings] An additional object containing the properties, including the `on`-prefixed hook names.
  * @returns {Object} An object containing the properties, with the `on`-prefixes trimmed.
  */
-export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.DefaultSettings {
+export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.GridSettings {
   const newSettings = {};
 
   for (const key in settings) {
@@ -173,3 +191,45 @@ export function prepareSettings(settings: object, additionalSettings?: object): 
 
   return newSettings;
 }
+
+/**
+ * Get the VNode child of the `hot-column` component.
+ *
+ * @param {Array} hotColumnSlots Array of slots from the `hot-column` component.
+ * @param {String} type Type of the child component. Either `hot-renderer` or `hot-editor`.
+ * @returns {Object|null} The VNode of the child component (or `null` when nothing's found).
+ */
+export function getColumnVNode(hotColumnSlots: VNode[], type: string): VNode {
+  let componentVNode: VNode = null;
+
+  hotColumnSlots.every((slot, index) => {
+    if (slot.data && slot.data.attrs && slot.data.attrs[type] !== void 0) {
+      componentVNode = slot;
+      return false;
+    }
+
+    return true;
+  });
+
+  return componentVNode;
+}
+
+/**
+ * Create an instance of the Vue Component based on the provided VNode.
+ *
+ * @param {Object} vNode VNode element to be turned into a component instance.
+ * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
+ * @param {Object} props Props to be passed to the new instance.
+ */
+export function createVueComponent(vNode: VNode, parent: SubComponentParent, props: object): CombinedVueInstance {
+  const HotTableComponent: SubComponentParent = parent;
+  const settings: object = {
+    propsData: props,
+    parent: HotTableComponent,
+    router: HotTableComponent.$router,
+    store: HotTableComponent.$store,
+  };
+
+  return (new (vNode.componentOptions as any).Ctor(settings)).$mount();
+}
+
