@@ -1,6 +1,6 @@
-import CombinedVueInstance, { VNode } from 'vue';
+import { VNode } from 'vue';
 import Handsontable from 'handsontable';
-import { HotTableProps, VueProps, SubComponentParent } from './types';
+import { HotTableProps, VueProps, SubComponentParent, EditorComponent } from './types';
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -87,9 +87,7 @@ export function preventInternalEditWatch(component) {
 export function propFactory(): VueProps<HotTableProps> {
   const registeredHooks: string[] = Handsontable.hooks.getRegistered();
 
-  //TODO: workaround for `DefaultSettings` being an interface and not a class in `handsontable.ts`
-  const hotTemp: any = Handsontable;
-  const propSchema: VueProps<HotTableProps> = new hotTemp.DefaultSettings();
+  const propSchema: VueProps<HotTableProps> = new Handsontable.DefaultSettings();
 
   for (let prop in propSchema) {
     propSchema[prop] = {};
@@ -221,7 +219,7 @@ export function getColumnVNode(hotColumnSlots: VNode[], type: string): VNode {
  * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
  * @param {Object} props Props to be passed to the new instance.
  */
-export function createVueComponent(vNode: VNode, parent: SubComponentParent, props: object): CombinedVueInstance {
+export function createVueComponent(vNode: VNode, parent: SubComponentParent, props: object): EditorComponent {
   const HotTableComponent: SubComponentParent = parent;
   const settings: object = {
     propsData: props,

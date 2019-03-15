@@ -2,7 +2,6 @@ import Handsontable from 'handsontable';
 import Vue, { VNode } from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import { HotTableData, HotTableMethods, HotTableProps } from './types';
-import { CustomEditor } from './hotColumn';
 
 export interface HotTableData {
   __internalEdit: boolean,
@@ -28,13 +27,22 @@ export interface HotTableComponent<V extends Vue, D, M, C, P> extends ThisTypedC
 export interface HotColumnMethods {
   createColumnSettings: () => void,
   getRendererWrapper: (vNode: VNode) => (...args) => HTMLElement,
-  getEditorClass: (vNode: VNode) => typeof CustomEditor,
+  getEditorClass: (vNode: VNode) => typeof Handsontable.editors.BaseEditor,
   hasProp: (type: string) => boolean
 }
 
 export interface SubComponentParent {
   $store?: any;
   $router?: any;
+}
+
+export interface EditorComponent extends Vue {
+  focus(): void;
+  open(event?: Event): void;
+  close(): void;
+  getValue(): any;
+  setValue(newValue?: any): void;
+  [additional: string]: any;
 }
 
 export type VueProps<T> = { [P in keyof T]: any };

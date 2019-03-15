@@ -15,7 +15,8 @@
   } from './helpers';
   import {
     HotTableProps,
-    HotColumnMethods
+    HotColumnMethods,
+    EditorComponent
   } from './types';
   import Handsontable from 'handsontable';
 
@@ -105,7 +106,7 @@
         const requiredMethods: string[] = ['focus', 'open', 'close', 'getValue', 'setValue'];
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
         const editorCache = this.$parent.$data.editorCache;
-        let mountedComponent: any = null;
+        let mountedComponent: EditorComponent = null;
 
         class CustomEditor extends Handsontable.editors.BaseEditor implements Handsontable._editors.Base {
           prepare(row, col, prop, td, originalValue, cellProperties) {
