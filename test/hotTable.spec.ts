@@ -7,7 +7,10 @@ describe('hotInit', () => {
     document.body.appendChild(container);
 
     const fakeVueComponent: any = {
-      $el: document.getElementById('hotContainer')
+      $el: document.getElementById('hotContainer'),
+      settings: {
+        licenseKey: 'non-commercial-and-evaluation'
+      }
     };
 
     expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
@@ -28,7 +31,10 @@ describe('updateHotSettings', () => {
     document.body.appendChild(container);
 
     const fakeVueComponent: any = {
-      $el: document.getElementById('hotContainer')
+      $el: document.getElementById('hotContainer'),
+      settings: {
+        licenseKey: 'non-commercial-and-evaluation'
+      }
     };
 
     expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
