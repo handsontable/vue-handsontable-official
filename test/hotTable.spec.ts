@@ -1,50 +1,42 @@
-import HotTableConstructor from '../src/HotTable.vue';
+import HotTable from '../src/HotTable.vue';
+import { mount } from '@vue/test-utils';
+import { createSampleData } from './_helpers';
 
 describe('hotInit', () => {
-  it('should initialize Handsontable and assign it to the `table` property of the provided object', () => {
-    const container = document.createElement('DIV');
-    container.id = 'hotContainer';
-    document.body.appendChild(container);
-
-    const fakeVueComponent: any = {
-      $el: document.getElementById('hotContainer'),
-      settings: {
+  it('should initialize Handsontable and assign it to the `hotInstace` property of the provided object', () => {
+    let testWrapper = mount(HotTable, {
+      propsData: {
+        data: createSampleData(1, 1),
         licenseKey: 'non-commercial-and-evaluation'
       }
-    };
+    });
 
-    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
-
-    (HotTableConstructor as any).methods.hotInit.call(fakeVueComponent);
-
-    expect(typeof fakeVueComponent.hotInstance).toEqual('object');
-    expect(typeof fakeVueComponent.hotInstance.guid).toEqual('string');
-
-    container.parentNode.removeChild(container);
+    expect(typeof testWrapper.vm.hotInstance).toEqual('object');
+    expect(testWrapper.vm.hotInstance.getDataAtCell(0, 0)).toEqual('0-0');
   });
 });
 
 describe('updateHotSettings', () => {
   it('should update the previously initialized Handsontable instance with a single changed property', () => {
-    const container = document.createElement('DIV');
-    container.id = 'hotContainer';
-    document.body.appendChild(container);
-
-    const fakeVueComponent: any = {
-      $el: document.getElementById('hotContainer'),
-      settings: {
-        licenseKey: 'non-commercial-and-evaluation'
+    let updateSettingsCalls = 0;
+    let testWrapper = mount(HotTable, {
+      propsData: {
+        data: createSampleData(1, 1),
+        licenseKey: 'non-commercial-and-evaluation',
+        rowHeaders: true,
+        afterUpdateSettings: function () {
+          updateSettingsCalls++;
+        }
       }
-    };
+    });
 
-    expect(typeof fakeVueComponent.hotInstance).toEqual('undefined');
+    expect(testWrapper.vm.hotInstance.getSettings().rowHeaders).toEqual(true);
 
-    (HotTableConstructor as any).methods.hotInit.call(fakeVueComponent);
+    testWrapper.setProps({
+      rowHeaders: false
+    });
 
-    (HotTableConstructor as any).methods.updateHotSettings.call(fakeVueComponent, 'startCols', 19, {});
-
-    expect(fakeVueComponent.hotInstance.getSettings().startCols).toEqual(19);
-
-    container.parentNode.removeChild(container);
+    expect(updateSettingsCalls).toEqual(1);
+    expect(testWrapper.vm.hotInstance.getSettings().rowHeaders).toEqual(false);
   });
 });

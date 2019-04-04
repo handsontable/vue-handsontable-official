@@ -7,99 +7,89 @@ import { createSampleData, mockClientDimensions } from './_helpers';
 
 describe('createColumnSettings', () => {
   it('should create the column settings based on the data provided to the `hot-column` component and it\'s child components', () => {
-    // mocks
-    interface MockInstance {
-      $slots: object,
-      $props: {
-        prop1: string,
-        prop2: string
+    const dummyRendererComponent = {
+      render: function (h) {
+        return h('DIV', 'test-value');
+      }
+    };
+    const dummyEditorComponent = {
+      render: function (h) {
+        return h();
       },
-      columnSettings?: {
-        prop1?: string,
-        prop2?: string,
-        renderer?: string,
-        editor?: string
-      },
-      hasProp: Function,
-      getRendererWrapper: Function,
-      getEditorClass: Function
-    }
+      data: function () {
+        return {
+          getValue: function () {
+            return 'test-value-editor';
+          }
+        }
+      }
+    };
 
-    const mockHotColumnInstance: MockInstance = {
-      $slots: {
-        'default': [
-          {
-            data: {
+    let App = Vue.extend({
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          props: {
+            data: createSampleData(1, 1),
+            licenseKey: 'non-commercial-and-evaluation',
+            init: function () {
+              mockClientDimensions(this.rootElement, 400, 400);
+            }
+          }
+        }, [
+          // HotColumn #1
+          h(HotColumn, {
+            props: {
+              title: 'test-title'
+            }
+          }, [
+            h(dummyRendererComponent, {
               attrs: {
                 'hot-renderer': true
               }
-            }
-          }, {
-            data: {
+            }),
+            h(dummyEditorComponent, {
               attrs: {
                 'hot-editor': true
               }
+            })
+          ]),
+          // HotColumn #2
+          h(HotColumn, {
+            props: {
+              readOnly: true,
+              type: 'numeric',
+              renderer: function () {
+                return 'test-value2';
+              }
             }
-          }
-        ]
-      },
-      $props: {
-        prop1: 'prop1',
-        prop2: 'prop2'
-      },
-      hasProp: () => true,
-      getRendererWrapper: () => 'renderer',
-      getEditorClass: () => 'editor'
-    };
+          })
+        ])
+      }
+    });
 
-    const createColumnSettings = (HotColumn as any).methods.createColumnSettings;
+    let testWrapper = mount(App, {
+      attachToDocument: true
+    });
+    const hotTableComponent = testWrapper.vm.$children[0];
 
-    createColumnSettings.call(mockHotColumnInstance);
+    expect(hotTableComponent.columnSettings[0].title).toEqual('test-title');
+    expect(hotTableComponent.columnSettings[0].renderer(hotTableComponent.hotInstance, document.createElement('TD')).innerHTML).toEqual('<div>test-value</div>');
+    expect((new hotTableComponent.columnSettings[0].editor()).getValue()).toEqual('test-value-editor');
+    expect(hotTableComponent.columnSettings[1].title).toEqual(void 0);
+    expect(hotTableComponent.columnSettings[1].readOnly).toEqual(true);
+    expect(hotTableComponent.columnSettings[1].type).toEqual('numeric');
+    expect(hotTableComponent.columnSettings[1].renderer()).toEqual('test-value2');
 
-    expect(mockHotColumnInstance.columnSettings.prop1).toEqual('prop1');
-    expect(mockHotColumnInstance.columnSettings.prop2).toEqual('prop2');
-    expect(mockHotColumnInstance.columnSettings.renderer).toEqual('renderer');
-    expect(mockHotColumnInstance.columnSettings.editor).toEqual('editor');
-  });
+    expect(hotTableComponent.hotInstance.getSettings().columns[0].title).toEqual('test-title');
+    expect(hotTableComponent.hotInstance.getSettings().columns[0].renderer(hotTableComponent.hotInstance, document.createElement('TD')).innerHTML).toEqual('<div>test-value</div>');
+    expect((new (hotTableComponent.hotInstance.getSettings().columns[0].editor)()).getValue()).toEqual('test-value-editor');
+    expect(hotTableComponent.hotInstance.getSettings().columns[1].title).toEqual(void 0);
+    expect(hotTableComponent.hotInstance.getSettings().columns[1].readOnly).toEqual(true);
+    expect(hotTableComponent.hotInstance.getSettings().columns[1].type).toEqual('numeric');
+    expect(hotTableComponent.hotInstance.getSettings().columns[1].renderer()).toEqual('test-value2');
 
-  it('should create the column settings based solely on the data provided to the `hot-column` component', () => {
-    // mocks
-    interface MockInstance {
-      $slots: object,
-      $props: {
-        prop1: string,
-        prop2: string,
-        renderer: string,
-        editor: string
-      },
-      columnSettings?: {
-        prop1?: string,
-        prop2?: string,
-        renderer?: string,
-        editor?: string
-      },
-      hasProp: Function
-    }
-
-    const mockHotColumnInstance: MockInstance = {
-      $slots: {},
-      $props: {
-        prop1: 'prop1',
-        prop2: 'prop2',
-        renderer: 'renderer',
-        editor: 'editor'
-      },
-      hasProp: () => true
-    };
-
-    const createColumnSettings = (HotColumn as any).methods.createColumnSettings;
-
-    createColumnSettings.call(mockHotColumnInstance);
-
-    expect(mockHotColumnInstance.columnSettings.prop1).toEqual('prop1');
-    expect(mockHotColumnInstance.columnSettings.prop2).toEqual('prop2');
-    expect(mockHotColumnInstance.columnSettings.renderer).toEqual('renderer');
-    expect(mockHotColumnInstance.columnSettings.editor).toEqual('editor');
+    testWrapper.destroy();
   });
 });
 
@@ -213,7 +203,7 @@ describe('renderer cache', () => {
             }
           }
         }, [
-          // HotColumn #2
+          // HotColumn #1
           h(HotColumn, {
             props: {}
           }, [
@@ -269,7 +259,7 @@ describe('renderer cache', () => {
             wrapperRendererCacheSize: 100
           }
         }, [
-          // HotColumn #2
+          // HotColumn #1
           h(HotColumn, {
             props: {}
           }, [
@@ -331,7 +321,7 @@ describe('hot-column children', () => {
             }
           }
         }, [
-          // HotColumn #2
+          // HotColumn #1
           h(HotColumn, {
             props: {}
           }, [
