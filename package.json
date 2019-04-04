@@ -56,10 +56,11 @@
     "@babel/preset-typescript": "^7.3.3",
     "@babel/runtime": "^7.3.4",
     "@types/jest": "^24.0.9",
+    "@vue/test-utils": "^1.0.0-beta.29",
     "babel-core": "^7.0.0-bridge.0",
     "cpy-cli": "^2.0.0",
     "cross-env": "^5.2.0",
-    "css-loader": "^0.28.11",
+    "css-loader": "2.1.1",
     "del-cli": "^1.1.0",
     "handsontable": "^7.0.0",
     "jest": "^24.1.0",
@@ -88,7 +89,8 @@
     "delete-build": "del-cli ./es/ && del-cli ./commonjs/ && del-cli ./dist/ && del-cli ./*.d.ts",
     "publish-build": "npm publish",
     "publish-all": "npm run build && npm run publish-build && npm run delete-build",
-    "test": "jest"
+    "test": "jest",
+    "watch:commonjs": "cross-env NODE_ENV=cjs rollup -c --watch"
   },
   "jest": {
     "testURL": "http://localhost/",

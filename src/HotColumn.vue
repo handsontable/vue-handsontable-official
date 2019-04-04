@@ -1,9 +1,3 @@
-<template>
-  <div>
-    <slot></slot>
-  </div>
-</template>
-
 <script lang="ts">
   import Vue, { VNode } from 'vue';
   import CombinedVueInstance from 'vue';
@@ -32,6 +26,10 @@
 
         const rendererVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-renderer');
         const editorVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-editor');
+
+        if (rendererVNode && this.usesRendererComponent === void 0) {
+          this.usesRendererComponent = true;
+        }
 
         this.columnSettings = {...this.$props};
 
@@ -68,16 +66,17 @@
         const $vm = this;
 
         return function (instance, TD, row, col, prop, value, cellProperties) {
-          if (TD) {
+          // Prevent caching and rendering of the GhostTable table cells
+          if (TD && !TD.getAttribute('ghost-table')) {
             const rendererCache = $vm.$parent.$data.rendererCache;
 
-            if (rendererCache && !rendererCache.has(TD)) {
+            if (rendererCache && !rendererCache.has(`${row}-${col}`)) {
               const mountedComponent: CombinedVueInstance = createVueComponent(vNode, $vm, {});
 
-              rendererCache.set(TD, mountedComponent);
+              rendererCache.set(`${row}-${col}`, mountedComponent);
             }
 
-            const cachedComponent: CombinedVueInstance = rendererCache.get(TD);
+            const cachedComponent: CombinedVueInstance = rendererCache.get(`${row}-${col}`);
             const rendererArgs: object = {
               instance,
               TD,
@@ -85,10 +84,15 @@
               col,
               prop,
               value,
-              cellProperties
+              cellProperties,
             };
 
             Object.assign(cachedComponent.$data, rendererArgs);
+
+            // Clear the previous contents of a TD
+            while (TD.firstChild) {
+              TD.removeChild(TD.firstChild);
+            }
 
             TD.appendChild(cachedComponent.$el);
           }
@@ -124,16 +128,21 @@
             };
           }
 
-          focus() {}
+          focus() {
+          }
+
           getValue() {
             Handsontable.editors.BaseEditor.prototype.getValue();
           }
+
           setValue() {
             Handsontable.editors.BaseEditor.prototype.setValue();
           }
+
           open() {
             Handsontable.editors.BaseEditor.prototype.open();
           }
+
           close() {
             Handsontable.editors.BaseEditor.prototype.close();
           }
@@ -148,20 +157,22 @@
           mountedComponent = editorCache.get(componentName);
         }
 
-        Object.entries(Handsontable.editors.BaseEditor.prototype).forEach(entry => {
-          const methodName: string = entry[0];
+        Object.getOwnPropertyNames(Handsontable.editors.BaseEditor.prototype).forEach(propName => {
+          if (propName === 'constructor') {
+            return;
+          }
 
-          if ((requiredMethods.includes(methodName) || methodName !== 'prepare') && mountedComponent[methodName]) {
-            CustomEditor.prototype[methodName] = function () {
-              return mountedComponent[methodName](...arguments);
+          if ((requiredMethods.includes(propName) || propName !== 'prepare') && mountedComponent[propName]) {
+            CustomEditor.prototype[propName] = function () {
+              return mountedComponent[propName](...arguments);
             }
 
-          } else if (methodName === 'prepare') {
-            const defaultPrepare: (...args: any[]) => any = CustomEditor.prototype[methodName];
+          } else if (propName === 'prepare') {
+            const defaultPrepare: (...args: any[]) => any = CustomEditor.prototype[propName];
 
-            CustomEditor.prototype[methodName] = function () {
+            CustomEditor.prototype[propName] = function () {
               defaultPrepare.call(this, ...arguments);
-              return mountedComponent[methodName](...arguments);
+              return mountedComponent[propName](...arguments);
             }
           }
         });

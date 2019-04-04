@@ -1,4 +1,9 @@
-import HotColumnConstructor from '../src/HotColumn.vue';
+import HotTable from '../src/HotTable.vue';
+import HotColumn from '../src/HotColumn.vue';
+import { mount } from '@vue/test-utils';
+import { LRUMap } from '../src/lib/lru/lru';
+import Vue from 'vue';
+import { createSampleData, mockClientDimensions } from './_helpers';
 
 describe('createColumnSettings', () => {
   it('should create the column settings based on the data provided to the `hot-column` component and it\'s child components', () => {
@@ -47,7 +52,7 @@ describe('createColumnSettings', () => {
       getEditorClass: () => 'editor'
     };
 
-    const createColumnSettings = (HotColumnConstructor as any).methods.createColumnSettings;
+    const createColumnSettings = (HotColumn as any).methods.createColumnSettings;
 
     createColumnSettings.call(mockHotColumnInstance);
 
@@ -87,7 +92,7 @@ describe('createColumnSettings', () => {
       hasProp: () => true
     };
 
-    const createColumnSettings = (HotColumnConstructor as any).methods.createColumnSettings;
+    const createColumnSettings = (HotColumn as any).methods.createColumnSettings;
 
     createColumnSettings.call(mockHotColumnInstance);
 
@@ -108,7 +113,7 @@ describe('hasProp', () => {
         renderer: 'renderer'
       }
     };
-    const hasProp = (HotColumnConstructor as any).methods.hasProp;
+    const hasProp = (HotColumn as any).methods.hasProp;
 
     expect(hasProp.call(mockHotColumnInstance, 'prop1')).toEqual(true);
     expect(hasProp.call(mockHotColumnInstance, 'prop2')).toEqual(true);
@@ -136,12 +141,12 @@ describe('getRendererWrapper', () => {
       $parent: {
         $data: {
           editorCache: new Map(),
-          rendererCache: new WeakMap()
+          rendererCache: new LRUMap(100)
         }
       }
     };
 
-    const getRendererWrapper = (HotColumnConstructor as any).methods.getRendererWrapper;
+    const getRendererWrapper = (HotColumn as any).methods.getRendererWrapper;
     const mockTD = document.createElement('TD');
 
     expect(typeof getRendererWrapper.call(mockComponent)).toEqual('function');
@@ -174,14 +179,196 @@ describe('getEditorClass', () => {
       $parent: {
         $data: {
           editorCache: new Map(),
-          rendererCache: new WeakMap()
+          rendererCache: new LRUMap(100)
         }
       }
     };
 
-    const getEditorClass = (HotColumnConstructor as any).methods.getEditorClass;
+    const getEditorClass = (HotColumn as any).methods.getEditorClass;
 
     expect(getEditorClass.call(mockComponent, mockVNode).constructor).not.toEqual(void 0);
     expect(getEditorClass.call(mockComponent, mockVNode).prototype.prepare).not.toEqual(void 0);
+  });
+});
+
+describe('renderer cache', () => {
+  it('should cache the same amount of cells, as they are in the table (below LRU limit)', () => {
+    const dummyRendererComponent = {
+      render: function (h) {
+        return h();
+      }
+    };
+
+    let App = Vue.extend({
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          props: {
+            data: createSampleData(20, 2),
+            width: 400,
+            height: 400,
+            licenseKey: 'non-commercial-and-evaluation',
+            init: function () {
+              mockClientDimensions(this.rootElement, 400, 400);
+            }
+          }
+        }, [
+          // HotColumn #2
+          h(HotColumn, {
+            props: {}
+          }, [
+            h(dummyRendererComponent, {
+              attrs: {
+                'hot-renderer': true
+              }
+            })
+          ]),
+          // HotColumn #2
+          h(HotColumn, {
+            props: {}
+          }, [
+            h(dummyRendererComponent, {
+              attrs: {
+                'hot-renderer': true
+              }
+            })
+          ])
+        ])
+      }
+    });
+
+    let testWrapper = mount(App, {
+      attachToDocument: true
+    });
+    const hotTableComponent = testWrapper.vm.$children[0];
+
+    expect(hotTableComponent.rendererCache.size).toEqual(40);
+
+    testWrapper.destroy();
+  });
+
+  it('should cache the maximum amount of cells possible in the LRU map, if the number of cells exceeds this limit', () => {
+    const dummyRendererComponent = {
+      render: function (h) {
+        return h();
+      }
+    };
+
+    let App = Vue.extend({
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          props: {
+            data: createSampleData(200, 2),
+            width: 400,
+            height: 400,
+            licenseKey: 'non-commercial-and-evaluation',
+            init: function () {
+              mockClientDimensions(this.rootElement, 400, 400);
+            },
+            wrapperRendererCacheSize: 100
+          }
+        }, [
+          // HotColumn #2
+          h(HotColumn, {
+            props: {}
+          }, [
+            h(dummyRendererComponent, {
+              attrs: {
+                'hot-renderer': true
+              }
+            })
+          ]),
+          // HotColumn #2
+          h(HotColumn, {
+            props: {}
+          }, [
+            h(dummyRendererComponent, {
+              attrs: {
+                'hot-renderer': true
+              }
+            })
+          ])
+        ])
+      }
+    });
+
+    let testWrapper = mount(App, {
+      attachToDocument: true
+    });
+    const hotTableComponent = testWrapper.vm.$children[0];
+
+    expect(hotTableComponent.rendererCache.size).toEqual(100);
+
+    testWrapper.destroy();
+  });
+});
+
+describe('hot-column children', () => {
+  it('should add as many hot-column children as there are cached renderers and editors for that column', () => {
+    const dummyRendererComponent = {
+      render: function (h) {
+        return h();
+      }
+    };
+    const dummyEditorComponent = {
+      render: function (h) {
+        return h();
+      }
+    };
+
+    let App = Vue.extend({
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          props: {
+            data: createSampleData(50, 2),
+            width: 400,
+            height: 400,
+            licenseKey: 'non-commercial-and-evaluation',
+            init: function () {
+              mockClientDimensions(this.rootElement, 400, 400);
+            }
+          }
+        }, [
+          // HotColumn #2
+          h(HotColumn, {
+            props: {}
+          }, [
+            h(dummyRendererComponent, {
+              attrs: {
+                'hot-renderer': true
+              }
+            }),
+            h(dummyEditorComponent, {
+              attrs: {
+                'hot-editor': true
+              }
+            })
+          ]),
+          // HotColumn #2
+          h(HotColumn, {
+            props: {}
+          }, [
+            h(dummyRendererComponent, {
+              attrs: {
+                'hot-renderer': true
+              }
+            })
+          ])
+        ])
+      }
+    });
+
+    let testWrapper = mount(App, {
+      attachToDocument: true
+    });
+    const hotTableComponent = testWrapper.vm.$children[0];
+
+    expect(hotTableComponent.rendererCache.size).toEqual(100);
+    expect(hotTableComponent.$children[0].$children.length).toEqual(51);
+    expect(hotTableComponent.$children[1].$children.length).toEqual(50);
+
+    testWrapper.destroy();
   });
 });

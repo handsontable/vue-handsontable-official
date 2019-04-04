@@ -17,7 +17,8 @@ export interface HotTableMethods {
 
 export interface HotTableProps extends Handsontable.GridSettings {
   id?: string,
-  settings?: Handsontable.DefaultSettings
+  settings?: Handsontable.DefaultSettings,
+  wrapperRendererCacheSize?: number
 }
 
 export interface HotTableComponent<V extends Vue, D, M, C, P> extends ThisTypedComponentOptionsWithRecordProps<V, D, M, C, P> {

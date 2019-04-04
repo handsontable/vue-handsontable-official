@@ -1,6 +1,5 @@
 import { addLicenseBanner } from './helpers/licenseBanner';
-import {baseConfig} from "./base";
-import commonjs from 'rollup-plugin-commonjs';
+import { baseConfig } from './base';
 
 const env = process.env.NODE_ENV;
 const filename = 'vue-handsontable.js';
@@ -14,11 +13,7 @@ const umdConfig = {
     file: `./dist/${filename}`,
     exports: 'named'
   },
-  plugins: baseConfig.plugins.concat([commonjs({
-    include: [
-      'node_modules/**'
-    ]
-  })])
+  plugins: baseConfig.plugins,
 };
 
 addLicenseBanner(umdConfig);

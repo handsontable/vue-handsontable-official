@@ -15,6 +15,7 @@
   import Vue from 'vue';
   import { HotTableData, HotTableMethods, HotTableProps, HotTableComponent } from './types';
   import * as packageJson from '../package.json';
+  import { LRUMap } from './lib/lru/lru';
   import Handsontable from 'handsontable';
 
   const HotTable: HotTableComponent<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
@@ -22,11 +23,21 @@
     props: propFactory(),
     watch: propWatchFactory(updateHotSettings),
     data: function () {
+      const rendererCache = new LRUMap(this.wrapperRendererCacheSize);
+
+      // Make the LRU cache destroy each removed component
+      rendererCache.shift = function () {
+        let entry = LRUMap.prototype.shift.call(this);
+        entry[1].$destroy();
+
+        return entry;
+      };
+
       return {
         __internalEdit: false,
         hotInstance: null,
         columnSettings: null,
-        rendererCache: new WeakMap(),
+        rendererCache: rendererCache,
         editorCache: new Map()
       }
     },
@@ -56,13 +67,25 @@
        */
       getColumnSettings: function (): HotTableProps[] | void {
         const columnSettings: HotTableProps[] = [];
+        let usesRendererComponent = false;
 
         if (this.$children.length > 0) {
           this.$children.forEach((elem, i) => {
             columnSettings.push({});
 
-            columnSettings[columnSettings.length - 1] = { ...elem.columnSettings };
+            columnSettings[columnSettings.length - 1] = {...elem.columnSettings};
+
+            if (!usesRendererComponent && elem.usesRendererComponent) {
+              usesRendererComponent = true;
+            }
           });
+        }
+
+        if (usesRendererComponent &&
+          (this.settings && (this.settings.autoColumnSize !== false || this.settings.autoRowSize)) &&
+          (this.autoColumnSize !== false || this.autoRowSize)) {
+          console.warn('Your `hot-table` configuration includes both `hot-column` and `autoRowSize`/`autoColumnSize`, which are not compatible with each other ' +
+            'in this version of `@handsontable/vue`. Disable `autoRowSize` and `autoColumnSize` to prevent row and column misalignment.')
         }
 
         return columnSettings.length ? columnSettings : void 0;

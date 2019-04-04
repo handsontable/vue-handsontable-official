@@ -108,6 +108,11 @@ export function propFactory(): VueProps<HotTableProps> {
     type: Object as () => Handsontable.DefaultSettings
   };
 
+  propSchema.wrapperRendererCacheSize = {
+    type: Number,
+    default: 3000
+  };
+
   return propSchema;
 }
 
