@@ -10,17 +10,18 @@
     propWatchFactory,
     updateHotSettings,
     preventInternalEditWatch,
-    prepareSettings
+    prepareSettings,
+    filterPassedProps
   } from './helpers';
   import Vue from 'vue';
-  import { HotTableData, HotTableMethods, HotTableProps, HotTableComponent } from './types';
+  import { HotTableData, HotTableMethods, HotTableProps, HotTableComponent, VueProps } from './types';
   import * as packageJson from '../package.json';
   import { LRUMap } from './lib/lru/lru';
   import Handsontable from 'handsontable';
 
   const HotTable: HotTableComponent<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
-    props: propFactory(),
+    props: propFactory('HotTable'),
     watch: propWatchFactory(updateHotSettings),
     data: function () {
       const rendererCache = new LRUMap(this.wrapperRendererCacheSize);
@@ -46,12 +47,13 @@
        * Initialize Handsontable.
        */
       hotInit: function (): void {
+        const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
         const unmappedSettings: any[] = [
-          this.settings ? this.settings : this.$props,
+          this.settings ? this.settings : assignedProps,
         ];
 
         if (this.settings) {
-          unmappedSettings.push(this.$props)
+          unmappedSettings.push(assignedProps)
         }
 
         const newSettings: Handsontable.GridSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);

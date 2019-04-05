@@ -93,25 +93,6 @@ describe('createColumnSettings', () => {
   });
 });
 
-describe('hasProp', () => {
-  it('should check if the `hot-column` component has the defined prop defined.', () => {
-    // mocks
-    const mockHotColumnInstance: object = {
-      $props: {
-        prop1: 'prop1',
-        prop2: 'prop2',
-        renderer: 'renderer'
-      }
-    };
-    const hasProp = (HotColumn as any).methods.hasProp;
-
-    expect(hasProp.call(mockHotColumnInstance, 'prop1')).toEqual(true);
-    expect(hasProp.call(mockHotColumnInstance, 'prop2')).toEqual(true);
-    expect(hasProp.call(mockHotColumnInstance, 'renderer')).toEqual(true);
-    expect(hasProp.call(mockHotColumnInstance, 'nonexistentProp')).toEqual(false);
-  });
-});
-
 describe('getRendererWrapper', () => {
   it('should create the wrapper function for the provided renderer child component', () => {
     // mocks

@@ -2,6 +2,8 @@ import { VNode } from 'vue';
 import Handsontable from 'handsontable';
 import { HotTableProps, VueProps, SubComponentParent, EditorComponent } from './types';
 
+const unassignedPropSymbol = Symbol('unassigned');
+
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
  *
@@ -37,23 +39,6 @@ export function rewriteSettings(observerSettings): any[] | object {
 }
 
 /**
- * Initialize Handsontable.
- */
-export function hotInit(): void {
-  const unmappedSettings: any[] = [
-    this.settings ? this.settings : this._props,
-  ];
-
-  if (this.settings) {
-    unmappedSettings.push(this._props)
-  }
-
-  this.hotInstance = new Handsontable(this.$el, prepareSettings(unmappedSettings[0], unmappedSettings[1]));
-
-  preventInternalEditWatch(this);
-}
-
-/**
  * Private method to ensure the table is not calling `updateSettings` after editing cells.
  * @private
  */
@@ -82,38 +67,63 @@ export function preventInternalEditWatch(component) {
 /**
  * Generate an object containing all the available Handsontable properties and plugin hooks.
  *
+ * @param {String} source Source for the factory (either 'HotTable' or 'HotColumn').
  * @returns {Object}
  */
-export function propFactory(): VueProps<HotTableProps> {
+export function propFactory(source): VueProps<HotTableProps> {
   const registeredHooks: string[] = Handsontable.hooks.getRegistered();
 
   const propSchema: VueProps<HotTableProps> = new Handsontable.DefaultSettings();
 
   for (let prop in propSchema) {
-    propSchema[prop] = {};
+    propSchema[prop] = {
+      default: unassignedPropSymbol
+    };
   }
 
   for (let i = 0; i < registeredHooks.length; i++) {
     propSchema[registeredHooks[i]] = {
-      type: Function
+      type: [Function, Symbol],
+      default: unassignedPropSymbol
     };
   }
 
-  propSchema.id = {
-    type: String,
-    default: 'hot-' + Math.random().toString(36).substring(5)
-  };
+  if (source === 'HotTable') {
+    propSchema.id = {
+      type: String,
+      default: 'hot-' + Math.random().toString(36).substring(5)
+    };
 
-  propSchema.settings = {
-    type: Object as () => Handsontable.DefaultSettings
-  };
+    propSchema.settings = {
+      type: Object as () => Handsontable.DefaultSettings,
+      default: unassignedPropSymbol
+    };
 
-  propSchema.wrapperRendererCacheSize = {
-    type: Number,
-    default: 3000
-  };
+    propSchema.wrapperRendererCacheSize = {
+      type: Number,
+      default: 3000
+    };
+  }
 
   return propSchema;
+}
+
+/**
+ * Filter out all of the unassigned props, and return only the one passed to the component.
+ *
+ * @param {Object} props Object containing all the possible props.
+ * @returns {Object} Object containing only used props.
+ */
+export function filterPassedProps(props) {
+  const filteredProps: VueProps<HotTableProps> = {};
+
+  for (let propName in props) {
+    if (props[propName] !== unassignedPropSymbol) {
+      filteredProps[propName] = props[propName];
+    }
+  }
+
+  return filteredProps;
 }
 
 /**
@@ -123,7 +133,7 @@ export function propFactory(): VueProps<HotTableProps> {
  * @returns {Object}
  */
 export function propWatchFactory(updateFunction: Function) {
-  const props: object = propFactory();
+  const props: object = propFactory('HotTable');
   const watchList = {};
 
   for (const prop in props) {
@@ -187,7 +197,7 @@ export function prepareSettings(settings: object, additionalSettings?: object): 
   }
 
   for (const key in additionalSettings) {
-    if (additionalSettings.hasOwnProperty(key) && additionalSettings[key] !== void 0) {
+    if (key !== 'settings' && key !== 'wrapperRendererCacheSize' && additionalSettings.hasOwnProperty(key) && additionalSettings[key] !== void 0) {
       newSettings[key] = additionalSettings[key];
     }
   }

@@ -5,7 +5,8 @@
   import {
     propFactory,
     createVueComponent,
-    getColumnVNode
+    getColumnVNode,
+    filterPassedProps
   } from './helpers';
   import {
     HotTableProps,
@@ -16,45 +17,36 @@
 
   const HotColumn: ThisTypedComponentOptionsWithRecordProps<Vue, {}, HotColumnMethods, {}, HotTableProps> = {
     name: 'HotColumn',
-    props: propFactory(),
+    props: propFactory('HotColumn'),
     methods: {
       /**
        * Create the column settings based on the data provided to the `hot-column` component and it's child components.
        */
       createColumnSettings: function (): void {
         const hotColumnSlots: VNode[] | any[] = this.$slots.default || [];
-
         const rendererVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-renderer');
         const editorVNode: VNode | null = getColumnVNode(hotColumnSlots, 'hot-editor');
+        const assignedProps = filterPassedProps(this.$props);
 
         if (rendererVNode && this.usesRendererComponent === void 0) {
           this.usesRendererComponent = true;
         }
 
-        this.columnSettings = {...this.$props};
+        this.columnSettings = {...assignedProps};
 
         if (rendererVNode !== null) {
           this.columnSettings.renderer = this.getRendererWrapper(rendererVNode);
 
-        } else if (this.hasProp('renderer')) {
-          this.columnSettings.renderer = this.$props.renderer;
+        } else if (assignedProps.renderer) {
+          this.columnSettings.renderer = assignedProps.renderer;
         }
 
         if (editorVNode !== null) {
           this.columnSettings.editor = this.getEditorClass(editorVNode);
 
-        } else if (this.hasProp('editor')) {
-          this.columnSettings.editor = this.$props.editor;
+        } else if (assignedProps.editor) {
+          this.columnSettings.editor = assignedProps.editor;
         }
-      },
-      /**
-       * Check if the `hot-column` component has the defined prop defined.
-       *
-       * @param {String} type Type of the prop to check. (Either `renderer` or `editor`)
-       * @returns {Boolean} `true` if the `hot-column` component has the prop defined, `false` otherwise.
-       */
-      hasProp: function (type: string): boolean {
-        return !!this.$props[type];
       },
       /**
        * Create the wrapper function for the provided renderer child component.
