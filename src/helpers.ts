@@ -95,7 +95,7 @@ export function propFactory(source): VueProps<HotTableProps> {
     };
 
     propSchema.settings = {
-      type: Object as () => Handsontable.DefaultSettings,
+      type: [Object as () => Handsontable.DefaultSettings, Symbol],
       default: unassignedPropSymbol
     };
 

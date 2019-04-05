@@ -32,6 +32,8 @@ describe('createColumnSettings', () => {
           props: {
             data: createSampleData(1, 1),
             licenseKey: 'non-commercial-and-evaluation',
+            autoRowSize: false,
+            autoColumnSize: false,
             init: function () {
               mockClientDimensions(this.rootElement, 400, 400);
             }
@@ -179,6 +181,8 @@ describe('renderer cache', () => {
             width: 400,
             height: 400,
             licenseKey: 'non-commercial-and-evaluation',
+            autoRowSize: false,
+            autoColumnSize: false,
             init: function () {
               mockClientDimensions(this.rootElement, 400, 400);
             }
@@ -234,6 +238,8 @@ describe('renderer cache', () => {
             width: 400,
             height: 400,
             licenseKey: 'non-commercial-and-evaluation',
+            autoRowSize: false,
+            autoColumnSize: false,
             init: function () {
               mockClientDimensions(this.rootElement, 400, 400);
             },
@@ -297,6 +303,8 @@ describe('hot-column children', () => {
             width: 400,
             height: 400,
             licenseKey: 'non-commercial-and-evaluation',
+            autoRowSize: false,
+            autoColumnSize: false,
             init: function () {
               mockClientDimensions(this.rootElement, 400, 400);
             }
