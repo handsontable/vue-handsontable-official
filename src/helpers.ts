@@ -83,7 +83,6 @@ export function propFactory(source): VueProps<HotTableProps> {
 
   for (let i = 0; i < registeredHooks.length; i++) {
     propSchema[registeredHooks[i]] = {
-      type: [Function, Symbol],
       default: unassignedPropSymbol
     };
   }
@@ -95,7 +94,6 @@ export function propFactory(source): VueProps<HotTableProps> {
     };
 
     propSchema.settings = {
-      type: [Object as () => Handsontable.DefaultSettings, Symbol],
       default: unassignedPropSymbol
     };
 
