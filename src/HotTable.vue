@@ -29,7 +29,7 @@
       // Make the LRU cache destroy each removed component
       rendererCache.shift = function () {
         let entry = LRUMap.prototype.shift.call(this);
-        entry[1].$destroy();
+        entry[1].component.$destroy();
 
         return entry;
       };

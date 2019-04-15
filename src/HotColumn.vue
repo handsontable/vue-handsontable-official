@@ -65,10 +65,15 @@
             if (rendererCache && !rendererCache.has(`${row}-${col}`)) {
               const mountedComponent: CombinedVueInstance = createVueComponent(vNode, $vm, {});
 
-              rendererCache.set(`${row}-${col}`, mountedComponent);
+              rendererCache.set(`${row}-${col}`, {
+                component: mountedComponent,
+                lastUsedTD: null
+              });
             }
 
-            const cachedComponent: CombinedVueInstance = rendererCache.get(`${row}-${col}`);
+            const cachedEntry = rendererCache.get(`${row}-${col}`);
+            const cachedComponent: CombinedVueInstance = cachedEntry.component;
+            const cachedTD: HTMLTableCellElement = cachedEntry.lastUsedTD;
             const rendererArgs: object = {
               instance,
               TD,
@@ -81,12 +86,16 @@
 
             Object.assign(cachedComponent.$data, rendererArgs);
 
-            // Clear the previous contents of a TD
-            while (TD.firstChild) {
-              TD.removeChild(TD.firstChild);
-            }
+            if (!cachedComponent.$el.parentElement || cachedTD !== TD) {
+              // Clear the previous contents of a TD
+              while (TD.firstChild) {
+                TD.removeChild(TD.firstChild);
+              }
 
-            TD.appendChild(cachedComponent.$el);
+              TD.appendChild(cachedComponent.$el);
+
+              cachedEntry.lastUsedTD = TD;
+            }
           }
 
           return TD;
