@@ -108,46 +108,9 @@
        * @returns {Class} The class used as an editor in Handsontable.
        */
       getEditorClass: function (vNode: VNode): typeof Handsontable.editors.BaseEditor {
-        const requiredMethods: string[] = ['focus', 'open', 'close', 'getValue', 'setValue'];
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
         const editorCache = this.$parent.$data.editorCache;
         let mountedComponent: EditorComponent = null;
-
-        class CustomEditor extends Handsontable.editors.BaseEditor implements Handsontable._editors.Base {
-          prepare(row, col, prop, td, originalValue, cellProperties) {
-            super.prepare(row, col, prop, td, originalValue, cellProperties);
-
-            mountedComponent.$data.row = row;
-            mountedComponent.$data.column = col;
-            mountedComponent.$data.columnProp = prop;
-            mountedComponent.$data.td = td;
-            mountedComponent.$data.originalValue = originalValue;
-            mountedComponent.$data.cellProperties = cellProperties;
-
-            mountedComponent.finishEditing = (restoreOriginalValue, ctrlDown, callback) => {
-              super.finishEditing(restoreOriginalValue, ctrlDown, callback);
-            };
-          }
-
-          focus() {
-          }
-
-          getValue() {
-            Handsontable.editors.BaseEditor.prototype.getValue();
-          }
-
-          setValue() {
-            Handsontable.editors.BaseEditor.prototype.setValue();
-          }
-
-          open() {
-            Handsontable.editors.BaseEditor.prototype.open();
-          }
-
-          close() {
-            Handsontable.editors.BaseEditor.prototype.close();
-          }
-        }
 
         if (editorCache && !editorCache.has(componentName)) {
           mountedComponent = createVueComponent(vNode, this, {});
@@ -158,27 +121,7 @@
           mountedComponent = editorCache.get(componentName);
         }
 
-        Object.getOwnPropertyNames(Handsontable.editors.BaseEditor.prototype).forEach(propName => {
-          if (propName === 'constructor') {
-            return;
-          }
-
-          if ((requiredMethods.includes(propName) || propName !== 'prepare') && mountedComponent[propName]) {
-            CustomEditor.prototype[propName] = function () {
-              return mountedComponent[propName](...arguments);
-            }
-
-          } else if (propName === 'prepare') {
-            const defaultPrepare: (...args: any[]) => any = CustomEditor.prototype[propName];
-
-            CustomEditor.prototype[propName] = function () {
-              defaultPrepare.call(this, ...arguments);
-              return mountedComponent[propName](...arguments);
-            }
-          }
-        });
-
-        return CustomEditor;
+        return mountedComponent.hotCustomEditorClass;
       }
     },
     mounted: function () {

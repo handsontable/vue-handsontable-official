@@ -46,3 +46,17 @@ export interface EditorComponent extends Vue {
 }
 
 export type VueProps<T> = { [P in keyof T]: any };
+
+type ClassMethodKey<T> = ({ [P in keyof T]: T[P] extends Function ? P : never })[keyof T];
+type NonConstructorClassMethodKey<T> = Exclude<ClassMethodKey<T>, 'constructor'>;
+// trim out the `originalValue` prop, as it's set to `any`
+type NotOriginalValueProp<T> = Exclude<NonConstructorClassMethodKey<T>, 'originalValue'>;
+type ClassFieldKey<T> = ({[P in keyof T]: T[P] extends Function ? never : P })[keyof T];
+type ClassMethods<T> = Pick<T, NotOriginalValueProp<T>>;
+type ClassFields<T> = Pick<T, ClassFieldKey<T>>;
+
+export interface BaseVueEditorMethods extends ClassMethods<Handsontable._editors.Base> {
+}
+
+export interface BaseVueEditorFields extends ClassFields<Handsontable._editors.Base> {
+}
