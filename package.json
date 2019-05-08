@@ -72,9 +72,10 @@
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-typescript2": "^0.20.1",
     "rollup-plugin-uglify": "^6.0.2",
-    "rollup-plugin-vue": "^4.7.2",
+    "rollup-plugin-vue": "^5.0.0",
     "typescript": "^3.3.3333",
     "vue": "^2.6.7",
+    "vue-class-component": "^7.0.2",
     "vue-jest": "^3.0.4",
     "vue-router": "^3.0.2",
     "vue-template-compiler": "^2.5.0",
@@ -89,8 +90,7 @@
     "delete-build": "del-cli ./es/ && del-cli ./commonjs/ && del-cli ./dist/ && del-cli ./*.d.ts",
     "publish-build": "npm publish",
     "publish-all": "npm run build && npm run publish-build && npm run delete-build",
-    "test": "jest",
-    "watch:commonjs": "cross-env NODE_ENV=cjs rollup -c --watch"
+    "test": "jest"
   },
   "jest": {
     "testURL": "http://localhost/",

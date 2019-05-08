@@ -121,7 +121,7 @@
           mountedComponent = editorCache.get(componentName);
         }
 
-        return mountedComponent.hotCustomEditorClass;
+        return mountedComponent.$data.hotCustomEditorClass;
       }
     },
     mounted: function () {
