@@ -6,7 +6,7 @@ import Vue from 'vue';
 import { createSampleData, mockClientDimensions } from './_helpers';
 
 describe('createColumnSettings', () => {
-  it('should create the column settings based on the data provided to the `hot-column` component and it\'s child components', () => {
+  it('should create the column settings based on the data provided to the `hot-column` component and its child components', () => {
     const dummyRendererComponent = {
       render: function (h) {
         return h('DIV', 'test-value');
@@ -18,8 +18,10 @@ describe('createColumnSettings', () => {
       },
       data: function () {
         return {
-          getValue: function () {
-            return 'test-value-editor';
+          hotCustomEditorClass: class A {
+            getValue() {
+              return 'test-value-editor';
+            }
           }
         }
       }
@@ -141,7 +143,13 @@ describe('getEditorClass', () => {
 
           $mount() {
             return {
-              $data: {},
+              $data: {
+                hotCustomEditorClass: class B {
+                  prepare() {
+                    return 'not-undefined';
+                  }
+                }
+              },
               $el: document.createElement('TD')
             };
           }
@@ -158,9 +166,10 @@ describe('getEditorClass', () => {
     };
 
     const getEditorClass = (HotColumn as any).methods.getEditorClass;
+    const editorClass = getEditorClass.call(mockComponent, mockVNode);
 
-    expect(getEditorClass.call(mockComponent, mockVNode).constructor).not.toEqual(void 0);
-    expect(getEditorClass.call(mockComponent, mockVNode).prototype.prepare).not.toEqual(void 0);
+    expect(editorClass.constructor).not.toEqual(void 0);
+    expect(editorClass.prototype.prepare).not.toEqual(void 0);
   });
 });
 
