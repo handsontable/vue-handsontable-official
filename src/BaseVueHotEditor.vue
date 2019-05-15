@@ -14,6 +14,7 @@
     originalValue = null;
     cellProperties = null;
     state = null;
+    isEditor = true;
 
     mounted() {
       const _this = this;

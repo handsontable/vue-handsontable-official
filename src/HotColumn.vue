@@ -82,6 +82,7 @@
               prop,
               value,
               cellProperties,
+              isRenderer: true
             };
 
             Object.assign(cachedComponent.$data, rendererArgs);

@@ -360,3 +360,45 @@ describe('hot-column children', () => {
     testWrapper.destroy();
   });
 });
+
+it('should inject an `isRenderer` property to renderer components (`isEditor` is set in the base editor component)', () => {
+  const dummyRendererComponent = {
+    render: function (h) {
+      return h();
+    }
+  };
+
+  let App = Vue.extend({
+    render(h) {
+      // HotTable
+      return h(HotTable, {
+        props: {
+          data: createSampleData(50, 2),
+          licenseKey: 'non-commercial-and-evaluation',
+          autoRowSize: false,
+          autoColumnSize: false
+        }
+      }, [
+        // HotColumn #1
+        h(HotColumn, {
+          props: {}
+        }, [
+          h(dummyRendererComponent, {
+            attrs: {
+              'hot-renderer': true
+            }
+          })
+        ])
+      ])
+    }
+  });
+
+  let testWrapper = mount(App, {
+    attachToDocument: true
+  });
+  const hotTableComponent = testWrapper.vm.$children[0];
+
+  expect(hotTableComponent.$data.rendererCache.get('0-0').component.$data.isRenderer).toEqual(true);
+
+  testWrapper.destroy();
+});
