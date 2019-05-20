@@ -87,14 +87,14 @@ export function propFactory(source): VueProps<HotTableProps> {
     };
   }
 
+  propSchema.settings = {
+    default: unassignedPropSymbol
+  };
+
   if (source === 'HotTable') {
     propSchema.id = {
       type: String,
       default: 'hot-' + Math.random().toString(36).substring(5)
-    };
-
-    propSchema.settings = {
-      default: unassignedPropSymbol
     };
 
     propSchema.wrapperRendererCacheSize = {
@@ -114,9 +114,18 @@ export function propFactory(source): VueProps<HotTableProps> {
  */
 export function filterPassedProps(props) {
   const filteredProps: VueProps<HotTableProps> = {};
+  const columnSettingsProp = props['settings'];
+
+  if (columnSettingsProp !== unassignedPropSymbol) {
+    for (let propName in columnSettingsProp) {
+      if (columnSettingsProp.hasOwnProperty(propName) && columnSettingsProp[propName] !== unassignedPropSymbol) {
+        filteredProps[propName] = columnSettingsProp[propName];
+      }
+    }
+  }
 
   for (let propName in props) {
-    if (props[propName] !== unassignedPropSymbol) {
+    if (props.hasOwnProperty(propName) && propName !== 'settings' && props[propName] !== unassignedPropSymbol) {
       filteredProps[propName] = props[propName];
     }
   }

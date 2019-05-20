@@ -67,6 +67,18 @@ describe('createColumnSettings', () => {
                 return 'test-value2';
               }
             }
+          }),
+          // HotColumn #3
+          h(HotColumn, {
+            props: {
+              settings: {
+                title: 'title-3',
+                renderer: function () {
+                  return 'test-value3';
+                }
+              },
+              readOnly: true
+            }
           })
         ])
       }
@@ -84,6 +96,9 @@ describe('createColumnSettings', () => {
     expect(hotTableComponent.columnSettings[1].readOnly).toEqual(true);
     expect(hotTableComponent.columnSettings[1].type).toEqual('numeric');
     expect(hotTableComponent.columnSettings[1].renderer()).toEqual('test-value2');
+    expect(hotTableComponent.columnSettings[2].title).toEqual('title-3');
+    expect(hotTableComponent.columnSettings[2].readOnly).toEqual(true);
+    expect(hotTableComponent.columnSettings[2].renderer()).toEqual('test-value3');
 
     expect(hotTableComponent.hotInstance.getSettings().columns[0].title).toEqual('test-title');
     expect(hotTableComponent.hotInstance.getSettings().columns[0].renderer(hotTableComponent.hotInstance, document.createElement('TD')).innerHTML).toEqual('<div>test-value</div>');
@@ -92,6 +107,9 @@ describe('createColumnSettings', () => {
     expect(hotTableComponent.hotInstance.getSettings().columns[1].readOnly).toEqual(true);
     expect(hotTableComponent.hotInstance.getSettings().columns[1].type).toEqual('numeric');
     expect(hotTableComponent.hotInstance.getSettings().columns[1].renderer()).toEqual('test-value2');
+    expect(hotTableComponent.hotInstance.getSettings().columns[2].title).toEqual('title-3');
+    expect(hotTableComponent.hotInstance.getSettings().columns[2].readOnly).toEqual(true);
+    expect(hotTableComponent.hotInstance.getSettings().columns[2].renderer()).toEqual('test-value3');
 
     testWrapper.destroy();
   });
