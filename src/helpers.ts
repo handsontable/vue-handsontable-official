@@ -204,16 +204,16 @@ export function prepareSettings(settings: object, additionalSettings?: object): 
 }
 
 /**
- * Get the VNode child of the `hot-column` component.
+ * Get the VNode element with the provided type attribute from the component slots.
  *
- * @param {Array} hotColumnSlots Array of slots from the `hot-column` component.
+ * @param {Array} componentSlots Array of slots from a component.
  * @param {String} type Type of the child component. Either `hot-renderer` or `hot-editor`.
  * @returns {Object|null} The VNode of the child component (or `null` when nothing's found).
  */
-export function getColumnVNode(hotColumnSlots: VNode[], type: string): VNode {
+export function findVNodeByType(componentSlots: VNode[], type: string): VNode {
   let componentVNode: VNode = null;
 
-  hotColumnSlots.every((slot, index) => {
+  componentSlots.every((slot, index) => {
     if (slot.data && slot.data.attrs && slot.data.attrs[type] !== void 0) {
       componentVNode = slot;
       return false;
@@ -226,19 +226,37 @@ export function getColumnVNode(hotColumnSlots: VNode[], type: string): VNode {
 }
 
 /**
+ * Get all `hot-column` component instances from the provided children array.
+ *
+ * @param {Array} children Array of children from a component.
+ * @returns {Array} Array of `hot-column` instances.
+ */
+export function getHotColumnComponents(children) {
+  const hotColumns = [];
+
+  children.forEach((child, index) => {
+    if (child.$options.name === 'HotColumn') {
+      hotColumns.push(child);
+    }
+  });
+
+  return hotColumns;
+}
+
+/**
  * Create an instance of the Vue Component based on the provided VNode.
  *
  * @param {Object} vNode VNode element to be turned into a component instance.
  * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
+ * @param {Object} rootComponent Instance of the root component (HotTable), owner of the `$router` and `$store` properties.
  * @param {Object} props Props to be passed to the new instance.
  */
-export function createVueComponent(vNode: VNode, parent: SubComponentParent, props: object): EditorComponent {
-  const HotTableComponent: SubComponentParent = parent;
+export function createVueComponent(vNode: VNode, parent: object, rootComponent: SubComponentParent, props: object): EditorComponent {
   const settings: object = {
     propsData: props,
-    parent: HotTableComponent,
-    router: HotTableComponent.$router,
-    store: HotTableComponent.$store,
+    parent,
+    router: rootComponent.$router,
+    store: rootComponent.$store,
   };
 
   return (new (vNode.componentOptions as any).Ctor(settings)).$mount();

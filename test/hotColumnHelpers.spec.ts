@@ -1,12 +1,12 @@
 import {
-  getColumnVNode,
+  findVNodeByType,
   createVueComponent
 } from '../src/helpers';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 
-describe('getColumnVNode', () => {
+describe('findVNodeByType', () => {
   it('should get the VNode child of the `hot-column` component.', () => {
     // mocks
     const mockHotRendererVNode = {
@@ -25,12 +25,12 @@ describe('getColumnVNode', () => {
     };
 
     // cast to `any` to use VNode mocks
-    const getColumnVNodeAny = getColumnVNode as any;
+    const findVNodeByTypeAny = findVNodeByType as any;
 
-    expect(getColumnVNodeAny([mockHotEditorVNode, mockHotRendererVNode], 'hot-renderer')).toEqual(mockHotRendererVNode);
-    expect(getColumnVNodeAny([mockHotEditorVNode, mockHotRendererVNode], 'hot-editor')).toEqual(mockHotEditorVNode);
-    expect(getColumnVNodeAny([mockHotEditorVNode, mockHotRendererVNode], 'hot-whatever')).toEqual(null);
-    expect(getColumnVNodeAny([mockHotRendererVNode], 'hot-editor')).toEqual(null);
+    expect(findVNodeByTypeAny([mockHotEditorVNode, mockHotRendererVNode], 'hot-renderer')).toEqual(mockHotRendererVNode);
+    expect(findVNodeByTypeAny([mockHotEditorVNode, mockHotRendererVNode], 'hot-editor')).toEqual(mockHotEditorVNode);
+    expect(findVNodeByTypeAny([mockHotEditorVNode, mockHotRendererVNode], 'hot-whatever')).toEqual(null);
+    expect(findVNodeByTypeAny([mockHotRendererVNode], 'hot-editor')).toEqual(null);
   });
 });
 
@@ -97,9 +97,9 @@ describe('createVueComponent', () => {
     const sampleVNode = vue.$children[0].$children[0].$vnode;
     const sampleParentComponent = vue.$children[0] as any;
 
-    expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$parent).toEqual(vue.$children[0]);
-    expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$router).not.toEqual(void 0);
-    expect(createVueComponent(sampleVNode, sampleParentComponent, {}).$store).not.toEqual(void 0);
-    expect(createVueComponent(sampleVNode, sampleParentComponent, {'testProp': 'test-prop-value'}).$props['testProp']).toEqual('test-prop-value');
+    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {}).$parent).toEqual(vue.$children[0]);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {}).$router).not.toEqual(void 0);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {}).$store).not.toEqual(void 0);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {'testProp': 'test-prop-value'}).$props['testProp']).toEqual('test-prop-value');
   });
 });

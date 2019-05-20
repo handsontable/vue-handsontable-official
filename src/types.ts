@@ -12,7 +12,11 @@ export interface HotTableData {
 export interface HotTableMethods {
   hotInit: () => void,
   getColumnSettings: () => HotTableProps[] | void,
-  updateHotSettings: (updatedProperty: string, updatedValue: object, oldValue: object) => void
+  updateHotSettings: (updatedProperty: string, updatedValue: object, oldValue: object) => void,
+  getGlobalRendererVNode: () => VNode | void,
+  getGlobalEditorVNode: () => VNode | void,
+  getRendererWrapper: (vNode: VNode, containerComponent: Vue) => (...args) => HTMLElement,
+  getEditorClass: (vNode: VNode, containerComponent: Vue) => typeof Handsontable.editors.BaseEditor
 }
 
 export interface HotTableProps extends Handsontable.GridSettings {
@@ -26,9 +30,7 @@ export interface HotTableComponent<V extends Vue, D, M, C, P> extends ThisTypedC
 }
 
 export interface HotColumnMethods {
-  createColumnSettings: () => void,
-  getRendererWrapper: (vNode: VNode) => (...args) => HTMLElement,
-  getEditorClass: (vNode: VNode) => typeof Handsontable.editors.BaseEditor
+  createColumnSettings: () => void
 }
 
 export interface SubComponentParent {

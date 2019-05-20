@@ -7,7 +7,7 @@
   class BaseVueHotEditor extends Vue implements Handsontable._editors.Base {
     name = 'BaseVueHotEditor';
     instance = null;
-    row = 34;
+    row = null
     col = null;
     prop = null;
     TD = null;
@@ -145,6 +145,18 @@
 
     setValue(...args) {
       return Handsontable.editors.BaseEditor.prototype.setValue.call(this.$data.hotCustomEditorInstance, ...args);
+    }
+
+    addHook(...args) {
+      return (Handsontable.editors.BaseEditor.prototype as any).addHook.call(this.$data.hotCustomEditorInstance, ...args);
+    }
+
+    removeHooksByKey(...args) {
+      return (Handsontable.editors.BaseEditor.prototype as any).removeHooksByKey.call(this.$data.hotCustomEditorInstance, ...args);
+    }
+
+    clearHooks(...args) {
+      return (Handsontable.editors.BaseEditor.prototype as any).clearHooks.call(this.$data.hotCustomEditorInstance, ...args);
     }
   }
 
