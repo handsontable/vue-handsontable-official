@@ -11,7 +11,11 @@ const umdConfig = {
     indent: false,
     sourcemap: true,
     file: `./dist/${filename}`,
-    exports: 'named'
+    exports: 'named',
+    globals: {
+      vue: 'Vue',
+      handsontable: 'Handsontable'
+    }
   },
   plugins: baseConfig.plugins,
 };

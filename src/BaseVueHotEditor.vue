@@ -7,14 +7,13 @@
   class BaseVueHotEditor extends Vue implements Handsontable._editors.Base {
     name = 'BaseVueHotEditor';
     instance = null;
-    row = null
+    row = null;
     col = null;
     prop = null;
     TD = null;
     originalValue = null;
     cellProperties = null;
     state = null;
-    isEditor = true;
 
     mounted() {
       const _this = this;
@@ -56,10 +55,6 @@
 
         return customEditorClass;
       }();
-    }
-
-    render() {
-      return null;
     }
 
     // BaseEditor methods:
@@ -130,8 +125,8 @@
     prepare(row, col, prop, TD, originalValue, cellProperties) {
       this.$data.hotInstance = cellProperties.instance;
       this.$data.row = row;
-      this.$data.column = col;
-      this.$data.columnProp = prop;
+      this.$data.col = col;
+      this.$data.prop = prop;
       this.$data.td = TD;
       this.$data.originalValue = originalValue;
       this.$data.cellProperties = cellProperties;

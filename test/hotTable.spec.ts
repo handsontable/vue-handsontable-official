@@ -185,3 +185,63 @@ describe('Global editors and renderers', () => {
     testWrapper.destroy();
   });
 });
+
+it('should inject an `isRenderer` and `isEditor` properties to renderer/editor components', () => {
+  const dummyEditorComponent = Vue.component('renderer-component', {
+    name: 'EditorComponent',
+    extends: BaseVueHotEditor,
+    render: function (h) {
+      return h('div', {
+        'attrs': {
+          'id': 'dummy-editor'
+        }
+      });
+    }
+  });
+
+  const dummyRendererComponent = Vue.component('renderer-component', {
+    name: 'RendererComponent',
+    render: function (h) {
+      return h('div', {
+        'attrs': {
+          'id': 'dummy-renderer'
+        }
+      });
+    }
+  });
+
+  let App = Vue.extend({
+    render(h) {
+      // HotTable
+      return h(HotTable, {
+        props: {
+          data: createSampleData(50, 2),
+          licenseKey: 'non-commercial-and-evaluation',
+          autoRowSize: false,
+          autoColumnSize: false
+        }
+      }, [
+        h(dummyRendererComponent, {
+          attrs: {
+            'hot-renderer': true
+          }
+        }),
+        h(dummyEditorComponent, {
+          attrs: {
+            'hot-editor': true
+          }
+        })
+      ])
+    }
+  });
+
+  let testWrapper = mount(App, {
+    attachToDocument: true
+  });
+  const hotTableComponent = testWrapper.vm.$children[0];
+
+  expect(hotTableComponent.$data.rendererCache.get('0-0').component.$data.isRenderer).toEqual(true);
+  expect(hotTableComponent.$data.editorCache.get('EditorComponent').$data.isEditor).toEqual(true);
+
+  testWrapper.destroy();
+});

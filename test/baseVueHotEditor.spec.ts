@@ -14,12 +14,6 @@ describe('BaseVueHotEditor', () => {
     expect(baseVueHotEditorInstance.state).toEqual(null);
   });
 
-  it('should have a property of `isEditor` set to `true`', () => {
-    const baseVueHotEditorInstance = new BaseVueHotEditor();
-
-    expect(baseVueHotEditorInstance.isEditor).toEqual(true);
-  });
-
   it('should have all of the Base Editor\'s method defined', () => {
     const baseVueHotEditorInstance = new BaseVueHotEditor();
 

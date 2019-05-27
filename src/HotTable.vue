@@ -135,19 +135,6 @@
           // Prevent caching and rendering of the GhostTable table cells
           if (TD && !TD.getAttribute('ghost-table')) {
             const rendererCache = $vm.rendererCache;
-
-            if (rendererCache && !rendererCache.has(`${row}-${col}`)) {
-              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, $vm, {});
-
-              rendererCache.set(`${row}-${col}`, {
-                component: mountedComponent,
-                lastUsedTD: null
-              });
-            }
-
-            const cachedEntry = rendererCache.get(`${row}-${col}`);
-            const cachedComponent: Vue = cachedEntry.component;
-            const cachedTD: HTMLTableCellElement = cachedEntry.lastUsedTD;
             const rendererArgs: object = {
               instance,
               TD,
@@ -158,6 +145,19 @@
               cellProperties,
               isRenderer: true
             };
+
+            if (rendererCache && !rendererCache.has(`${row}-${col}`)) {
+              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, $vm, {}, rendererArgs);
+
+              rendererCache.set(`${row}-${col}`, {
+                component: mountedComponent,
+                lastUsedTD: null
+              });
+            }
+
+            const cachedEntry = rendererCache.get(`${row}-${col}`);
+            const cachedComponent: Vue = cachedEntry.component;
+            const cachedTD: HTMLTableCellElement = cachedEntry.lastUsedTD;
 
             Object.assign(cachedComponent.$data, rendererArgs);
 
@@ -187,9 +187,12 @@
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
         const editorCache = this.editorCache;
         let mountedComponent: EditorComponent = null;
+        const editorFlag: object = {
+          isEditor: true
+        };
 
         if (editorCache && !editorCache.has(componentName)) {
-          mountedComponent = createVueComponent(vNode, containerComponent, this, {});
+          mountedComponent = createVueComponent(vNode, containerComponent, this, {}, editorFlag);
 
           editorCache.set(componentName, mountedComponent);
 

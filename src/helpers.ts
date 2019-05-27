@@ -259,13 +259,15 @@ export function getHotColumnComponents(children) {
  * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
  * @param {Object} rootComponent Instance of the root component (HotTable), owner of the `$router` and `$store` properties.
  * @param {Object} props Props to be passed to the new instance.
+ * @param {Object} data Data to be passed to the new instance.
  */
-export function createVueComponent(vNode: VNode, parent: object, rootComponent: SubComponentParent, props: object): EditorComponent {
+export function createVueComponent(vNode: VNode, parent: object, rootComponent: SubComponentParent, props: object, data: object): EditorComponent {
   const settings: object = {
     propsData: props,
     parent,
     router: rootComponent.$router,
     store: rootComponent.$store,
+    data
   };
 
   return (new (vNode.componentOptions as any).Ctor(settings)).$mount();

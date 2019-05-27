@@ -11,7 +11,11 @@ const minConfig = {
     indent: false,
     sourcemap: true,
     file: `./dist/${minFilename}`,
-    exports: 'named'
+    exports: 'named',
+    globals: {
+      vue: 'Vue',
+      handsontable: 'Handsontable'
+    }
   },
   plugins: baseConfig.plugins.concat([
     uglify({
