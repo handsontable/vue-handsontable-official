@@ -127,7 +127,7 @@
       this.$data.row = row;
       this.$data.col = col;
       this.$data.prop = prop;
-      this.$data.td = TD;
+      this.$data.TD = TD;
       this.$data.originalValue = originalValue;
       this.$data.cellProperties = cellProperties;
 
