@@ -270,6 +270,16 @@ export function createVueComponent(vNode: VNode, parent: object, rootComponent: 
     data
   };
 
-  return (new (vNode.componentOptions as any).Ctor(settings)).$mount();
+  if (!document.querySelector('#vueHotEditors')) {
+    const builkEditorContainer = document.createElement('DIV');
+    builkEditorContainer.id = 'vueHotEditors';
+
+    document.body.appendChild(builkEditorContainer);
+  }
+
+  const editorContainer = document.createElement('DIV');
+  document.querySelector('#vueHotEditors').appendChild(editorContainer);
+
+  return (new (vNode.componentOptions as any).Ctor(settings)).$mount(editorContainer);
 }
 

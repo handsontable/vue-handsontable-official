@@ -4,8 +4,8 @@
   import Component from 'vue-class-component';
 
   @Component({})
-  class BaseVueHotEditor extends Vue implements Handsontable._editors.Base {
-    name = 'BaseVueHotEditor';
+  class BaseEditorComponent extends Vue implements Handsontable._editors.Base {
+    name = 'BaseEditorComponent';
     instance = null;
     row = null;
     col = null;
@@ -42,7 +42,7 @@
           }
         } as any;
 
-        // Fill with the rest of the BaseEditor methods
+        // Fill with the rest of the BaseEditorComponent methods
         Object.getOwnPropertyNames(Handsontable.editors.BaseEditor.prototype).forEach(propName => {
           if (propName === 'constructor') {
             return;
@@ -57,7 +57,7 @@
       }();
     }
 
-    // BaseEditor methods:
+    // BaseEditorComponent methods:
     private _fireCallbacks(...args) {
       (Handsontable.editors.BaseEditor.prototype as any)._fireCallbacks.call(this.$data.hotCustomEditorInstance, ...args);
     }
@@ -155,6 +155,6 @@
     }
   }
 
-  export default BaseVueHotEditor;
-  export { BaseVueHotEditor };
+  export default BaseEditorComponent;
+  export { BaseEditorComponent };
 </script>

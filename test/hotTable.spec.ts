@@ -1,5 +1,5 @@
 import HotTable from '../src/HotTable.vue';
-import BaseVueHotEditor from '../src/BaseVueHotEditor.vue';
+import BaseEditorComponent from '../src/BaseEditorComponent.vue';
 import { mount } from '@vue/test-utils';
 import { createSampleData, mockClientDimensions } from './_helpers';
 import { LRUMap } from "../src/lib/lru/lru";
@@ -121,7 +121,7 @@ describe('Global editors and renderers', () => {
 
     const dummyEditorComponent = Vue.component('renderer-component', {
       name: 'EditorComponent',
-      extends: BaseVueHotEditor,
+      extends: BaseEditorComponent,
       render: function (h) {
         return h('div', {
           'attrs': {
@@ -189,7 +189,7 @@ describe('Global editors and renderers', () => {
 it('should inject an `isRenderer` and `isEditor` properties to renderer/editor components', () => {
   const dummyEditorComponent = Vue.component('renderer-component', {
     name: 'EditorComponent',
-    extends: BaseVueHotEditor,
+    extends: BaseEditorComponent,
     render: function (h) {
       return h('div', {
         'attrs': {

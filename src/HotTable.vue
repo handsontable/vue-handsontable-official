@@ -74,10 +74,14 @@
 
         if (globalEditorVNode) {
           newSettings.editor = this.getEditorClass(globalEditorVNode, this);
+
+          globalEditorVNode.child.$destroy();
         }
 
         if (globalRendererVNode) {
           newSettings.renderer = this.getRendererWrapper(globalRendererVNode, this);
+
+          globalRendererVNode.child.$destroy();
         }
 
         this.hotInstance = new Handsontable(this.$el, newSettings);
@@ -136,7 +140,7 @@
           if (TD && !TD.getAttribute('ghost-table')) {
             const rendererCache = $vm.rendererCache;
             const rendererArgs: object = {
-              instance,
+              hotInstance: instance,
               TD,
               row,
               col,
