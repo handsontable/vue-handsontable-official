@@ -270,16 +270,15 @@ export function createVueComponent(vNode: VNode, parent: object, rootComponent: 
     data
   };
 
-  if (!document.querySelector('#vueHotEditors')) {
+  if (!document.querySelector('#vueHotComponents')) {
     const builkEditorContainer = document.createElement('DIV');
-    builkEditorContainer.id = 'vueHotEditors';
+    builkEditorContainer.id = 'vueHotComponents';
 
     document.body.appendChild(builkEditorContainer);
   }
 
-  const editorContainer = document.createElement('DIV');
-  document.querySelector('#vueHotEditors').appendChild(editorContainer);
+  const componentContainer = document.createElement('DIV');
+  document.querySelector('#vueHotComponents').appendChild(componentContainer);
 
-  return (new (vNode.componentOptions as any).Ctor(settings)).$mount(editorContainer);
+  return (new (vNode.componentOptions as any).Ctor(settings)).$mount(componentContainer);
 }
-
