@@ -265,8 +265,6 @@ export function createVueComponent(vNode: VNode, parent: object, rootComponent: 
   const settings: object = {
     propsData: props,
     parent,
-    router: rootComponent.$router,
-    store: rootComponent.$store,
     data
   };
 
