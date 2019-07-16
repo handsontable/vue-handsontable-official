@@ -1,8 +1,9 @@
-import { VNode } from 'vue';
+import Vue, { VNode } from 'vue';
 import Handsontable from 'handsontable';
-import { HotTableProps, VueProps, SubComponentParent, EditorComponent } from './types';
+import { HotTableProps, VueProps, EditorComponent } from './types';
 
 const unassignedPropSymbol = Symbol('unassigned');
+let bulkComponentContainer = null;
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -257,26 +258,26 @@ export function getHotColumnComponents(children) {
  *
  * @param {Object} vNode VNode element to be turned into a component instance.
  * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
- * @param {Object} rootComponent Instance of the root component (HotTable), owner of the `$router` and `$store` properties.
  * @param {Object} props Props to be passed to the new instance.
  * @param {Object} data Data to be passed to the new instance.
  */
-export function createVueComponent(vNode: VNode, parent: object, rootComponent: SubComponentParent, props: object, data: object): EditorComponent {
+export function createVueComponent(vNode: VNode, parent: Vue, props: object, data: object): EditorComponent {
+  const ownerDocument = parent.$el ? parent.$el.ownerDocument : document;
   const settings: object = {
     propsData: props,
     parent,
     data
   };
 
-  if (!document.querySelector('#vueHotComponents')) {
-    const builkEditorContainer = document.createElement('DIV');
-    builkEditorContainer.id = 'vueHotComponents';
+  if (!bulkComponentContainer) {
+    bulkComponentContainer = ownerDocument.createElement('DIV');
+    bulkComponentContainer.id = 'vueHotComponents';
 
-    document.body.appendChild(builkEditorContainer);
+    ownerDocument.body.appendChild(bulkComponentContainer);
   }
 
-  const componentContainer = document.createElement('DIV');
-  document.querySelector('#vueHotComponents').appendChild(componentContainer);
+  const componentContainer = ownerDocument.createElement('DIV');
+  bulkComponentContainer.appendChild(componentContainer);
 
   return (new (vNode.componentOptions as any).Ctor(settings)).$mount(componentContainer);
 }

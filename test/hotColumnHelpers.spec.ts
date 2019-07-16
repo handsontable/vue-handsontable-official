@@ -97,9 +97,9 @@ describe('createVueComponent', () => {
     const sampleVNode = vue.$children[0].$children[0].$vnode;
     const sampleParentComponent = vue.$children[0] as any;
 
-    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {}, {}).$parent).toEqual(vue.$children[0]);
-    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {}, {}).$router).not.toEqual(void 0);
-    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {}, {}).$store).not.toEqual(void 0);
-    expect(createVueComponent(sampleVNode, sampleParentComponent, sampleParentComponent, {'testProp': 'test-prop-value'}, {}).$props['testProp']).toEqual('test-prop-value');
+    expect(createVueComponent(sampleVNode, sampleParentComponent, {}, {}).$parent).toEqual(vue.$children[0]);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, {}, {}).$router).not.toEqual(void 0);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, {}, {}).$store).not.toEqual(void 0);
+    expect(createVueComponent(sampleVNode, sampleParentComponent, {'testProp': 'test-prop-value'}, {}).$props['testProp']).toEqual('test-prop-value');
   });
 });

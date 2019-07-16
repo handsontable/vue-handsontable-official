@@ -33,11 +33,6 @@ export interface HotColumnMethods {
   createColumnSettings: () => void
 }
 
-export interface SubComponentParent {
-  $store?: any;
-  $router?: any;
-}
-
 export interface EditorComponent extends Vue {
   focus(): void;
   open(event?: Event): void;

@@ -68,8 +68,8 @@ describe('getRendererWrapper', () => {
     const getRendererWrapper = (HotTable as any).methods.getRendererWrapper;
     const mockTD = document.createElement('TD');
 
-    expect(typeof getRendererWrapper.call(mockComponent)).toEqual('function');
-    expect(getRendererWrapper.call(mockComponent, mockVNode)({}, mockTD, 0, 0, 0, '', {})).toEqual(mockTD);
+    expect(typeof getRendererWrapper.call(mockComponent, mockVNode, mockComponent)).toEqual('function');
+    expect(getRendererWrapper.call(mockComponent, mockVNode, mockComponent)({}, mockTD, 0, 0, 0, '', {})).toEqual(mockTD);
   });
 });
 
@@ -107,7 +107,7 @@ describe('getEditorClass', () => {
     };
 
     const getEditorClass = (HotTable as any).methods.getEditorClass;
-    const editorClass = getEditorClass.call(mockComponent, mockVNode);
+    const editorClass = getEditorClass.call(mockComponent, mockVNode, mockComponent);
 
     expect(editorClass.constructor).not.toEqual(void 0);
     expect(editorClass.prototype.prepare).not.toEqual(void 0);

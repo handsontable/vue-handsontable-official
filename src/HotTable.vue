@@ -151,7 +151,7 @@
             };
 
             if (rendererCache && !rendererCache.has(`${row}-${col}`)) {
-              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, $vm, {}, rendererArgs);
+              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, {}, rendererArgs);
 
               rendererCache.set(`${row}-${col}`, {
                 component: mountedComponent,
@@ -191,12 +191,9 @@
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
         const editorCache = this.editorCache;
         let mountedComponent: EditorComponent = null;
-        const editorFlag: object = {
-          isEditor: true
-        };
 
         if (editorCache && !editorCache.has(componentName)) {
-          mountedComponent = createVueComponent(vNode, containerComponent, this, {}, editorFlag);
+          mountedComponent = createVueComponent(vNode, containerComponent, {}, { isEditor: true });
 
           editorCache.set(componentName, mountedComponent);
 
