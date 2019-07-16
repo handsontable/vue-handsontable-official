@@ -7,8 +7,6 @@
 <script lang="ts">
   import {
     propFactory,
-    propWatchFactory,
-    updateHotSettings,
     preventInternalEditWatch,
     prepareSettings,
     filterPassedProps,
@@ -32,7 +30,11 @@
   const HotTable: HotTableComponent<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
     props: propFactory('HotTable'),
-    watch: propWatchFactory(updateHotSettings),
+    watch: {
+      mergedHotSettings: function() {
+        this.hotInstance.updateSettings(this.mergedHotSettings);
+      }
+    },
     data: function () {
       const rendererCache = new LRUMap(this.wrapperRendererCacheSize);
 
@@ -52,23 +54,38 @@
         editorCache: new Map()
       }
     },
+    computed: {
+      mergedHotSettings: function(): Handsontable.GridSettings {
+        const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
+
+        const unfilteredSettingsFromProps: any[] = [
+          this.settings ? this.settings : assignedProps,
+        ];
+
+        if (this.settings) {
+          unfilteredSettingsFromProps.push(assignedProps)
+        }
+
+        return prepareSettings(unfilteredSettingsFromProps[0], unfilteredSettingsFromProps[1]);
+      }
+    },
     methods: {
       /**
        * Initialize Handsontable.
        */
       hotInit: function (): void {
         const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
-        const unmappedSettings: any[] = [
+        const unfilteredSettingsFromProps: any[] = [
           this.settings ? this.settings : assignedProps,
         ];
         const globalRendererVNode = this.getGlobalRendererVNode();
         const globalEditorVNode = this.getGlobalEditorVNode();
 
         if (this.settings) {
-          unmappedSettings.push(assignedProps)
+          unfilteredSettingsFromProps.push(assignedProps)
         }
 
-        const newSettings: Handsontable.GridSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);
+        const newSettings: Handsontable.GridSettings = prepareSettings(unfilteredSettingsFromProps[0], unfilteredSettingsFromProps[1]);
 
         newSettings.columns = this.columnSettings ? this.columnSettings : newSettings.columns;
 
@@ -205,12 +222,10 @@
         }
 
         return mountedComponent.$data.hotCustomEditorClass;
-      },
-      updateHotSettings: updateHotSettings
+      }
     },
     mounted: function () {
       this.columnSettings = this.getColumnSettings();
-
       return this.hotInit();
     },
     beforeDestroy: function () {
