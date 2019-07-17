@@ -88,33 +88,27 @@
 
         preventInternalEditWatch(this);
       },
-      getGlobalRendererVNode: function(): VNode | null  {
-        const hotTableSlots: VNode[] | any[] = this.$slots.default || [];
+      getGlobalRendererVNode: function (): VNode | null {
+        const hotTableSlots: VNode[] = this.$slots.default || [];
         return findVNodeByType(hotTableSlots, 'hot-renderer');
       },
-      getGlobalEditorVNode: function(): VNode | null  {
-        const hotTableSlots: VNode[] | any[] = this.$slots.default || [];
+      getGlobalEditorVNode: function (): VNode | null {
+        const hotTableSlots: VNode[] = this.$slots.default || [];
         return findVNodeByType(hotTableSlots, 'hot-editor');
       },
       /**
        * Get settings for the columns provided in the `hot-column` components.
        */
       getColumnSettings: function (): HotTableProps[] | void {
-        const columnSettings: HotTableProps[] = [];
         const hotColumns = getHotColumnComponents(this.$children);
         let usesRendererComponent = false;
+        let columnSettings: HotTableProps[] = hotColumns.map((elem) => {
+          if (elem.usesRendererComponent) {
+            usesRendererComponent = true;
+          }
 
-        if (hotColumns.length > 0) {
-          hotColumns.forEach((elem, i) => {
-            columnSettings.push({});
-
-            columnSettings[columnSettings.length - 1] = {...elem.columnSettings};
-
-            if (!usesRendererComponent && elem.usesRendererComponent) {
-              usesRendererComponent = true;
-            }
-          });
-        }
+          return {...elem.columnSettings};
+        });
 
         if (usesRendererComponent &&
           (this.settings && (this.settings.autoColumnSize !== false || this.settings.autoRowSize)) &&
@@ -192,8 +186,8 @@
         const editorCache = this.editorCache;
         let mountedComponent: EditorComponent = null;
 
-        if (editorCache && !editorCache.has(componentName)) {
-          mountedComponent = createVueComponent(vNode, containerComponent, {}, { isEditor: true });
+        if (!editorCache.has(componentName)) {
+          mountedComponent = createVueComponent(vNode, containerComponent, {}, {isEditor: true});
 
           editorCache.set(componentName, mountedComponent);
 
