@@ -7,6 +7,8 @@
 <script lang="ts">
   import {
     propFactory,
+    propWatchFactory,
+    updateHotSettings,
     preventInternalEditWatch,
     prepareSettings,
     filterPassedProps,
@@ -30,11 +32,7 @@
   const HotTable: HotTableComponent<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
     props: propFactory('HotTable'),
-    watch: {
-      mergedHotSettings: function() {
-        this.hotInstance.updateSettings(this.mergedHotSettings);
-      }
-    },
+    watch: propWatchFactory(updateHotSettings),
     data: function () {
       const rendererCache = new LRUMap(this.wrapperRendererCacheSize);
 
@@ -54,38 +52,23 @@
         editorCache: new Map()
       }
     },
-    computed: {
-      mergedHotSettings: function(): Handsontable.GridSettings {
-        const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
-
-        const unfilteredSettingsFromProps: any[] = [
-          this.settings ? this.settings : assignedProps,
-        ];
-
-        if (this.settings) {
-          unfilteredSettingsFromProps.push(assignedProps)
-        }
-
-        return prepareSettings(unfilteredSettingsFromProps[0], unfilteredSettingsFromProps[1]);
-      }
-    },
     methods: {
       /**
        * Initialize Handsontable.
        */
       hotInit: function (): void {
         const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
-        const unfilteredSettingsFromProps: any[] = [
+        const unmappedSettings: any[] = [
           this.settings ? this.settings : assignedProps,
         ];
         const globalRendererVNode = this.getGlobalRendererVNode();
         const globalEditorVNode = this.getGlobalEditorVNode();
 
         if (this.settings) {
-          unfilteredSettingsFromProps.push(assignedProps)
+          unmappedSettings.push(assignedProps)
         }
 
-        const newSettings: Handsontable.GridSettings = prepareSettings(unfilteredSettingsFromProps[0], unfilteredSettingsFromProps[1]);
+        const newSettings: Handsontable.GridSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);
 
         newSettings.columns = this.columnSettings ? this.columnSettings : newSettings.columns;
 
@@ -105,33 +88,27 @@
 
         preventInternalEditWatch(this);
       },
-      getGlobalRendererVNode: function(): VNode | null  {
-        const hotTableSlots: VNode[] | any[] = this.$slots.default || [];
+      getGlobalRendererVNode: function (): VNode | null {
+        const hotTableSlots: VNode[] = this.$slots.default || [];
         return findVNodeByType(hotTableSlots, 'hot-renderer');
       },
-      getGlobalEditorVNode: function(): VNode | null  {
-        const hotTableSlots: VNode[] | any[] = this.$slots.default || [];
+      getGlobalEditorVNode: function (): VNode | null {
+        const hotTableSlots: VNode[] = this.$slots.default || [];
         return findVNodeByType(hotTableSlots, 'hot-editor');
       },
       /**
        * Get settings for the columns provided in the `hot-column` components.
        */
       getColumnSettings: function (): HotTableProps[] | void {
-        const columnSettings: HotTableProps[] = [];
         const hotColumns = getHotColumnComponents(this.$children);
         let usesRendererComponent = false;
+        let columnSettings: HotTableProps[] = hotColumns.map((elem) => {
+          if (elem.usesRendererComponent) {
+            usesRendererComponent = true;
+          }
 
-        if (hotColumns.length > 0) {
-          hotColumns.forEach((elem, i) => {
-            columnSettings.push({});
-
-            columnSettings[columnSettings.length - 1] = {...elem.columnSettings};
-
-            if (!usesRendererComponent && elem.usesRendererComponent) {
-              usesRendererComponent = true;
-            }
-          });
-        }
+          return {...elem.columnSettings};
+        });
 
         if (usesRendererComponent &&
           (this.settings && (this.settings.autoColumnSize !== false || this.settings.autoRowSize)) &&
@@ -168,7 +145,7 @@
             };
 
             if (rendererCache && !rendererCache.has(`${row}-${col}`)) {
-              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, $vm, {}, rendererArgs);
+              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, {}, rendererArgs);
 
               rendererCache.set(`${row}-${col}`, {
                 component: mountedComponent,
@@ -208,12 +185,9 @@
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
         const editorCache = this.editorCache;
         let mountedComponent: EditorComponent = null;
-        const editorFlag: object = {
-          isEditor: true
-        };
 
-        if (editorCache && !editorCache.has(componentName)) {
-          mountedComponent = createVueComponent(vNode, containerComponent, this, {}, editorFlag);
+        if (!editorCache.has(componentName)) {
+          mountedComponent = createVueComponent(vNode, containerComponent, {}, {isEditor: true});
 
           editorCache.set(componentName, mountedComponent);
 
@@ -222,10 +196,12 @@
         }
 
         return mountedComponent.$data.hotCustomEditorClass;
-      }
+      },
+      updateHotSettings: updateHotSettings
     },
     mounted: function () {
       this.columnSettings = this.getColumnSettings();
+
       return this.hotInit();
     },
     beforeDestroy: function () {

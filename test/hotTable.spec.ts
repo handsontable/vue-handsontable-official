@@ -19,7 +19,7 @@ describe('hotInit', () => {
   });
 });
 
-describe('Updating the Handsontable settings', () => {
+describe('updateHotSettings', () => {
   it('should update the previously initialized Handsontable instance with a single changed property', () => {
     let updateSettingsCalls = 0;
     let testWrapper = mount(HotTable, {
@@ -41,104 +41,6 @@ describe('Updating the Handsontable settings', () => {
 
     expect(updateSettingsCalls).toEqual(1);
     expect(testWrapper.vm.hotInstance.getSettings().rowHeaders).toEqual(false);
-  });
-
-  it('should update the previously initialized Handsontable instance only once with multiple changed properties', async() => {
-    let App = Vue.extend({
-      data: function () {
-        return {
-          rowHeaders: true,
-          colHeaders: true,
-          readOnly: true,
-        }
-      },
-      methods: {
-        updateData: function () {
-          this.rowHeaders = false;
-          this.colHeaders = false;
-          this.readOnly = false;
-        }
-      },
-      render(h) {
-        // HotTable
-        return h(HotTable, {
-          ref: 'hotInstance',
-          props: {
-            rowHeaders: this.rowHeaders,
-            colHeaders: this.colHeaders,
-            readOnly: this.readOnly,
-            afterUpdateSettings: function () {
-              updateSettingsCalls++;
-            }
-          }
-        })
-      }
-    });
-
-    let testWrapper = mount(App, {
-      sync: false
-    });
-
-    let updateSettingsCalls = 0;
-
-    const hotTableComponent = testWrapper.vm.$children[0];
-
-    expect(hotTableComponent.hotInstance.getSettings().rowHeaders).toEqual(true);
-    expect(hotTableComponent.hotInstance.getSettings().colHeaders).toEqual(true);
-    expect(hotTableComponent.hotInstance.getSettings().readOnly).toEqual(true);
-
-    testWrapper.vm.updateData();
-
-    await Vue.nextTick();
-    expect(updateSettingsCalls).toEqual(1);
-    expect(hotTableComponent.hotInstance.getSettings().rowHeaders).toEqual(false);
-    expect(hotTableComponent.hotInstance.getSettings().colHeaders).toEqual(false);
-    expect(hotTableComponent.hotInstance.getSettings().readOnly).toEqual(false);
-  });
-
-  it('should update the previously initialized Handsontable instance with only the options that are passed to the component as props', async() => {
-    let newHotSettings = null;
-    let App = Vue.extend({
-      data: function () {
-        return {
-          rowHeaders: true,
-          colHeaders: true,
-          readOnly: true,
-        }
-      },
-      methods: {
-        updateData: function () {
-          this.rowHeaders = false;
-          this.colHeaders = false;
-          this.readOnly = false;
-        }
-      },
-      render(h) {
-        // HotTable
-        return h(HotTable, {
-          ref: 'hotInstance',
-          props: {
-            rowHeaders: this.rowHeaders,
-            colHeaders: this.colHeaders,
-            readOnly: this.readOnly,
-            minSpareRows: 4,
-            afterUpdateSettings: function (newSettings) {
-              newHotSettings = newSettings
-            }
-          }
-        })
-      }
-    });
-
-    let testWrapper = mount(App, {
-      sync: false
-    });
-
-    testWrapper.vm.updateData();
-
-    await Vue.nextTick();
-
-    expect(Object.keys(newHotSettings).length).toBe(5)
   });
 });
 
@@ -166,8 +68,8 @@ describe('getRendererWrapper', () => {
     const getRendererWrapper = (HotTable as any).methods.getRendererWrapper;
     const mockTD = document.createElement('TD');
 
-    expect(typeof getRendererWrapper.call(mockComponent)).toEqual('function');
-    expect(getRendererWrapper.call(mockComponent, mockVNode)({}, mockTD, 0, 0, 0, '', {})).toEqual(mockTD);
+    expect(typeof getRendererWrapper.call(mockComponent, mockVNode, mockComponent)).toEqual('function');
+    expect(getRendererWrapper.call(mockComponent, mockVNode, mockComponent)({}, mockTD, 0, 0, 0, '', {})).toEqual(mockTD);
   });
 });
 
@@ -205,7 +107,7 @@ describe('getEditorClass', () => {
     };
 
     const getEditorClass = (HotTable as any).methods.getEditorClass;
-    const editorClass = getEditorClass.call(mockComponent, mockVNode);
+    const editorClass = getEditorClass.call(mockComponent, mockVNode, mockComponent);
 
     expect(editorClass.constructor).not.toEqual(void 0);
     expect(editorClass.prototype.prepare).not.toEqual(void 0);

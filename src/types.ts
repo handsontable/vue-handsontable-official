@@ -12,6 +12,7 @@ export interface HotTableData {
 export interface HotTableMethods {
   hotInit: () => void,
   getColumnSettings: () => HotTableProps[] | void,
+  updateHotSettings: (updatedProperty: string, updatedValue: object, oldValue: object) => void,
   getGlobalRendererVNode: () => VNode | void,
   getGlobalEditorVNode: () => VNode | void,
   getRendererWrapper: (vNode: VNode, containerComponent: Vue) => (...args) => HTMLElement,
@@ -30,11 +31,6 @@ export interface HotTableComponent<V extends Vue, D, M, C, P> extends ThisTypedC
 
 export interface HotColumnMethods {
   createColumnSettings: () => void
-}
-
-export interface SubComponentParent {
-  $store?: any;
-  $router?: any;
 }
 
 export interface EditorComponent extends Vue {

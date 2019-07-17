@@ -1,7 +1,8 @@
 import {
   rewriteSettings,
   prepareSettings,
-  propFactory
+  propFactory,
+  propWatchFactory
 } from '../src/helpers';
 
 describe('rewriteSettings', () => {
@@ -40,6 +41,36 @@ describe('propFactory', () => {
     expect(typeof props.afterCreateRow).toEqual('object');
     expect(typeof props.afterGetCellMeta).toEqual('object');
     expect(typeof props.beforeInit).toEqual('object');
+    expect(typeof props.randomProp).toEqual('undefined');
+  });
+});
+
+describe('propWatchFactory', () => {
+  it('should generate and object containing all the available Handsontable properties and hooks tied to the Handsontable updating function', () => {
+    const bulkUpdateFunction = () => {};
+    const props: any = propWatchFactory(bulkUpdateFunction);
+
+    expect(typeof props.startRows).toEqual('object');
+    expect(typeof props.startRows.handler).toEqual('function');
+    expect(props.startRows.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.startCols).toEqual('object');
+    expect(typeof props.startCols.handler).toEqual('function');
+    expect(props.startCols.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.data).toEqual('object');
+    expect(typeof props.data.handler).toEqual('function');
+    expect(props.data.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.fixedRowsTop).toEqual('object');
+    expect(typeof props.fixedRowsTop.handler).toEqual('function');
+    expect(props.fixedRowsTop.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.afterCreateRow).toEqual('object');
+    expect(typeof props.afterCreateRow.handler).toEqual('function');
+    expect(props.afterCreateRow.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.afterGetCellMeta).toEqual('object');
+    expect(typeof props.afterGetCellMeta.handler).toEqual('function');
+    expect(props.afterGetCellMeta.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
+    expect(typeof props.beforeInit).toEqual('object');
+    expect(typeof props.beforeInit.handler).toEqual('function');
+    expect(props.beforeInit.toString().indexOf('bulkUpdateFunction') > -1).toBe(false);
     expect(typeof props.randomProp).toEqual('undefined');
   });
 });

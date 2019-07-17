@@ -1,8 +1,9 @@
 import Vue, { VNode } from 'vue';
 import Handsontable from 'handsontable';
-import { HotTableProps, VueProps, SubComponentParent, EditorComponent } from './types';
+import { HotTableProps, VueProps, EditorComponent } from './types';
 
 const unassignedPropSymbol = Symbol('unassigned');
+let bulkComponentContainer = null;
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -133,14 +134,66 @@ export function filterPassedProps(props) {
   return filteredProps;
 }
 
+/**
+ * Generate and object containing all the available Handsontable properties and hooks tied to the Handsontable updating function.
+ *
+ * @param {Function} updateFunction Function used to update a single changed property.
+ * @returns {Object}
+ */
+export function propWatchFactory(updateFunction: Function) {
+  const props: object = propFactory('HotTable');
+  const watchList = {};
+
+  for (const prop in props) {
+    if (props.hasOwnProperty(prop)) {
+      if (prop !== 'settings') {
+        watchList[prop] = {
+          handler: function (...args) {
+            return updateFunction.call(this, prop, ...args);
+          },
+          deep: true
+        };
+
+        watchList[`settings.${prop}`] = {
+          handler: function (...args) {
+            return updateFunction.call(this, prop, ...args);
+          },
+          deep: true
+        };
+      }
+    }
+  }
+
+  return watchList;
+}
+
 // The `this` value in the functions below points to the Vue component instance. They're not meant to used anywhere but in the context of the component.
 
 /**
- * Prepare the settings object to be used as the settings for Handsontable, based on the props provided to the component.
+ * Update the Handsontable instance with a single changed property.
  *
- * @param {Object} settings An object containing the properties passed into the component under the `settings` prop.
- * @param {Object} [additionalSettings] An additional object containing the properties passed outside of the `settings` prop.
- * @returns {Object} An object containing the properties, ready to be used within Handsontable.
+ * @param {String} updatedProperty Updated property name.
+ * @param {Object} updatedValue Watcher-generated updated value object.
+ * @param {Object} oldValue Watcher-generated old value object.
+ */
+export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object) {
+  const newSettings = {};
+
+  if (updatedProperty === 'data' && this.__internalEdit === true) {
+    this.__internalEdit = false;
+    return;
+  }
+
+  newSettings[updatedProperty] = rewriteSettings(updatedValue);
+  this.hotInstance.updateSettings(newSettings);
+}
+
+/**
+ * Prepare the settings object containing the `on`-properties to be used in the Handsontable configuration.
+ *
+ * @param {Object} settings An object containing the properties, including the `on`-prefixed hook names.
+ * @param {Object} [additionalSettings] An additional object containing the properties, including the `on`-prefixed hook names.
+ * @returns {Object} An object containing the properties, with the `on`-prefixes trimmed.
  */
 export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.GridSettings {
   const newSettings = {};
@@ -152,7 +205,7 @@ export function prepareSettings(settings: object, additionalSettings?: object): 
   }
 
   for (const key in additionalSettings) {
-    if (key !== 'id' && key !== 'settings' && key !== 'wrapperRendererCacheSize' && additionalSettings.hasOwnProperty(key) && additionalSettings[key] !== void 0) {
+    if (key !== 'settings' && key !== 'wrapperRendererCacheSize' && additionalSettings.hasOwnProperty(key) && additionalSettings[key] !== void 0) {
       newSettings[key] = additionalSettings[key];
     }
   }
@@ -189,15 +242,7 @@ export function findVNodeByType(componentSlots: VNode[], type: string): VNode {
  * @returns {Array} Array of `hot-column` instances.
  */
 export function getHotColumnComponents(children) {
-  const hotColumns = [];
-
-  children.forEach((child, index) => {
-    if (child.$options.name === 'HotColumn') {
-      hotColumns.push(child);
-    }
-  });
-
-  return hotColumns;
+  return children.filter((child) => child.$options.name === 'HotColumn');
 }
 
 /**
@@ -205,28 +250,26 @@ export function getHotColumnComponents(children) {
  *
  * @param {Object} vNode VNode element to be turned into a component instance.
  * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
- * @param {Object} rootComponent Instance of the root component (HotTable), owner of the `$router` and `$store` properties.
  * @param {Object} props Props to be passed to the new instance.
  * @param {Object} data Data to be passed to the new instance.
  */
-export function createVueComponent(vNode: VNode, parent: object, rootComponent: SubComponentParent, props: object, data: object): EditorComponent {
+export function createVueComponent(vNode: VNode, parent: Vue, props: object, data: object): EditorComponent {
+  const ownerDocument = parent.$el ? parent.$el.ownerDocument : document;
   const settings: object = {
     propsData: props,
     parent,
-    router: rootComponent.$router,
-    store: rootComponent.$store,
     data
   };
 
-  if (!document.querySelector('#vueHotComponents')) {
-    const builkEditorContainer = document.createElement('DIV');
-    builkEditorContainer.id = 'vueHotComponents';
+  if (!bulkComponentContainer) {
+    bulkComponentContainer = ownerDocument.createElement('DIV');
+    bulkComponentContainer.id = 'vueHotComponents';
 
-    document.body.appendChild(builkEditorContainer);
+    ownerDocument.body.appendChild(bulkComponentContainer);
   }
 
-  const componentContainer = document.createElement('DIV');
-  document.querySelector('#vueHotComponents').appendChild(componentContainer);
+  const componentContainer = ownerDocument.createElement('DIV');
+  bulkComponentContainer.appendChild(componentContainer);
 
   return (new (vNode.componentOptions as any).Ctor(settings)).$mount(componentContainer);
 }
