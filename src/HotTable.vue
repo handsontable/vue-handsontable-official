@@ -56,14 +56,7 @@
     },
     computed: {
       mergedHotSettings: function(): Handsontable.GridSettings {
-        const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
-        const unfilteredSettingsFromProps: any[] = [
-          this.settings ? this.settings : assignedProps,
-        ];
-        if (this.settings) {
-          unfilteredSettingsFromProps.push(assignedProps)
-        }
-        return prepareSettings(unfilteredSettingsFromProps[0], unfilteredSettingsFromProps[1]);
+        return prepareSettings(this.$props);
       }
     },
     methods: {
@@ -71,18 +64,10 @@
        * Initialize Handsontable.
        */
       hotInit: function (): void {
-        const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
-        const unfilteredSettingsFromProps: any[] = [
-          this.settings ? this.settings : assignedProps,
-        ];
         const globalRendererVNode = this.getGlobalRendererVNode();
         const globalEditorVNode = this.getGlobalEditorVNode();
 
-        if (this.settings) {
-          unfilteredSettingsFromProps.push(assignedProps)
-        }
-
-        const newSettings: Handsontable.GridSettings = prepareSettings(unfilteredSettingsFromProps[0], unfilteredSettingsFromProps[1]);
+        const newSettings: Handsontable.GridSettings = prepareSettings(this.$props);
 
         newSettings.columns = this.columnSettings ? this.columnSettings : newSettings.columns;
 

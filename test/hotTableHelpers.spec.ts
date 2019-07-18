@@ -45,83 +45,29 @@ describe('propFactory', () => {
 });
 
 describe('prepareSettings', () => {
-  it('should prepare the settings object to be used with Handsontable', () => {
-    const onPrefixedPropObj = {
-      'afterChange': {},
-      'afterCellMetaReset': {},
-      'afterChangesObserved': {},
-      'afterContextMenuDefaultOptions': {},
-      'beforeContextMenuSetItems': {},
-      'afterDropdownMenuDefaultOptions': {},
-      'beforeDropdownMenuSetItems': {},
-      'afterContextMenuHide': {},
-      'afterContextMenuShow': {},
-      'afterCopyLimit': {},
-      'beforeCreateCol': {},
-      'afterCreateCol': {},
-      'beforeCreateRow': {},
-      'afterCreateRow': {}
+  it('should prepare the settings passed to the component props to be used within Handsontable', () => {
+    const propsMock = {
+      id: 'hot-id',
+      readOnly: true,
+      colHeaders: true,
+      afterChange: () => 'afterChangeResult',
+      settings: {
+        rowHeaders: true,
+        data: [[1, 2], [3, 4]],
+        afterUpdateSettings: () => 'afterUpdateSettingsResult'
+      }
     };
 
-    const result: any = prepareSettings(onPrefixedPropObj);
+    const preparedSettings = prepareSettings(propsMock);
 
-    expect(typeof result.afterChange).toEqual('object');
-    expect(typeof result.afterCellMetaReset).toEqual('object');
-    expect(typeof result.afterChangesObserved).toEqual('object');
-    expect(typeof result.afterContextMenuDefaultOptions).toEqual('object');
-    expect(typeof result.beforeContextMenuSetItems).toEqual('object');
-    expect(typeof result.afterDropdownMenuDefaultOptions).toEqual('object');
-    expect(typeof result.beforeDropdownMenuSetItems).toEqual('object');
-    expect(typeof result.afterContextMenuHide).toEqual('object');
-    expect(typeof result.afterContextMenuShow).toEqual('object');
-    expect(typeof result.afterCopyLimit).toEqual('object');
-    expect(typeof result.beforeCreateCol).toEqual('object');
-    expect(typeof result.afterCreateCol).toEqual('object');
-    expect(typeof result.beforeCreateRow).toEqual('object');
-    expect(typeof result.afterCreateRow).toEqual('object');
-
-    expect(typeof result.randomPropName).toEqual('undefined');
-  });
-
-  it('should prepare the settings object to be used with Handsontable (when two objects are provided)', () => {
-    const onPrefixedPropObj = {
-      'afterChange': {},
-      'afterCellMetaReset': {},
-      'afterChangesObserved': {},
-      'afterContextMenuDefaultOptions': {},
-      'beforeContextMenuSetItems': {},
-      'afterDropdownMenuDefaultOptions': {},
-      'beforeDropdownMenuSetItems': {},
-      'afterContextMenuHide': {}
-    };
-
-    const secondOnPrefixedPropObj = {
-      'afterContextMenuHide': {},
-      'afterContextMenuShow': {},
-      'afterCopyLimit': {},
-      'beforeCreateCol': {},
-      'afterCreateCol': {},
-      'beforeCreateRow': {},
-      'afterCreateRow': {}
-    };
-
-    const result: any = prepareSettings(onPrefixedPropObj, secondOnPrefixedPropObj);
-
-    expect(typeof result.afterChange).toEqual('object');
-    expect(typeof result.afterCellMetaReset).toEqual('object');
-    expect(typeof result.afterChangesObserved).toEqual('object');
-    expect(typeof result.afterContextMenuDefaultOptions).toEqual('object');
-    expect(typeof result.beforeContextMenuSetItems).toEqual('object');
-    expect(typeof result.afterDropdownMenuDefaultOptions).toEqual('object');
-    expect(typeof result.beforeDropdownMenuSetItems).toEqual('object');
-    expect(typeof result.afterContextMenuHide).toEqual('object');
-    expect(typeof result.afterContextMenuShow).toEqual('object');
-    expect(typeof result.afterCopyLimit).toEqual('object');
-    expect(typeof result.beforeCreateCol).toEqual('object');
-    expect(typeof result.afterCreateCol).toEqual('object');
-    expect(typeof result.beforeCreateRow).toEqual('object');
-    expect(typeof result.afterCreateRow).toEqual('object');
-
-    expect(typeof result.randomPropName).toEqual('undefined');
+    expect(preparedSettings.readOnly).toBe(true);
+    expect(preparedSettings.colHeaders).toBe(true);
+    expect(preparedSettings.rowHeaders).toBe(true);
+    expect(preparedSettings.data).toEqual([[1, 2], [3, 4]]);
+    expect(preparedSettings.afterUpdateSettings()).toBe('afterUpdateSettingsResult');
+    expect(preparedSettings.afterChange()).toBe('afterChangeResult');
+    expect(preparedSettings.id).toBe(void 0);
+    expect(preparedSettings.settings).toBe(void 0);
+    expect(preparedSettings.wrapperRendererCacheSize).toBe(void 0);
   });
 });
