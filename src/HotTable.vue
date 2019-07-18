@@ -7,8 +7,6 @@
 <script lang="ts">
   import {
     propFactory,
-    propWatchFactory,
-    updateHotSettings,
     preventInternalEditWatch,
     prepareSettings,
     filterPassedProps,
@@ -32,7 +30,11 @@
   const HotTable: HotTableComponent<Vue, HotTableData, HotTableMethods, {}, HotTableProps> = {
     name: 'HotTable',
     props: propFactory('HotTable'),
-    watch: propWatchFactory(updateHotSettings),
+    watch: {
+      mergedHotSettings: function(value) {
+        this.hotInstance.updateSettings(value);
+      }
+    },
     data: function () {
       const rendererCache = new LRUMap(this.wrapperRendererCacheSize);
 
@@ -52,23 +54,20 @@
         editorCache: new Map()
       }
     },
+    computed: {
+      mergedHotSettings: function(): Handsontable.GridSettings {
+        return prepareSettings(this.$props);
+      }
+    },
     methods: {
       /**
        * Initialize Handsontable.
        */
       hotInit: function (): void {
-        const assignedProps: VueProps<HotTableProps> = filterPassedProps(this.$props);
-        const unmappedSettings: any[] = [
-          this.settings ? this.settings : assignedProps,
-        ];
         const globalRendererVNode = this.getGlobalRendererVNode();
         const globalEditorVNode = this.getGlobalEditorVNode();
 
-        if (this.settings) {
-          unmappedSettings.push(assignedProps)
-        }
-
-        const newSettings: Handsontable.GridSettings = prepareSettings(unmappedSettings[0], unmappedSettings[1]);
+        const newSettings: Handsontable.GridSettings = prepareSettings(this.$props);
 
         newSettings.columns = this.columnSettings ? this.columnSettings : newSettings.columns;
 
@@ -197,7 +196,6 @@
 
         return mountedComponent.$data.hotCustomEditorClass;
       },
-      updateHotSettings: updateHotSettings
     },
     mounted: function () {
       this.columnSettings = this.getColumnSettings();
