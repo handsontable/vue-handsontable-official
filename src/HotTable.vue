@@ -31,8 +31,8 @@
     name: 'HotTable',
     props: propFactory('HotTable'),
     watch: {
-      mergedHotSettings: function() {
-        this.hotInstance.updateSettings(this.mergedHotSettings);
+      mergedHotSettings: function(value) {
+        this.hotInstance.updateSettings(value);
       }
     },
     data: function () {
