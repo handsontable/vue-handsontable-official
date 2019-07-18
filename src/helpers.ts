@@ -242,15 +242,7 @@ export function findVNodeByType(componentSlots: VNode[], type: string): VNode {
  * @returns {Array} Array of `hot-column` instances.
  */
 export function getHotColumnComponents(children) {
-  const hotColumns = [];
-
-  children.forEach((child, index) => {
-    if (child.$options.name === 'HotColumn') {
-      hotColumns.push(child);
-    }
-  });
-
-  return hotColumns;
+  return children.filter((child) => child.$options.name === 'HotColumn');
 }
 
 /**
