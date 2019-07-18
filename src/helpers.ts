@@ -135,78 +135,26 @@ export function filterPassedProps(props) {
 }
 
 /**
- * Generate and object containing all the available Handsontable properties and hooks tied to the Handsontable updating function.
+ * Prepare the settings object to be used as the settings for Handsontable, based on the props provided to the component.
  *
- * @param {Function} updateFunction Function used to update a single changed property.
- * @returns {Object}
+ * @param {Object} props The props passed to the component.
+ * @returns {Object} An object containing the properties, ready to be used within Handsontable.
  */
-export function propWatchFactory(updateFunction: Function) {
-  const props: object = propFactory('HotTable');
-  const watchList = {};
+export function prepareSettings(props: HotTableProps): Handsontable.GridSettings {
+  const assignedProps: VueProps<HotTableProps> = filterPassedProps(props);
+  const hotSettingsInProps: {} = props.settings ? props.settings : assignedProps;
+  const additionalHotSettingsInProps: Handsontable.GridSettings = props.settings ? assignedProps : null;
+  const newSettings = {};
 
-  for (const prop in props) {
-    if (props.hasOwnProperty(prop)) {
-      if (prop !== 'settings') {
-        watchList[prop] = {
-          handler: function (...args) {
-            return updateFunction.call(this, prop, ...args);
-          },
-          deep: true
-        };
-
-        watchList[`settings.${prop}`] = {
-          handler: function (...args) {
-            return updateFunction.call(this, prop, ...args);
-          },
-          deep: true
-        };
-      }
+  for (const key in hotSettingsInProps) {
+    if (hotSettingsInProps.hasOwnProperty(key) && hotSettingsInProps[key] !== void 0) {
+      newSettings[key] = hotSettingsInProps[key];
     }
   }
 
-  return watchList;
-}
-
-// The `this` value in the functions below points to the Vue component instance. They're not meant to used anywhere but in the context of the component.
-
-/**
- * Update the Handsontable instance with a single changed property.
- *
- * @param {String} updatedProperty Updated property name.
- * @param {Object} updatedValue Watcher-generated updated value object.
- * @param {Object} oldValue Watcher-generated old value object.
- */
-export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object) {
-  const newSettings = {};
-
-  if (updatedProperty === 'data' && this.__internalEdit === true) {
-    this.__internalEdit = false;
-    return;
-  }
-
-  newSettings[updatedProperty] = rewriteSettings(updatedValue);
-  this.hotInstance.updateSettings(newSettings);
-}
-
-/**
- * Prepare the settings object containing the `on`-properties to be used in the Handsontable configuration.
- *
- * @param {Object} settings An object containing the properties, including the `on`-prefixed hook names.
- * @param {Object} [additionalSettings] An additional object containing the properties, including the `on`-prefixed hook names.
- * @returns {Object} An object containing the properties, with the `on`-prefixes trimmed.
- */
-export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.GridSettings {
-  const newSettings = {};
-
-  for (const key in settings) {
-    if (settings.hasOwnProperty(key) && settings[key] !== void 0) {
-      newSettings[key] = settings[key];
-    }
-  }
-
-  for (const key in additionalSettings) {
-    if (key !== 'settings' && key !== 'wrapperRendererCacheSize' && additionalSettings.hasOwnProperty(key) && additionalSettings[key] !== void 0) {
-      newSettings[key] = additionalSettings[key];
+  for (const key in additionalHotSettingsInProps) {
+    if (key !== 'id' && key !== 'settings' && key !== 'wrapperRendererCacheSize' && additionalHotSettingsInProps.hasOwnProperty(key) && additionalHotSettingsInProps[key] !== void 0) {
+      newSettings[key] = additionalHotSettingsInProps[key];
     }
   }
 
