@@ -83,7 +83,8 @@
           globalRendererVNode.child.$destroy();
         }
 
-        this.hotInstance = new Handsontable(this.$el, newSettings);
+        this.hotInstance = new Handsontable.Core(this.$el, newSettings);
+        this.hotInstance.init();
 
         preventInternalEditWatch(this);
       },

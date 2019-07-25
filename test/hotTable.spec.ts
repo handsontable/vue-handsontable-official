@@ -343,3 +343,43 @@ it('should inject an `isRenderer` and `isEditor` properties to renderer/editor c
 
   testWrapper.destroy();
 });
+
+it('should be possible to access the `hotInstance` property of the HotTable instance from a parent-component', () => {
+  let hotInstanceFromRef = 'not-set';
+  let App = Vue.extend({
+    data: function () {
+      return {
+        rowHeaders: true,
+        colHeaders: true,
+        readOnly: true,
+      }
+    },
+    methods: {
+      cellsCallback: function() {
+        if (hotInstanceFromRef === 'not-set') {
+          hotInstanceFromRef = this.$refs.hTable.hotInstance;
+        }
+      }
+    },
+    render(h) {
+      // HotTable
+      return h(HotTable, {
+        ref: 'hTable',
+        props: {
+          rowHeaders: this.rowHeaders,
+          colHeaders: this.colHeaders,
+          readOnly: this.readOnly,
+          cells: this.cellsCallback
+        }
+      })
+    }
+  });
+
+  let testWrapper = mount(App, {
+    attachToDocument: true
+  });
+
+  expect(['not-set', null].includes(hotInstanceFromRef)).toBe(false);
+
+  testWrapper.destroy();
+});
