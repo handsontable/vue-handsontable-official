@@ -1,5 +1,4 @@
-import { baseConfig } from './base';
-import commonjs from 'rollup-plugin-commonjs';
+import { baseConfig, plugins } from './base';
 
 const env = process.env.NODE_ENV;
 const filename = 'vue-handsontable.js';
@@ -11,5 +10,5 @@ export const cjsConfig = {
     file: `./commonjs/${filename}`,
     exports: 'named'
   },
-  plugins: baseConfig.plugins.concat([commonjs()])
+  plugins: baseConfig.plugins,
 };

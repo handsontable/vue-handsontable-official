@@ -1,5 +1,9 @@
+import Vue, { VNode } from 'vue';
 import Handsontable from 'handsontable';
-import {HotTableProps, VueProps} from './types';
+import { HotTableProps, VueProps, EditorComponent } from './types';
+
+const unassignedPropSymbol = Symbol('unassigned');
+let bulkComponentContainer = null;
 
 /**
  * Rewrite the settings object passed to the watchers to be a clean array/object prepared to use within Handsontable config.
@@ -36,27 +40,10 @@ export function rewriteSettings(observerSettings): any[] | object {
 }
 
 /**
- * Initialize Handsontable.
- */
-export function hotInit(): void {
-  const unmappedSettings: any[] = [
-    this.settings ? this.settings : this._props,
-  ];
-
-  if (this.settings) {
-    unmappedSettings.push(this._props)
-  }
-
-  this.hotInstance = new Handsontable(this.$el, prepareSettings(unmappedSettings[0], unmappedSettings[1]));
-
-  preventInternalEditWatch(this);
-}
-
-/**
  * Private method to ensure the table is not calling `updateSettings` after editing cells.
  * @private
  */
-function preventInternalEditWatch(component) {
+export function preventInternalEditWatch(component) {
   component.hotInstance.addHook('beforeChange', () => {
     component.__internalEdit = true;
   });
@@ -81,112 +68,156 @@ function preventInternalEditWatch(component) {
 /**
  * Generate an object containing all the available Handsontable properties and plugin hooks.
  *
+ * @param {String} source Source for the factory (either 'HotTable' or 'HotColumn').
  * @returns {Object}
  */
-export function propFactory(): VueProps<HotTableProps> {
+export function propFactory(source): VueProps<HotTableProps> {
   const registeredHooks: string[] = Handsontable.hooks.getRegistered();
 
-  //TODO: workaround for `DefaultSettings` being an interface and not a class in `handsontable.ts`
-  const hotTemp: any = Handsontable;
-  const propSchema: VueProps<HotTableProps> = new hotTemp.DefaultSettings();
+  const propSchema: VueProps<HotTableProps> = new Handsontable.DefaultSettings();
 
   for (let prop in propSchema) {
-    propSchema[prop] = {};
+    propSchema[prop] = {
+      default: unassignedPropSymbol
+    };
   }
 
   for (let i = 0; i < registeredHooks.length; i++) {
     propSchema[registeredHooks[i]] = {
-      type: Function
+      default: unassignedPropSymbol
     };
   }
 
-  propSchema.id = {
-    type: String,
-    default: 'hot-' + Math.random().toString(36).substring(5)
+  propSchema.settings = {
+    default: unassignedPropSymbol
   };
 
-  propSchema.settings = {
-    type: Object as () => Handsontable.DefaultSettings
-  };
+  if (source === 'HotTable') {
+    propSchema.id = {
+      type: String,
+      default: 'hot-' + Math.random().toString(36).substring(5)
+    };
+
+    propSchema.wrapperRendererCacheSize = {
+      type: Number,
+      default: 3000
+    };
+  }
 
   return propSchema;
 }
 
 /**
- * Generate and object containing all the available Handsontable properties and hooks tied to the Handsontable updating function.
+ * Filter out all of the unassigned props, and return only the one passed to the component.
  *
- * @param {Function} updateFunction Function used to update a single changed property.
- * @returns {Object}
+ * @param {Object} props Object containing all the possible props.
+ * @returns {Object} Object containing only used props.
  */
-export function propWatchFactory(updateFunction: Function) {
-  const props: object = propFactory();
-  const watchList = {};
+export function filterPassedProps(props) {
+  const filteredProps: VueProps<HotTableProps> = {};
+  const columnSettingsProp = props['settings'];
 
-  for (const prop in props) {
-    if (props.hasOwnProperty(prop)) {
-      if (prop !== 'settings') {
-        watchList[prop] = {
-          handler: function (...args) {
-            return updateFunction.call(this, prop, ...args);
-          },
-          deep: true
-        };
-
-        watchList[`settings.${prop}`] = {
-          handler: function (...args) {
-            return updateFunction.call(this, prop, ...args);
-          },
-          deep: true
-        };
+  if (columnSettingsProp !== unassignedPropSymbol) {
+    for (let propName in columnSettingsProp) {
+      if (columnSettingsProp.hasOwnProperty(propName) && columnSettingsProp[propName] !== unassignedPropSymbol) {
+        filteredProps[propName] = columnSettingsProp[propName];
       }
     }
   }
 
-  return watchList;
-}
-
-// The `this` value in the functions below points to the Vue component instance. They're not meant to used anywhere but in the context of the component.
-
-/**
- * Update the Handsontable instance with a single changed property.
- *
- * @param {String} updatedProperty Updated property name.
- * @param {Object} updatedValue Watcher-generated updated value object.
- * @param {Object} oldValue Watcher-generated old value object.
- */
-export function updateHotSettings(updatedProperty: string, updatedValue: object, oldValue: object) {
-  const newSettings = {};
-
-  if (updatedProperty === 'data' && this.__internalEdit === true) {
-    this.__internalEdit = false;
-    return;
-  }
-
-  newSettings[updatedProperty] = rewriteSettings(updatedValue);
-  this.hotInstance.updateSettings(newSettings);
-}
-
-/**
- * Prepare the settings object containing the `on`-properties to be used in the Handsontable configuration.
- *
- * @param {Object} settings An object containing the properties, including the `on`-prefixed hook names.
- * @param {Object} [additionalSettings] An additional object containing the properties, including the `on`-prefixed hook names.
- * @returns {Object} An object containing the properties, with the `on`-prefixes trimmed.
- */
-export function prepareSettings(settings: object, additionalSettings?: object): Handsontable.GridSettings {
-  const newSettings = {};
-
-  for (const key in settings) {
-    if (settings.hasOwnProperty(key) && settings[key] !== void 0) {
-      newSettings[key] = settings[key];
+  for (let propName in props) {
+    if (props.hasOwnProperty(propName) && propName !== 'settings' && props[propName] !== unassignedPropSymbol) {
+      filteredProps[propName] = props[propName];
     }
   }
 
-  for (const key in additionalSettings) {
-    if (additionalSettings.hasOwnProperty(key) && additionalSettings[key] !== void 0) {
-      newSettings[key] = additionalSettings[key];
+  return filteredProps;
+}
+
+/**
+ * Prepare the settings object to be used as the settings for Handsontable, based on the props provided to the component.
+ *
+ * @param {Object} props The props passed to the component.
+ * @returns {Object} An object containing the properties, ready to be used within Handsontable.
+ */
+export function prepareSettings(props: HotTableProps): Handsontable.GridSettings {
+  const assignedProps: VueProps<HotTableProps> = filterPassedProps(props);
+  const hotSettingsInProps: {} = props.settings ? props.settings : assignedProps;
+  const additionalHotSettingsInProps: Handsontable.GridSettings = props.settings ? assignedProps : null;
+  const newSettings = {};
+
+  for (const key in hotSettingsInProps) {
+    if (hotSettingsInProps.hasOwnProperty(key) && hotSettingsInProps[key] !== void 0) {
+      newSettings[key] = hotSettingsInProps[key];
+    }
+  }
+
+  for (const key in additionalHotSettingsInProps) {
+    if (key !== 'id' && key !== 'settings' && key !== 'wrapperRendererCacheSize' && additionalHotSettingsInProps.hasOwnProperty(key) && additionalHotSettingsInProps[key] !== void 0) {
+      newSettings[key] = additionalHotSettingsInProps[key];
     }
   }
 
   return newSettings;
+}
+
+/**
+ * Get the VNode element with the provided type attribute from the component slots.
+ *
+ * @param {Array} componentSlots Array of slots from a component.
+ * @param {String} type Type of the child component. Either `hot-renderer` or `hot-editor`.
+ * @returns {Object|null} The VNode of the child component (or `null` when nothing's found).
+ */
+export function findVNodeByType(componentSlots: VNode[], type: string): VNode {
+  let componentVNode: VNode = null;
+
+  componentSlots.every((slot, index) => {
+    if (slot.data && slot.data.attrs && slot.data.attrs[type] !== void 0) {
+      componentVNode = slot;
+      return false;
+    }
+
+    return true;
+  });
+
+  return componentVNode;
+}
+
+/**
+ * Get all `hot-column` component instances from the provided children array.
+ *
+ * @param {Array} children Array of children from a component.
+ * @returns {Array} Array of `hot-column` instances.
+ */
+export function getHotColumnComponents(children) {
+  return children.filter((child) => child.$options.name === 'HotColumn');
+}
+
+/**
+ * Create an instance of the Vue Component based on the provided VNode.
+ *
+ * @param {Object} vNode VNode element to be turned into a component instance.
+ * @param {Object} parent Instance of the component to be marked as a parent of the newly created instance.
+ * @param {Object} props Props to be passed to the new instance.
+ * @param {Object} data Data to be passed to the new instance.
+ */
+export function createVueComponent(vNode: VNode, parent: Vue, props: object, data: object): EditorComponent {
+  const ownerDocument = parent.$el ? parent.$el.ownerDocument : document;
+  const settings: object = {
+    propsData: props,
+    parent,
+    data
+  };
+
+  if (!bulkComponentContainer) {
+    bulkComponentContainer = ownerDocument.createElement('DIV');
+    bulkComponentContainer.id = 'vueHotComponents';
+
+    ownerDocument.body.appendChild(bulkComponentContainer);
+  }
+
+  const componentContainer = ownerDocument.createElement('DIV');
+  bulkComponentContainer.appendChild(componentContainer);
+
+  return (new (vNode.componentOptions as any).Ctor(settings)).$mount(componentContainer);
 }

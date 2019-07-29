@@ -1,7 +1,6 @@
 import { baseConfig } from './base';
 import { addLicenseBanner } from './helpers/licenseBanner';
 import { uglify } from 'rollup-plugin-uglify';
-import commonjs from 'rollup-plugin-commonjs';
 
 const minFilename = 'vue-handsontable.min.js';
 
@@ -12,14 +11,13 @@ const minConfig = {
     indent: false,
     sourcemap: true,
     file: `./dist/${minFilename}`,
-    exports: 'named'
+    exports: 'named',
+    globals: {
+      vue: 'Vue',
+      handsontable: 'Handsontable'
+    }
   },
   plugins: baseConfig.plugins.concat([
-    commonjs({
-      include: [
-        'node_modules/**'
-      ]
-    }),
     uglify({
       output: {
         comments: /^!/
@@ -28,7 +26,6 @@ const minConfig = {
         pure_getters: true,
         unsafe: true,
         unsafe_comps: true,
-        warnings: false
       }
     })
   ])

@@ -1,5 +1,4 @@
 import typescript from 'rollup-plugin-typescript2';
-import commonjs from 'rollup-plugin-commonjs';
 import { plugins } from './base';
 
 const env = process.env.NODE_ENV;
@@ -16,11 +15,7 @@ export const esConfig = {
     plugins.json,
     plugins.replace,
     plugins.VuePlugin,
-    commonjs({
-      include: [
-        'node_modules/**'
-      ]
-    }),
+    plugins.commonjs,
     typescript({
       tsconfigOverride: {
         compilerOptions: {

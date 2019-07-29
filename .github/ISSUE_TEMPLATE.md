@@ -9,7 +9,7 @@
 
 ### Demo
 <!--- Provide a link to a live example on JSFiddle or Codepen or fill the following demo with your settings -->
-https://jsfiddle.net/handsoncode/4owqzasd/
+https://jsfiddle.net/handsoncode/dezfbgjt/
 
 ### Your environment
 * Vue wrapper version:
