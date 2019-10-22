@@ -14,6 +14,7 @@
     originalValue = null;
     cellProperties = null;
     state = null;
+    hot = null;
 
     mounted() {
       const _this = this;
@@ -152,6 +153,14 @@
 
     clearHooks(...args) {
       return (Handsontable.editors.BaseEditor.prototype as any).clearHooks.call(this.$data.hotCustomEditorInstance, ...args);
+    }
+
+    getEditedCell(...args) {
+      return (Handsontable.editors.BaseEditor.prototype as any).getEditedCell.call(this.$data.hotCustomEditorInstance, ...args);
+    }
+
+    getEditedCellsZIndex(...args) {
+      return (Handsontable.editors.BaseEditor.prototype as any).getEditedCellsZIndex.call(this.$data.hotCustomEditorInstance, ...args);
     }
   }
 
