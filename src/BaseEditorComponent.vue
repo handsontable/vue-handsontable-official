@@ -162,6 +162,10 @@
     getEditedCellsZIndex(...args) {
       return (Handsontable.editors.BaseEditor.prototype as any).getEditedCellsZIndex.call(this.$data.hotCustomEditorInstance, ...args);
     }
+
+    getEditedCellsLayerClass(...args) {
+      return (Handsontable.editors.BaseEditor.prototype as any).getEditedCellsLayerClass.call(this.$data.hotCustomEditorInstance, ...args);
+    }
   }
 
   export default BaseEditorComponent;
