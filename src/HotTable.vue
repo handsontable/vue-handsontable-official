@@ -9,7 +9,6 @@
     propFactory,
     preventInternalEditWatch,
     prepareSettings,
-    filterPassedProps,
     createVueComponent,
     findVNodeByType,
     getHotColumnComponents
@@ -20,7 +19,6 @@
     HotTableMethods,
     HotTableProps,
     HotTableComponent,
-    VueProps,
     EditorComponent
   } from './types';
   import * as packageJson from '../package.json';
@@ -145,7 +143,7 @@
             };
 
             if (rendererCache && !rendererCache.has(`${row}-${col}`)) {
-              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, {}, rendererArgs);
+              const mountedComponent: Vue = createVueComponent(vNode, containerComponent, vNode.componentOptions.propsData, rendererArgs);
 
               rendererCache.set(`${row}-${col}`, {
                 component: mountedComponent,
@@ -187,7 +185,7 @@
         let mountedComponent: EditorComponent = null;
 
         if (!editorCache.has(componentName)) {
-          mountedComponent = createVueComponent(vNode, containerComponent, {}, {isEditor: true});
+          mountedComponent = createVueComponent(vNode, containerComponent, vNode.componentOptions.propsData, {isEditor: true});
 
           editorCache.set(componentName, mountedComponent);
 
