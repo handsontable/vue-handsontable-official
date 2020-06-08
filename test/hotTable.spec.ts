@@ -383,3 +383,57 @@ it('should be possible to access the `hotInstance` property of the HotTable inst
 
   testWrapper.destroy();
 });
+
+it('should be possible to pass props to the editor and renderer components', () => {
+  const dummyEditorComponent = Vue.component('renderer-component', {
+    name: 'EditorComponent',
+    extends: BaseEditorComponent,
+    props: ['test-prop'],
+    render: function (h) {
+      return h('div', {});
+    }
+  });
+
+  const dummyRendererComponent = Vue.component('renderer-component', {
+    name: 'RendererComponent',
+    props: ['test-prop'],
+    render: function (h) {
+      return h('div', {});
+    }
+  });
+
+  let App = Vue.extend({
+    render(h) {
+      // HotTable
+      return h(HotTable, {
+        props: {
+          data: createSampleData(1, 1),
+          licenseKey: 'non-commercial-and-evaluation',
+        }
+      }, [
+        h(dummyRendererComponent, {
+          attrs: {
+            'hot-renderer': true,
+            'test-prop': 'test-prop-value'
+          }
+        }),
+        h(dummyEditorComponent, {
+          attrs: {
+            'hot-editor': true,
+            'test-prop': 'test-prop-value'
+          }
+        })
+      ])
+    }
+  });
+
+  let testWrapper = mount(App, {
+    attachToDocument: true
+  });
+  const hotTableComponent = testWrapper.vm.$children[0];
+
+  expect(hotTableComponent.rendererCache.get('0-0').component.$props.testProp).toEqual('test-prop-value');
+  expect(hotTableComponent.editorCache.get('EditorComponent').$props.testProp).toEqual('test-prop-value');
+
+  testWrapper.destroy();
+});

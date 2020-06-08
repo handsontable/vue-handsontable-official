@@ -5,7 +5,9 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 export interface HotTableData {
   __internalEdit: boolean,
   hotInstance?: Handsontable,
-  columnSettings: HotTableProps[]
+  columnSettings: HotTableProps[],
+  rendererCache: any, // temporary `any`, TODO: use the LRU definition here
+  editorCache: Map<string, EditorComponent>
 }
 
 export interface HotTableMethods {
