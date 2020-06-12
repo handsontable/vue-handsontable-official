@@ -180,17 +180,20 @@
        * @returns {Class} The class used as an editor in Handsontable.
        */
       getEditorClass: function (vNode: VNode, containerComponent: Vue): typeof Handsontable.editors.BaseEditor {
+        const componentKey: string = vNode.key ? vNode.key.toString() : null;
         const componentName: string = (vNode.componentOptions.Ctor as any).options.name;
+        const componentCacheKey = componentKey ? `${componentName}:${componentKey}` : componentName;
+
         const editorCache = this.editorCache;
         let mountedComponent: EditorComponent = null;
 
-        if (!editorCache.has(componentName)) {
+        if (!editorCache.has(componentCacheKey)) {
           mountedComponent = createVueComponent(vNode, containerComponent, vNode.componentOptions.propsData, {isEditor: true});
 
-          editorCache.set(componentName, mountedComponent);
+          editorCache.set(componentCacheKey, mountedComponent);
 
         } else {
-          mountedComponent = editorCache.get(componentName);
+          mountedComponent = editorCache.get(componentCacheKey);
         }
 
         return mountedComponent.$data.hotCustomEditorClass;

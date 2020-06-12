@@ -1,4 +1,5 @@
 import HotTable from '../src/HotTable.vue';
+import HotColumn from '../src/HotColumn.vue';
 import BaseEditorComponent from '../src/BaseEditorComponent.vue';
 import { mount } from '@vue/test-utils';
 import { createSampleData, mockClientDimensions } from './_helpers';
@@ -434,6 +435,58 @@ it('should be possible to pass props to the editor and renderer components', () 
 
   expect(hotTableComponent.rendererCache.get('0-0').component.$props.testProp).toEqual('test-prop-value');
   expect(hotTableComponent.editorCache.get('EditorComponent').$props.testProp).toEqual('test-prop-value');
+
+  testWrapper.destroy();
+});
+
+it('should be possible to set a key on custom editor to use the same component twice', () => {
+  const dummyEditorComponent = Vue.component('renderer-component', {
+    name: 'EditorComponent',
+    extends: BaseEditorComponent,
+    props: ['test-prop'],
+    render: function (h) {
+      return h('div', {});
+    }
+  });
+
+  let App = Vue.extend({
+    render(h) {
+      // HotTable
+      return h(HotTable, {
+        props: {
+          data: createSampleData(2, 2),
+          licenseKey: 'non-commercial-and-evaluation',
+        }
+      }, [
+        h(HotColumn, {}, [
+          h(dummyEditorComponent, {
+            key: 'editor-one',
+            attrs: {
+              'hot-editor': true,
+              'test-prop': 'test-prop-value-1'
+            }
+          }),
+        ]),
+        h(HotColumn, {}, [
+          h(dummyEditorComponent, {
+            key: 'editor-two',
+            attrs: {
+              'hot-editor': true,
+              'test-prop': 'test-prop-value-2'
+            }
+          })
+        ])
+      ])
+    }
+  });
+
+  let testWrapper = mount(App, {
+    attachToDocument: true
+  });
+  const hotTableComponent = testWrapper.vm.$children[0];
+
+  expect(hotTableComponent.editorCache.get('EditorComponent:editor-one').$props.testProp).toEqual('test-prop-value-1');
+  expect(hotTableComponent.editorCache.get('EditorComponent:editor-two').$props.testProp).toEqual('test-prop-value-2');
 
   testWrapper.destroy();
 });
