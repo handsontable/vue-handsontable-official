@@ -74,7 +74,8 @@ export function preventInternalEditWatch(component) {
 export function propFactory(source): VueProps<HotTableProps> {
   const registeredHooks: string[] = Handsontable.hooks.getRegistered();
 
-  const propSchema: VueProps<HotTableProps> = new Handsontable.DefaultSettings();
+  let propSchema: VueProps<HotTableProps> = {};
+  Object.assign(propSchema, Handsontable.DefaultSettings);
 
   for (let prop in propSchema) {
     propSchema[prop] = {

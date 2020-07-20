@@ -1,7 +1,11 @@
 import HotTable from '../src/HotTable.vue';
 import BaseEditorComponent from '../src/BaseEditorComponent.vue';
 import { mount } from '@vue/test-utils';
-import { createSampleData, mockClientDimensions } from './_helpers';
+import {
+  createDomContainer,
+  createSampleData,
+  mockClientDimensions
+} from './_helpers';
 import { LRUMap } from "../src/lib/lru/lru";
 import Vue from 'vue';
 
@@ -272,7 +276,7 @@ describe('Global editors and renderers', () => {
     });
 
     let testWrapper = mount(App, {
-      attachToDocument: true
+      attachTo: createDomContainer()
     });
     const hotTableComponent = testWrapper.vm.$children[0];
     const globalEditor = hotTableComponent.hotInstance.getSettings().editor;
@@ -336,7 +340,7 @@ it('should inject an `isRenderer` and `isEditor` properties to renderer/editor c
   });
 
   let testWrapper = mount(App, {
-    attachToDocument: true
+    attachTo: createDomContainer()
   });
   const hotTableComponent = testWrapper.vm.$children[0];
 
@@ -378,7 +382,7 @@ it('should be possible to access the `hotInstance` property of the HotTable inst
   });
 
   let testWrapper = mount(App, {
-    attachToDocument: true
+    attachTo: createDomContainer()
   });
 
   expect(['not-set', null].includes(hotInstanceFromRef)).toBe(false);
@@ -430,7 +434,7 @@ it('should be possible to pass props to the editor and renderer components', () 
   });
 
   let testWrapper = mount(App, {
-    attachToDocument: true
+    attachTo: createDomContainer()
   });
   const hotTableComponent = testWrapper.vm.$children[0];
 
