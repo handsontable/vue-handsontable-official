@@ -16,7 +16,8 @@ export interface HotTableMethods {
   getGlobalRendererVNode: () => VNode | void,
   getGlobalEditorVNode: () => VNode | void,
   getRendererWrapper: (vNode: VNode, containerComponent: Vue) => (...args) => HTMLElement,
-  getEditorClass: (vNode: VNode, containerComponent: Vue) => typeof Handsontable.editors.BaseEditor
+  getEditorClass: (vNode: VNode, containerComponent: Vue) => typeof Handsontable.editors.BaseEditor,
+  trimHotMappersToSize: (data: any[][]) => void
 }
 
 export interface HotTableProps extends Handsontable.GridSettings {

@@ -29,8 +29,23 @@
     name: 'HotTable',
     props: propFactory('HotTable'),
     watch: {
-      mergedHotSettings: function(value) {
-        this.hotInstance.updateSettings(value);
+      mergedHotSettings: function (value) {
+        const newData = value.data;
+
+        // If the dataset dimensions change, update the index mappers.
+        if (
+          (newData && newData.length !== this.hotInstance.countRows()) ||
+          (newData && newData[0] && newData[0]?.length !== this.hotInstance.countCols())
+        ) {
+          this.trimHotMappersToSize(newData);
+        }
+
+        // Data is automatically synchronized by reference.
+        delete value.data;
+
+        if (Object.keys(value).length) {
+          this.hotInstance.updateSettings(value);
+        }
       }
     },
     data: function () {
@@ -50,11 +65,11 @@
         columnSettings: null,
         rendererCache: rendererCache,
         editorCache: new Map()
-      }
+      };
     },
     computed: {
-      mergedHotSettings: function(): Handsontable.GridSettings {
-        return prepareSettings(this.$props);
+      mergedHotSettings: function (): Handsontable.GridSettings {
+        return prepareSettings(this.$props, this.hotInstance ? this.hotInstance.getSettings() : void 0);
       }
     },
     methods: {
@@ -85,6 +100,38 @@
         this.hotInstance.init();
 
         preventInternalEditWatch(this);
+      },
+      trimHotMappersToSize: function (data: any[][]): void {
+        const rowsToRemove: number[] = [];
+        const columnsToRemove: number[] = [];
+        const hotRowCount: number = this.hotInstance.countRows();
+        const hotColumnCount: number = this.hotInstance.countCols();
+
+        if (data.length) {
+          if (data.length < hotRowCount) {
+            for (let r = data.length; r < hotRowCount; r++) {
+              rowsToRemove.push(r);
+            }
+
+            this.hotInstance.rowIndexMapper.removeIndexes(rowsToRemove);
+
+          } else {
+            this.hotInstance.rowIndexMapper.insertIndexes(hotRowCount - 1, data.length - hotRowCount);
+          }
+        }
+
+        if (data[0]?.length) {
+          if (data[0].length < hotColumnCount) {
+            for (let c = data[0].length; c < hotColumnCount; c++) {
+              columnsToRemove.push(c);
+            }
+
+            this.hotInstance.columnIndexMapper.removeIndexes(columnsToRemove);
+
+          } else {
+            this.hotInstance.rowIndexMapper.insertIndexes(hotColumnCount - 1, data[0].length - hotColumnCount);
+          }
+        }
       },
       getGlobalRendererVNode: function (): VNode | null {
         const hotTableSlots: VNode[] = this.$slots.default || [];
