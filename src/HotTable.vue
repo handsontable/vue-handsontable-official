@@ -31,7 +31,7 @@
     watch: {
       mergedHotSettings: function (value) {
         // If the dataset dimensions change, update the index mappers.
-        this.trimHotMappersToSize(value.data);
+        this.matchHotMappersSize(value.data);
 
         // Data is automatically synchronized by reference.
         delete value.data;
@@ -98,7 +98,7 @@
 
         preventInternalEditWatch(this);
       },
-      trimHotMappersToSize: function (data: any[][]): void {
+      matchHotMappersSize: function (data: any[][]): void {
         const rowsToRemove: number[] = [];
         const columnsToRemove: number[] = [];
         const indexMapperRowCount = this.hotInstance.rowIndexMapper.getNumberOfIndexes();
