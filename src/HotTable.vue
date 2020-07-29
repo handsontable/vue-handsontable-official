@@ -34,8 +34,8 @@
 
         // If the dataset dimensions change, update the index mappers.
         if (
-          (newData && newData.length !== this.hotInstance.countRows()) ||
-          (newData && newData[0] && newData[0]?.length !== this.hotInstance.countCols())
+          (newData && newData.length !== this.hotInstance.countSourceRows()) ||
+          (newData && newData[0] && newData[0]?.length !== this.hotInstance.countSourceCols())
         ) {
           this.trimHotMappersToSize(newData);
         }
@@ -104,8 +104,8 @@
       trimHotMappersToSize: function (data: any[][]): void {
         const rowsToRemove: number[] = [];
         const columnsToRemove: number[] = [];
-        const hotRowCount: number = this.hotInstance.countRows();
-        const hotColumnCount: number = this.hotInstance.countCols();
+        const hotRowCount: number = this.hotInstance.countSourceRows();
+        const hotColumnCount: number = this.hotInstance.countSourceCols();
 
         if (data.length) {
           if (data.length < hotRowCount) {
