@@ -30,21 +30,18 @@
     props: propFactory('HotTable'),
     watch: {
       mergedHotSettings: function (value) {
-        const newData = value.data;
-
         // If the dataset dimensions change, update the index mappers.
-        if (
-          (newData && newData.length !== this.hotInstance.countSourceRows()) ||
-          (newData && newData[0] && newData[0]?.length !== this.hotInstance.countSourceCols())
-        ) {
-          this.trimHotMappersToSize(newData);
-        }
+        this.trimHotMappersToSize(value.data);
 
         // Data is automatically synchronized by reference.
         delete value.data;
 
+        // If there are another options changed, update the HOT settings, render the table otherwise.
         if (Object.keys(value).length) {
           this.hotInstance.updateSettings(value);
+
+        } else {
+          this.hotInstance.render();
         }
       }
     },
@@ -104,32 +101,32 @@
       trimHotMappersToSize: function (data: any[][]): void {
         const rowsToRemove: number[] = [];
         const columnsToRemove: number[] = [];
-        const hotRowCount: number = this.hotInstance.countSourceRows();
-        const hotColumnCount: number = this.hotInstance.countSourceCols();
+        const indexMapperRowCount = this.hotInstance.rowIndexMapper.getNumberOfIndexes();
+        const indexMapperColumnCount = this.hotInstance.columnIndexMapper.getNumberOfIndexes();
 
-        if (data.length) {
-          if (data.length < hotRowCount) {
-            for (let r = data.length; r < hotRowCount; r++) {
+        if (data && data.length !== indexMapperRowCount) {
+          if (data.length < indexMapperRowCount) {
+            for (let r = data.length; r < indexMapperRowCount; r++) {
               rowsToRemove.push(r);
             }
 
             this.hotInstance.rowIndexMapper.removeIndexes(rowsToRemove);
 
           } else {
-            this.hotInstance.rowIndexMapper.insertIndexes(hotRowCount - 1, data.length - hotRowCount);
+            this.hotInstance.rowIndexMapper.insertIndexes(indexMapperRowCount - 1, data.length - indexMapperRowCount);
           }
         }
 
-        if (data[0]?.length) {
-          if (data[0].length < hotColumnCount) {
-            for (let c = data[0].length; c < hotColumnCount; c++) {
+        if (data && data[0] && data[0]?.length !== indexMapperColumnCount) {
+          if (data[0].length < indexMapperColumnCount) {
+            for (let c = data[0].length; c < indexMapperColumnCount; c++) {
               columnsToRemove.push(c);
             }
 
             this.hotInstance.columnIndexMapper.removeIndexes(columnsToRemove);
 
           } else {
-            this.hotInstance.rowIndexMapper.insertIndexes(hotColumnCount - 1, data[0].length - hotColumnCount);
+            this.hotInstance.rowIndexMapper.insertIndexes(indexMapperColumnCount - 1, data[0].length - indexMapperColumnCount);
           }
         }
       },
