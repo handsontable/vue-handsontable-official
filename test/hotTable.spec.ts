@@ -102,7 +102,8 @@ describe('Updating the Handsontable settings', () => {
     expect(hotTableComponent.hotInstance.getSettings().readOnly).toEqual(false);
   });
 
-  it('should update the previously initialized Handsontable instance with only the options that are passed to the component as props', async() => {
+  it('should update the previously initialized Handsontable instance with only the options that are passed to the' +
+    ' component as props and actually changed', async() => {
     let newHotSettings = null;
     let App = Vue.extend({
       data: function () {
@@ -144,7 +145,46 @@ describe('Updating the Handsontable settings', () => {
 
     await Vue.nextTick();
 
-    expect(Object.keys(newHotSettings).length).toBe(5)
+    expect(Object.keys(newHotSettings).length).toBe(3)
+  });
+
+  it('should not call Handsontable\'s `updateSettings` method, when the table data was changed by reference', async() => {
+    let newHotSettings = null;
+    let App = Vue.extend({
+      data: function () {
+        return {
+          data: [[1, 2, 3]],
+        }
+      },
+      methods: {
+        updateData: function () {
+          this.data.push([2, 3, 4]);
+        }
+      },
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          ref: 'hotInstance',
+          props: {
+            data: this.data,
+            afterUpdateSettings: function (newSettings) {
+              newHotSettings = newSettings
+            }
+          }
+        })
+      }
+    });
+
+    let testWrapper = mount(App, {
+      sync: false
+    });
+
+    testWrapper.vm.updateData();
+
+    await Vue.nextTick();
+
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1, 2, 3], [2, 3, 4]]);
+    expect(newHotSettings).toBe(null);
   });
 });
 
