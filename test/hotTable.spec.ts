@@ -21,7 +21,7 @@ describe('hotInit', () => {
 });
 
 describe('Updating the Handsontable settings', () => {
-  it('should update the previously initialized Handsontable instance with a single changed property', () => {
+  it('should update the previously initialized Handsontable instance with a single changed property', async() => {
     let updateSettingsCalls = 0;
     let testWrapper = mount(HotTable, {
       propsData: {
@@ -39,6 +39,8 @@ describe('Updating the Handsontable settings', () => {
     testWrapper.setProps({
       rowHeaders: false
     });
+
+    await Vue.nextTick();
 
     expect(updateSettingsCalls).toEqual(1);
     expect(testWrapper.vm.hotInstance.getSettings().rowHeaders).toEqual(false);
