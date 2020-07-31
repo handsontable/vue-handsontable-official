@@ -2,7 +2,11 @@ import HotTable from '../src/HotTable.vue';
 import HotColumn from '../src/HotColumn.vue';
 import { mount } from '@vue/test-utils';
 import Vue from 'vue';
-import { createSampleData, mockClientDimensions } from './_helpers';
+import {
+  createDomContainer,
+  createSampleData,
+  mockClientDimensions
+} from './_helpers';
 
 describe('createColumnSettings', () => {
   it('should create the column settings based on the data provided to the `hot-column` component and its child components', () => {
@@ -84,7 +88,7 @@ describe('createColumnSettings', () => {
     });
 
     let testWrapper = mount(App, {
-      attachToDocument: true
+      attachTo: createDomContainer()
     });
     const hotTableComponent = testWrapper.vm.$children[0];
 
@@ -163,7 +167,7 @@ describe('renderer cache', () => {
     });
 
     let testWrapper = mount(App, {
-      attachToDocument: true
+      attachTo: createDomContainer()
     });
     const hotTableComponent = testWrapper.vm.$children[0];
 
@@ -221,7 +225,7 @@ describe('renderer cache', () => {
     });
 
     let testWrapper = mount(App, {
-      attachToDocument: true
+      attachTo: createDomContainer()
     });
     const hotTableComponent = testWrapper.vm.$children[0];
 
@@ -290,7 +294,7 @@ describe('hot-column children', () => {
     });
 
     let testWrapper = mount(App, {
-      attachToDocument: true
+      attachTo: createDomContainer()
     });
     const hotTableComponent = testWrapper.vm.$children[0];
 

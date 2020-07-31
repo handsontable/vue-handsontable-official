@@ -29,8 +29,32 @@
     name: 'HotTable',
     props: propFactory('HotTable'),
     watch: {
-      mergedHotSettings: function(value) {
-        this.hotInstance.updateSettings(value);
+      mergedHotSettings: function (value) {
+        if (value.data) {
+          if (
+            this.hotInstance.isColumnModificationAllowed() ||
+            (
+              !this.hotInstance.isColumnModificationAllowed() &&
+              this.hotInstance.countSourceCols() === this.miscCache.currentSourceColumns
+            )
+          ) {
+            // If the dataset dimensions change, update the index mappers.
+            this.matchHotMappersSize(value.data);
+
+            // Data is automatically synchronized by reference.
+            delete value.data;
+          }
+        }
+
+        // If there are another options changed, update the HOT settings, render the table otherwise.
+        if (Object.keys(value).length) {
+          this.hotInstance.updateSettings(value);
+
+        } else {
+          this.hotInstance.render();
+        }
+
+        this.miscCache.currentSourceColumns = this.hotInstance.countSourceCols();
       }
     },
     data: function () {
@@ -46,15 +70,18 @@
 
       return {
         __internalEdit: false,
+        miscCache: {
+          currentSourceColumns: null
+        },
         hotInstance: null,
         columnSettings: null,
         rendererCache: rendererCache,
         editorCache: new Map()
-      }
+      };
     },
     computed: {
-      mergedHotSettings: function(): Handsontable.GridSettings {
-        return prepareSettings(this.$props);
+      mergedHotSettings: function (): Handsontable.GridSettings {
+        return prepareSettings(this.$props, this.hotInstance ? this.hotInstance.getSettings() : void 0);
       }
     },
     methods: {
@@ -85,6 +112,54 @@
         this.hotInstance.init();
 
         preventInternalEditWatch(this);
+
+        this.miscCache.currentSourceColumns = this.hotInstance.countSourceCols();
+      },
+      matchHotMappersSize: function (data: any[][]): void {
+        const rowsToRemove: number[] = [];
+        const columnsToRemove: number[] = [];
+        const indexMapperRowCount = this.hotInstance.rowIndexMapper.getNumberOfIndexes();
+        const isColumnModificationAllowed = this.hotInstance.isColumnModificationAllowed();
+        let indexMapperColumnCount = 0;
+
+        if (data && data.length !== indexMapperRowCount) {
+          if (data.length < indexMapperRowCount) {
+            for (let r = data.length; r < indexMapperRowCount; r++) {
+              rowsToRemove.push(r);
+            }
+          }
+        }
+
+        if (isColumnModificationAllowed) {
+          indexMapperColumnCount = this.hotInstance.columnIndexMapper.getNumberOfIndexes();
+
+          if (data && data[0] && data[0]?.length !==
+            indexMapperColumnCount) {
+            if (data[0].length < indexMapperColumnCount) {
+              for (let c = data[0].length; c < indexMapperColumnCount; c++) {
+                columnsToRemove.push(c);
+              }
+            }
+          }
+        }
+
+        this.hotInstance.batch(() => {
+          if (rowsToRemove.length > 0) {
+            this.hotInstance.rowIndexMapper.removeIndexes(rowsToRemove);
+
+          } else {
+            this.hotInstance.rowIndexMapper.insertIndexes(indexMapperRowCount - 1, data.length - indexMapperRowCount);
+          }
+
+          if (isColumnModificationAllowed) {
+            if (columnsToRemove.length > 0) {
+              this.hotInstance.columnIndexMapper.removeIndexes(columnsToRemove);
+
+            } else {
+              this.hotInstance.columnIndexMapper.insertIndexes(indexMapperColumnCount - 1, data[0].length - indexMapperColumnCount);
+            }
+          }
+        });
       },
       getGlobalRendererVNode: function (): VNode | null {
         const hotTableSlots: VNode[] = this.$slots.default || [];

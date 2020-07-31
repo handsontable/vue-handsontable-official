@@ -74,7 +74,8 @@ export function preventInternalEditWatch(component) {
 export function propFactory(source): VueProps<HotTableProps> {
   const registeredHooks: string[] = Handsontable.hooks.getRegistered();
 
-  const propSchema: VueProps<HotTableProps> = new Handsontable.DefaultSettings();
+  let propSchema: VueProps<HotTableProps> = {};
+  Object.assign(propSchema, Handsontable.DefaultSettings);
 
   for (let prop in propSchema) {
     propSchema[prop] = {
@@ -137,23 +138,35 @@ export function filterPassedProps(props) {
 /**
  * Prepare the settings object to be used as the settings for Handsontable, based on the props provided to the component.
  *
- * @param {Object} props The props passed to the component.
- * @returns {Object} An object containing the properties, ready to be used within Handsontable.
+ * @param {HotTableProps} props The props passed to the component.
+ * @param {Handsontable.GridSettings} currentSettings The current Handsontable settings.
+ * @returns {Handsontable.GridSettings} An object containing the properties, ready to be used within Handsontable.
  */
-export function prepareSettings(props: HotTableProps): Handsontable.GridSettings {
+export function prepareSettings(props: HotTableProps, currentSettings?: Handsontable.GridSettings): Handsontable.GridSettings {
   const assignedProps: VueProps<HotTableProps> = filterPassedProps(props);
   const hotSettingsInProps: {} = props.settings ? props.settings : assignedProps;
   const additionalHotSettingsInProps: Handsontable.GridSettings = props.settings ? assignedProps : null;
   const newSettings = {};
 
   for (const key in hotSettingsInProps) {
-    if (hotSettingsInProps.hasOwnProperty(key) && hotSettingsInProps[key] !== void 0) {
+    if (
+      hotSettingsInProps.hasOwnProperty(key) &&
+      hotSettingsInProps[key] !== void 0 &&
+      ((currentSettings && key !== 'data') ? !simpleEqual(currentSettings[key], hotSettingsInProps[key]) : true)
+    ) {
       newSettings[key] = hotSettingsInProps[key];
     }
   }
 
   for (const key in additionalHotSettingsInProps) {
-    if (key !== 'id' && key !== 'settings' && key !== 'wrapperRendererCacheSize' && additionalHotSettingsInProps.hasOwnProperty(key) && additionalHotSettingsInProps[key] !== void 0) {
+    if (
+      additionalHotSettingsInProps.hasOwnProperty(key) &&
+      key !== 'id' &&
+      key !== 'settings' &&
+      key !== 'wrapperRendererCacheSize' &&
+      additionalHotSettingsInProps[key] !== void 0 &&
+      ((currentSettings && key !== 'data') ? !simpleEqual(currentSettings[key], additionalHotSettingsInProps[key]) : true)
+    ) {
       newSettings[key] = additionalHotSettingsInProps[key];
     }
   }
@@ -220,4 +233,17 @@ export function createVueComponent(vNode: VNode, parent: Vue, props: object, dat
   bulkComponentContainer.appendChild(componentContainer);
 
   return (new (vNode.componentOptions as any).Ctor(settings)).$mount(componentContainer);
+}
+
+/**
+ * Compare two objects using `JSON.stringify`.
+ * *Note: * As it's using the stringify function to compare objects, the property order in both objects is
+ * important. It will return `false` for the same objects, if they're defined in a different order.
+ *
+ * @param {object} objectA First object to compare.
+ * @param {object} objectB Second object to compare.
+ * @returns {boolean} `true` if they're the same, `false` otherwise.
+ */
+function simpleEqual(objectA, objectB) {
+  return JSON.stringify(objectA) === JSON.stringify(objectB);
 }

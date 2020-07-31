@@ -4,6 +4,9 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 
 export interface HotTableData {
   __internalEdit: boolean,
+  miscCache?: {
+    currentSourceColumns?: number
+  },
   hotInstance?: Handsontable,
   columnSettings: HotTableProps[],
   rendererCache: any, // temporary `any`, TODO: use the LRU definition here
@@ -16,12 +19,13 @@ export interface HotTableMethods {
   getGlobalRendererVNode: () => VNode | void,
   getGlobalEditorVNode: () => VNode | void,
   getRendererWrapper: (vNode: VNode, containerComponent: Vue) => (...args) => HTMLElement,
-  getEditorClass: (vNode: VNode, containerComponent: Vue) => typeof Handsontable.editors.BaseEditor
+  getEditorClass: (vNode: VNode, containerComponent: Vue) => typeof Handsontable.editors.BaseEditor,
+  matchHotMappersSize: (data: any[][]) => void
 }
 
 export interface HotTableProps extends Handsontable.GridSettings {
   id?: string,
-  settings?: Handsontable.DefaultSettings,
+  settings?: Handsontable.GridSettings,
   wrapperRendererCacheSize?: number
 }
 
