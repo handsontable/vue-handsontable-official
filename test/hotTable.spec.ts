@@ -148,7 +148,8 @@ describe('Updating the Handsontable settings', () => {
     expect(Object.keys(newHotSettings).length).toBe(3)
   });
 
-  it('should not call Handsontable\'s `updateSettings` method, when the table data was changed by reference', async() => {
+  it('should not call Handsontable\'s `updateSettings` method, when the table data was changed by reference, and the' +
+    ' dataset is an array of arrays', async() => {
     let newHotSettings = null;
     let App = Vue.extend({
       data: function () {
@@ -157,8 +158,68 @@ describe('Updating the Handsontable settings', () => {
         }
       },
       methods: {
-        updateData: function () {
+        modifyFirstRow: function () {
+          Vue.set(this.data, 0, [22, 32, 42]);
+        },
+        addRow: function () {
           this.data.push([2, 3, 4]);
+        },
+        removeRow: function () {
+          this.data.pop()
+        },
+      },
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          ref: 'hotInstance',
+          props: {
+            data: this.data,
+            afterUpdateSettings: function (newSettings) {
+              newHotSettings = newSettings
+            }
+          }
+        })
+      }
+    });
+
+    let testWrapper = mount(App, {
+      sync: false
+    });
+
+    testWrapper.vm.addRow();
+
+    await Vue.nextTick();
+
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1, 2, 3], [2, 3, 4]]);
+    expect(newHotSettings).toBe(null);
+
+    testWrapper.vm.removeRow();
+
+    await Vue.nextTick();
+
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1, 2, 3]]);
+    expect(newHotSettings).toBe(null);
+
+    testWrapper.vm.modifyFirstRow();
+
+    await Vue.nextTick();
+
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[22, 32, 42]]);
+    expect(newHotSettings).toBe(null);
+  });
+
+  it('should call Handsontable\'s `updateSettings` method, when the table data was changed by reference while the' +
+    ' dataset is an array of object and property number changed', async() => {
+    let newHotSettings = null;
+    let App = Vue.extend({
+      data: function () {
+        return {
+          data: [{a: 1, b: 2, c: 3}],
+        }
+      },
+      methods: {
+        updateData: function (changedRow) {
+          Vue.set(this.data, 0, Object.assign({}, changedRow));
         }
       },
       render(h) {
@@ -179,11 +240,72 @@ describe('Updating the Handsontable settings', () => {
       sync: false
     });
 
-    testWrapper.vm.updateData();
+    testWrapper.vm.updateData({a: 1, b: 2, c: 3, d: 4});
 
     await Vue.nextTick();
 
-    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1, 2, 3], [2, 3, 4]]);
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1, 2, 3, 4]]);
+    expect(JSON.stringify(newHotSettings)).toBe(JSON.stringify({
+      data: [{a: 1, b: 2, c: 3, d: 4}]
+    }));
+
+    testWrapper.vm.updateData({a: 1});
+
+    await Vue.nextTick();
+
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1]]);
+    expect(JSON.stringify(newHotSettings)).toBe(JSON.stringify({
+      data: [{a: 1}]
+    }));
+  });
+
+  it('should NOT call Handsontable\'s `updateSettings` method, when the table data was changed by reference while the' +
+    ' dataset is an array of object and property number DID NOT change', async() => {
+    let newHotSettings = null;
+    let App = Vue.extend({
+      data: function () {
+        return {
+          data: [{a: 1, b: 2, c: 3}],
+        }
+      },
+      methods: {
+        addRow: function () {
+          this.data.push({a: 12, b: 22, c: 32})
+        },
+        removeRow: function () {
+          this.data.pop()
+        }
+      },
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          ref: 'hotInstance',
+          props: {
+            data: this.data,
+            afterUpdateSettings: function (newSettings) {
+              newHotSettings = newSettings
+            }
+          }
+        })
+      }
+    });
+
+    let testWrapper = mount(App, {
+      sync: false
+    });
+
+    testWrapper.vm.addRow();
+
+    await Vue.nextTick();
+
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1, 2, 3], [12, 22, 32]]);
+    expect(newHotSettings).toBe(null);
+
+    testWrapper.vm.removeRow();
+
+    await Vue.nextTick();
+
+    expect(testWrapper.vm.$children[0].hotInstance.getData()).toEqual([[1, 2, 3]]);
     expect(newHotSettings).toBe(null);
   });
 });
