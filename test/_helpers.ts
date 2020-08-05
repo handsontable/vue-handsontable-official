@@ -31,3 +31,18 @@ export function mockClientDimensions(element, width, height) {
     value: height
   });
 }
+
+/**
+ * Create a temporary DOM container for the components to be placed in.
+ * It should be replaced with the actual mounted component from `@vue/test-utils`, so there's no need to remove it
+ * after the test case is finished.
+ */
+export function createDomContainer() {
+  const container = document.createElement('div');
+
+  if (document.body) {
+    document.body.appendChild(container);
+  }
+
+  return container;
+}

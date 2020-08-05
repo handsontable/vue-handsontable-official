@@ -31,7 +31,7 @@ describe('rewriteSettings', () => {
 
 describe('propFactory', () => {
   it('should generate an object containing all the available Handsontable properties and plugin hooks', () => {
-    const props: any = propFactory();
+    const props: any = propFactory('HotTable');
 
     expect(typeof props.startRows).toEqual('object');
     expect(typeof props.startCols).toEqual('object');
