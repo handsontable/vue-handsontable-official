@@ -649,7 +649,7 @@ it('should be possible to set a key on custom editor to use the same component t
   });
 
   let testWrapper = mount(App, {
-    attachToDocument: true
+    attachTo: createDomContainer()
   });
   const hotTableComponent = testWrapper.vm.$children[0];
 
