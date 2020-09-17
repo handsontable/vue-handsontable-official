@@ -1,4 +1,5 @@
-import { baseConfig, plugins } from './base';
+import { baseConfig } from './base';
+import unifyHotTableExports from './helpers/rollup-plugin-unify-hot-table-exports';
 
 const env = process.env.NODE_ENV;
 const filename = 'vue-handsontable.js';
@@ -10,5 +11,8 @@ export const cjsConfig = {
     file: `./commonjs/${filename}`,
     exports: 'named'
   },
-  plugins: baseConfig.plugins,
+  plugins: baseConfig.plugins
+    .concat([
+    unifyHotTableExports('commonjs')
+  ]),
 };
