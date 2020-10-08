@@ -1,5 +1,6 @@
 import HotTable from '../src/HotTable.vue';
 import HotColumn from '../src/HotColumn.vue';
+import BaseEditorComponent from '../src/BaseEditorComponent.vue';
 import { mount } from '@vue/test-utils';
 import Vue from 'vue';
 import {
@@ -301,6 +302,143 @@ describe('hot-column children', () => {
     expect(hotTableComponent.rendererCache.size).toEqual(100);
     expect(hotTableComponent.$children[0].$children.length).toEqual(51);
     expect(hotTableComponent.$children[1].$children.length).toEqual(50);
+
+    testWrapper.destroy();
+  });
+
+  it('should be possible to set a key on custom editor to use the same component twice', () => {
+    const dummyEditorComponent = Vue.component('renderer-component', {
+      name: 'EditorComponent',
+      extends: BaseEditorComponent,
+      props: ['test-prop'],
+      render: function (h) {
+        return h('div', {});
+      }
+    });
+
+    let App = Vue.extend({
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          props: {
+            data: createSampleData(2, 2),
+            licenseKey: 'non-commercial-and-evaluation',
+          }
+        }, [
+          h(HotColumn, {}, [
+            h(dummyEditorComponent, {
+              key: 'editor-one',
+              attrs: {
+                'hot-editor': true,
+                'test-prop': 'test-prop-value-1'
+              }
+            }),
+          ]),
+          h(HotColumn, {}, [
+            h(dummyEditorComponent, {
+              key: 'editor-two',
+              attrs: {
+                'hot-editor': true,
+                'test-prop': 'test-prop-value-2'
+              }
+            })
+          ])
+        ])
+      }
+    });
+
+    let testWrapper = mount(App, {
+      attachTo: createDomContainer()
+    });
+    const hotTableComponent = testWrapper.vm.$children[0];
+
+    expect(hotTableComponent.editorCache.get('EditorComponent:editor-one').$props.testProp).toEqual('test-prop-value-1');
+    expect(hotTableComponent.editorCache.get('EditorComponent:editor-two').$props.testProp).toEqual('test-prop-value-2');
+
+    testWrapper.destroy();
+  });
+
+  it('should be possible to set a key on custom editor to use the same component twice, alongside an editor without' +
+    ' the key property defined', () => {
+    const dummyEditorComponent = Vue.component('renderer-component', {
+      name: 'EditorComponent',
+      extends: BaseEditorComponent,
+      props: ['test-prop'],
+      methods: {
+        getValue: function () {
+
+          // For the sake of this test, the returned value is the passed test prop
+          return this.$props.testProp;
+        },
+        setValue: () => {},
+        open: () => {}
+      },
+      render: function (h) {
+        return h('div', {});
+      }
+    });
+
+    let App = Vue.extend({
+      render(h) {
+        // HotTable
+        return h(HotTable, {
+          props: {
+            data: createSampleData(2, 2),
+            licenseKey: 'non-commercial-and-evaluation',
+          }
+        }, [
+          h(HotColumn, {}, [
+            h(dummyEditorComponent, {
+              key: 'editor-one',
+              attrs: {
+                'hot-editor': true,
+                'test-prop': 'test-prop-value-1'
+              }
+            }),
+          ]),
+          h(HotColumn, {}, [
+            h(dummyEditorComponent, {
+              key: 'editor-two',
+              attrs: {
+                'hot-editor': true,
+                'test-prop': 'test-prop-value-2'
+              }
+            })
+          ]),
+          h(HotColumn, {}, [
+            h(dummyEditorComponent, {
+              attrs: {
+                'hot-editor': true,
+                'test-prop': 'test-prop-value-common'
+              }
+            })
+          ]),
+          h(HotColumn, {}, [
+            h(dummyEditorComponent, {
+              attrs: {
+                'hot-editor': true,
+              }
+            })
+          ])
+        ])
+      }
+    });
+
+    let testWrapper = mount(App, {
+      attachTo: createDomContainer()
+    });
+    const hotTableComponent = testWrapper.vm.$children[0];
+
+    expect(hotTableComponent.editorCache.get('EditorComponent:editor-one').$props.testProp).toEqual('test-prop-value-1');
+    expect(hotTableComponent.editorCache.get('EditorComponent:editor-two').$props.testProp).toEqual('test-prop-value-2');
+    expect(hotTableComponent.editorCache.get('EditorComponent').$props.testProp).toEqual('test-prop-value-common');
+
+    const hotInstance = hotTableComponent.hotInstance;
+
+    expect(hotInstance.getCellEditor(0, 0).prototype.getValue()).toEqual('test-prop-value-1');
+    expect(hotInstance.getCellEditor(0, 1).prototype.getValue()).toEqual('test-prop-value-2');
+    expect(hotInstance.getCellEditor(0, 2).prototype.getValue()).toEqual('test-prop-value-common');
+    expect(hotInstance.getCellEditor(0, 3).prototype.getValue()).toEqual('test-prop-value-common');
 
     testWrapper.destroy();
   });
