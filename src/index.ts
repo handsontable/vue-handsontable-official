@@ -1,4 +1,5 @@
-export * from './HotTable.vue';
-export * from './HotColumn.vue';
-export * from './BaseEditorComponent.vue';
-export { default } from './HotTable.vue';
+import HotTable from './HotTable.vue';
+import HotColumn from './HotColumn.vue';
+import BaseEditorComponent from './BaseEditorComponent.vue';
+
+export { HotTable as default, HotTable, HotColumn, BaseEditorComponent };

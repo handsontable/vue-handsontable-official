@@ -1,4 +1,4 @@
-import { baseConfig, plugins } from './base';
+import { baseConfig } from './base';
 
 const env = process.env.NODE_ENV;
 const filename = 'vue-handsontable.js';
