@@ -1,3 +1,12 @@
+# Important information
+
+## We permanently moved this project to the main Handsontable repository at [https://github.com/handsontable/handsontable/wrappers/vue](https://github.com/handsontable/handsontable/wrappers/vue)
+
+## It is still available under the same name in npm: [`@handsontable/vue`](https://www.npmjs.com/package/@handsontable/vue), so you don't have to update your dependency configuration.
+
+---------
+<br><br><br>
+
 <div align="center">
   
 ![Handsontable for Vue](https://raw.githubusercontent.com/handsontable/static-files/master/Images/Logo/Handsontable/handsontable-vue.png)
